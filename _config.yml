@@ -1,0 +1,10 @@
+port:			4000
+base-url:		http://gjjones.github.io
+custom-domain:	http://gjjones.me
+
+title:			gjjones
+
+source:			.
+destination:	./_site
+
+excerpt_separator:	"<!-- more -->"
