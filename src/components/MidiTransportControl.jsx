@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export function MidiTransportControl({ selectedOutput, onStart, onStop }) {
+export function MidiTransportControl({ selectedOutput, onStart, onStop, onTriggerNote }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Reset playing state when output device disconnects
@@ -27,6 +27,11 @@ export function MidiTransportControl({ selectedOutput, onStart, onStop }) {
     }
   };
 
+  const handleTrigger = () => {
+    // Trigger Ch:10 Note:36 (C2) Vel:80
+    onTriggerNote(10, 36, 80);
+  };
+
   return (
     <div
       style={{
@@ -41,22 +46,40 @@ export function MidiTransportControl({ selectedOutput, onStart, onStop }) {
         Sequencer Control
       </h3>
 
-      <button
-        onClick={handleToggle}
-        style={{
-          padding: '0.75rem 1.5rem',
-          fontSize: '1rem',
-          cursor: 'pointer',
-          borderRadius: '4px',
-          border: `1px solid ${isPlaying ? '#c00' : '#0a0'}`,
-          background: isPlaying ? '#c00' : '#0a0',
-          color: 'white',
-          fontWeight: '500',
-          minWidth: '150px',
-        }}
-      >
-        {isPlaying ? '■ Stop' : '▶ Start'} Sequencer
-      </button>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <button
+          onClick={handleToggle}
+          style={{
+            padding: '0.75rem 1.5rem',
+            fontSize: '1rem',
+            cursor: 'pointer',
+            borderRadius: '4px',
+            border: `1px solid ${isPlaying ? '#c00' : '#0a0'}`,
+            background: isPlaying ? '#c00' : '#0a0',
+            color: 'white',
+            fontWeight: '500',
+            minWidth: '150px',
+          }}
+        >
+          {isPlaying ? '■ Stop' : '▶ Start'} Sequencer
+        </button>
+
+        <button
+          onClick={handleTrigger}
+          style={{
+            padding: '0.75rem 1.5rem',
+            fontSize: '1rem',
+            cursor: 'pointer',
+            borderRadius: '4px',
+            border: '1px solid #06c',
+            background: '#06c',
+            color: 'white',
+            fontWeight: '500',
+          }}
+        >
+          Trigger Note
+        </button>
+      </div>
 
       <p
         style={{

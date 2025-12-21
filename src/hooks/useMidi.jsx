@@ -143,6 +143,31 @@ export function useMidi() {
     return sendMidiMessage(0xFB);
   }, [sendMidiMessage]);
 
+  // Send MIDI note trigger (Note On followed by Note Off)
+  const sendNoteTrigger = useCallback((channel, note, velocity, duration = 20) => {
+    if (!selectedOutput || selectedOutput.state !== 'connected') {
+      console.warn('MIDI output not available');
+      return false;
+    }
+
+    try {
+      // Send Note On (0x90 + channel-1, note, velocity)
+      const noteOnStatus = 0x90 + (channel - 1);
+      selectedOutput.send([noteOnStatus, note, velocity]);
+
+      // Send Note Off after duration
+      setTimeout(() => {
+        const noteOffStatus = 0x80 + (channel - 1);
+        selectedOutput.send([noteOffStatus, note, 0]);
+      }, duration);
+
+      return true;
+    } catch (err) {
+      console.error('Failed to send MIDI note trigger:', err);
+      return false;
+    }
+  }, [selectedOutput]);
+
   return {
     isSupported,
     permissionStatus,
@@ -158,5 +183,6 @@ export function useMidi() {
     sendStart,
     sendStop,
     sendContinue,
+    sendNoteTrigger,
   };
 }

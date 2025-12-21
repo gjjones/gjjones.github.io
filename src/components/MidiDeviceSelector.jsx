@@ -24,9 +24,6 @@ export function MidiDeviceSelector({
         >
           Request MIDI Access
         </button>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#666' }}>
-          Click to grant MIDI device access
-        </p>
       </div>
     );
   }
@@ -72,11 +69,6 @@ export function MidiDeviceSelector({
           </option>
         ))}
       </select>
-      {outputs.length === 0 && (
-        <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#666' }}>
-          No MIDI devices detected. Connect a device and try again.
-        </p>
-      )}
     </div>
   );
 }
