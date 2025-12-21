@@ -1,7 +1,7 @@
 import { useRef, useEffect, memo } from 'react';
 import { theme } from '../theme';
 
-function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes }) {
+function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [] }) {
   const tracks = [
     { label: 'HH', name: 'Hi-Hat' },
     { label: 'SN', name: 'Snare' },
@@ -144,6 +144,31 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
                 const isCurrentStep = stepIndex === currentStep;
                 const isMeasureBoundary = stepIndex === 8;
 
+                // Check if this cell has a hint
+                const hint = highlightedCells.find(
+                  (h) => h.track === trackIndex && h.step === stepIndex
+                );
+                const hasHint = Boolean(hint);
+                const hintType = hint?.type; // 'add' or 'remove'
+
+                // Determine border/outline styling
+                let borderStyle;
+                let outlineStyle;
+
+                if (hasHint) {
+                  // Hint styling takes precedence over current step
+                  const hintColor = hintType === 'add' ? '#22c55e' : '#ef4444'; // green for add, red for remove
+                  outlineStyle = `3px solid ${hintColor}`;
+                } else if (isCurrentStep) {
+                  outlineStyle = `2px solid ${theme.colors.highlight}`;
+                } else {
+                  outlineStyle = 'none';
+                }
+
+                borderStyle = isMeasureBoundary
+                  ? `2px solid ${theme.colors.border.measure}`
+                  : `1px solid ${theme.colors.border.dark}`;
+
                 return (
                   <button
                     key={stepIndex}
@@ -153,15 +178,15 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
                       minWidth: '20px',
                       height: '40px',
                       border: `1px solid ${theme.colors.border.dark}`,
-                      borderLeft: isMeasureBoundary ? `2px solid ${theme.colors.border.measure}` : `1px solid ${theme.colors.border.dark}`,
+                      borderLeft: borderStyle,
                       background: (isActive && !hideNotes) ? theme.colors.primary : theme.colors.bg.grid,
                       cursor: isEditable ? 'pointer' : 'default',
-                      outline: isCurrentStep ? `2px solid ${theme.colors.highlight}` : 'none',
+                      outline: outlineStyle,
                       outlineOffset: '-2px',
                       transition: 'background 0.1s',
                     }}
                     disabled={!isEditable}
-                    title={`${track.label} - Step ${stepIndex + 1}`}
+                    title={`${track.label} - Step ${stepIndex + 1}${hasHint ? ` (${hintType === 'add' ? 'Add note here' : 'Remove this note'})` : ''}`}
                   />
                 );
               })}
@@ -175,13 +200,14 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
 
 // Memoize to prevent unnecessary grid re-renders
 export const SequencerGrid = memo(SequencerGridComponent, (prevProps, nextProps) => {
-  // Only re-render if sequence, currentStep, bpm, isEditable, or hideNotes changes
+  // Only re-render if sequence, currentStep, bpm, isEditable, hideNotes, or highlightedCells changes
   // Playhead animation is handled internally via requestAnimationFrame
   return (
     prevProps.sequence === nextProps.sequence &&
     prevProps.currentStep === nextProps.currentStep &&
     prevProps.bpm === nextProps.bpm &&
     prevProps.isEditable === nextProps.isEditable &&
-    prevProps.hideNotes === nextProps.hideNotes
+    prevProps.hideNotes === nextProps.hideNotes &&
+    prevProps.highlightedCells === nextProps.highlightedCells
   );
 });

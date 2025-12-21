@@ -6,19 +6,28 @@ import { usePlaybackEngine } from './usePlaybackEngine';
  * Combines useSequencerState and usePlaybackEngine while maintaining the same API
  *
  * @param {Function} sendNoteTrigger - MIDI note trigger function from useMidi
+ * @param {String} playbackMode - Which sequence to play: 'user' or 'hidden'
  */
-export function useSequencer(sendNoteTrigger) {
-  // State management (sequences, view, tempo)
+export function useSequencer(sendNoteTrigger, playbackMode = 'user') {
+  // State management (sequences, quiz state, tempo)
   const {
-    testSequence,
+    hiddenSequences,
+    currentHiddenSequence,
     userSequence,
-    currentSequence,
-    activeView,
-    setActiveView,
+    currentQuestionIndex,
+    quizResults,
+    isQuizComplete,
+    hasSubmitted,
+    toggleStep,
+    submitAnswer,
+    goToNextQuestion,
+    restartQuiz,
     bpm,
     setBpm,
-    toggleStep,
   } = useSequencerState();
+
+  // Determine which sequence to play
+  const playbackSequence = playbackMode === 'hidden' ? currentHiddenSequence : userSequence;
 
   // Playback engine (timing, MIDI triggering)
   const {
@@ -28,25 +37,41 @@ export function useSequencer(sendNoteTrigger) {
     stop,
     restart,
   } = usePlaybackEngine({
-    sequence: currentSequence,
+    sequence: playbackSequence,
     bpm,
     sendNoteTrigger,
   });
 
-  // Return combined API (maintains backward compatibility)
+  // Return combined API
   return {
-    testSequence,
+    // Sequences
+    hiddenSequences,
+    currentHiddenSequence,
     userSequence,
-    currentSequence,
-    activeView,
-    setActiveView,
-    bpm,
-    setBpm,
+
+    // Quiz state
+    currentQuestionIndex,
+    quizResults,
+    isQuizComplete,
+    hasSubmitted,
+
+    // Quiz actions
+    submitAnswer,
+    goToNextQuestion,
+    restartQuiz,
+
+    // Sequencer actions
+    toggleStep,
+
+    // Playback state
     isPlaying,
     currentStep,
-    toggleStep,
     start,
     stop,
     restart,
+
+    // Other
+    bpm,
+    setBpm,
   };
 }

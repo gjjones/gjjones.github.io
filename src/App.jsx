@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { theme } from './theme';
 import { useMidi } from './hooks/useMidi';
 import { useSequencer } from './hooks/useSequencer';
 import { SequencerGrid } from './components/SequencerGrid';
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
+import { QuizComplete } from './components/QuizComplete';
 import { BrowserNotSupported } from './components/ErrorStates/BrowserNotSupported';
 import { PermissionRequest } from './components/ErrorStates/PermissionRequest';
+import { getDifferences } from './utils/sequenceComparison';
 
 function App() {
   const {
@@ -19,10 +22,19 @@ function App() {
     sendNoteTrigger,
   } = useMidi();
 
+  // Playback mode: 'user' or 'hidden'
+  const [playbackMode, setPlaybackMode] = useState('hidden');
+
   const {
-    currentSequence,
-    activeView,
-    setActiveView,
+    userSequence,
+    currentHiddenSequence,
+    currentQuestionIndex,
+    quizResults,
+    isQuizComplete,
+    hasSubmitted,
+    submitAnswer,
+    goToNextQuestion,
+    restartQuiz,
     bpm,
     setBpm,
     isPlaying,
@@ -31,14 +43,10 @@ function App() {
     start,
     stop,
     restart,
-  } = useSequencer(sendNoteTrigger);
+  } = useSequencer(sendNoteTrigger, playbackMode);
 
-  const handleViewChange = (newView) => {
-    setActiveView(newView);
-    if (isPlaying) {
-      restart();
-    }
-  };
+  // Hint system state
+  const [showHints, setShowHints] = useState(false);
 
   const handleTogglePlayback = () => {
     if (isPlaying) {
@@ -47,6 +55,35 @@ function App() {
       start();
     }
   };
+
+  const handleToggleHints = () => {
+    setShowHints((prev) => !prev);
+  };
+
+  const handleTogglePlaybackMode = () => {
+    setPlaybackMode((prev) => prev === 'user' ? 'hidden' : 'user');
+    // Restart playback if currently playing to hear the switched sequence
+    if (isPlaying) {
+      restart();
+    }
+  };
+
+  // Reset hints and playback mode when moving to next question
+  const handleNextQuestion = () => {
+    setShowHints(false);
+    setPlaybackMode('hidden');
+    goToNextQuestion();
+    restart(); // Automatically start playing the hidden sequence from the beginning
+  };
+
+  // Calculate differences for hints
+  const differences = getDifferences(userSequence, currentHiddenSequence);
+  const highlightedCells = showHints ? differences : [];
+
+  // Determine which sequence to display in the grid
+  const displayedSequence = playbackMode === 'hidden' ? currentHiddenSequence : userSequence;
+  const isGridEditable = playbackMode === 'user';
+  const hideNotes = playbackMode === 'hidden'; // Hide notes when viewing hidden sequence
 
   // Show error states
   if (!isSupported || error) {
@@ -73,6 +110,8 @@ function App() {
         onSelectOutputDevice={selectOutputDevice}
         bpm={bpm}
         onBpmChange={setBpm}
+        currentQuestionIndex={isQuizComplete ? undefined : currentQuestionIndex}
+        totalQuestions={5}
       />
 
       <main
@@ -85,14 +124,17 @@ function App() {
           overflow: 'auto',
         }}
       >
-        {selectedOutput && selectedOutput.state === 'connected' ? (
+        {isQuizComplete ? (
+          <QuizComplete quizResults={quizResults} onRestart={restartQuiz} />
+        ) : selectedOutput && selectedOutput.state === 'connected' ? (
           <SequencerGrid
-            sequence={currentSequence}
+            sequence={displayedSequence}
             onToggleStep={toggleStep}
             currentStep={currentStep}
             bpm={bpm}
-            isEditable={activeView === 'user'}
-            hideNotes={activeView === 'test'}
+            isEditable={isGridEditable}
+            hideNotes={hideNotes}
+            highlightedCells={highlightedCells}
           />
         ) : (
           <div style={{ textAlign: 'center', color: theme.colors.text.secondary, marginTop: theme.spacing.xl }}>
@@ -101,13 +143,25 @@ function App() {
         )}
       </main>
 
-      <Footer
-        activeView={activeView}
-        onViewChange={handleViewChange}
-        isPlaying={isPlaying}
-        selectedOutput={selectedOutput}
-        onTogglePlayback={handleTogglePlayback}
-      />
+      {!isQuizComplete && (
+        <Footer
+          currentQuestionIndex={currentQuestionIndex}
+          hasSubmitted={hasSubmitted}
+          isQuizComplete={isQuizComplete}
+          quizResults={quizResults}
+          submitAnswer={submitAnswer}
+          goToNextQuestion={handleNextQuestion}
+          restartQuiz={restartQuiz}
+          showHints={showHints}
+          differenceCount={differences.length}
+          onToggleHints={handleToggleHints}
+          playbackMode={playbackMode}
+          onTogglePlaybackMode={handleTogglePlaybackMode}
+          isPlaying={isPlaying}
+          selectedOutput={selectedOutput}
+          onTogglePlayback={handleTogglePlayback}
+        />
+      )}
     </div>
   );
 }

@@ -1,14 +1,28 @@
 import { theme } from '../../theme';
-import { ViewToggle } from './ViewToggle';
+import { QuizControls } from './QuizControls';
 import { PlaybackControls } from './PlaybackControls';
+import { PlaybackModeToggle } from './PlaybackModeToggle';
 
 export function Footer({
-  activeView,
-  onViewChange,
+  currentQuestionIndex,
+  hasSubmitted,
+  isQuizComplete,
+  quizResults,
+  submitAnswer,
+  goToNextQuestion,
+  restartQuiz,
+  showHints,
+  differenceCount,
+  onToggleHints,
+  playbackMode,
+  onTogglePlaybackMode,
   isPlaying,
   selectedOutput,
   onTogglePlayback,
 }) {
+  // Get the current question's result
+  const isCorrect = quizResults[currentQuestionIndex];
+
   return (
     <footer
       style={{
@@ -18,20 +32,36 @@ export function Footer({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        gap: theme.spacing.lg,
       }}
     >
-      <ViewToggle
-        activeView={activeView}
-        onViewChange={onViewChange}
-        isPlaying={isPlaying}
+      {/* Left: Playback mode toggle */}
+      <PlaybackModeToggle
+        playbackMode={playbackMode}
+        onToggle={onTogglePlaybackMode}
+        hasSubmitted={hasSubmitted}
       />
+
+      {/* Center: Playback controls */}
       <PlaybackControls
         isPlaying={isPlaying}
         selectedOutput={selectedOutput}
         onTogglePlayback={onTogglePlayback}
       />
-      {/* Spacer for balance */}
-      <div style={{ width: '200px' }} />
+
+      {/* Right: Quiz controls (Hint + Submit) */}
+      <QuizControls
+        currentQuestionIndex={currentQuestionIndex}
+        hasSubmitted={hasSubmitted}
+        isCorrect={isCorrect}
+        showHints={showHints}
+        differenceCount={differenceCount}
+        playbackMode={playbackMode}
+        onSubmit={submitAnswer}
+        onNext={goToNextQuestion}
+        onToggleHints={onToggleHints}
+        onTogglePlaybackMode={onTogglePlaybackMode}
+      />
     </footer>
   );
 }
