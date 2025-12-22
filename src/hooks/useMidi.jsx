@@ -19,6 +19,24 @@ export function useMidi() {
     }
   }, []);
 
+  // Auto-request MIDI access on mount if permission already granted
+  useEffect(() => {
+    if (!isSupported) return;
+
+    // Try to access MIDI - if permission was previously granted, this succeeds silently
+    navigator.requestMIDIAccess()
+      .then((access) => {
+        setMidiAccess(access);
+        setPermissionStatus('granted');
+        setError(null);
+      })
+      .catch(() => {
+        // Permission not granted yet - user needs to click "Request MIDI Access" button
+        // This is expected on first visit, so we don't set an error
+        setPermissionStatus('prompt');
+      });
+  }, [isSupported]);
+
   // Request MIDI access (must be called from user gesture)
   const requestAccess = useCallback(async () => {
     if (!isSupported) return;

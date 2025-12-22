@@ -99,16 +99,19 @@ function App() {
     setShowHints(false);
     setPlaybackMode('hidden');
     goToNextQuestion();
+    stop(); // Ensure clean stop first
     restart(); // Automatically start playing the hidden sequence from the beginning
   };
 
   // Navigation handlers
   const handleSelectQuiz = (quizId) => {
+    stop(); // Stop any playback before starting new quiz
     setSelectedQuizId(quizId);
     setAppView('quiz');
   };
 
   const handleExitQuiz = () => {
+    stop(); // Stop playback before exiting to menu
     exitQuiz();
     setAppView('menu');
     setSelectedQuizId(null);
@@ -121,6 +124,7 @@ function App() {
   };
 
   const handleRestartQuiz = () => {
+    stop(); // Stop current playback before restarting quiz
     restartQuiz();
     setAppView('quiz');
     setShowHints(false);
@@ -130,9 +134,10 @@ function App() {
   // Transition to quiz complete view when quiz finishes
   useEffect(() => {
     if (isQuizComplete && appView === 'quiz') {
+      stop(); // Stop playback when transitioning to completion screen
       setAppView('quizComplete');
     }
-  }, [isQuizComplete, appView]);
+  }, [isQuizComplete, appView, stop]);
 
   // Calculate differences for hints
   const differences = getDifferences(userSequence, currentPattern.steps);

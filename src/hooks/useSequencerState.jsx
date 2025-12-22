@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { createEmptySequence } from '../utils/patternUtils';
 
 /**
@@ -8,7 +8,7 @@ import { createEmptySequence } from '../utils/patternUtils';
  */
 export function useSequencerState(quizDefinition) {
   // Quiz patterns from definition
-  const [hiddenSequences] = useState(quizDefinition.patterns);
+  const [hiddenSequences, setHiddenSequences] = useState(quizDefinition.patterns);
   const totalQuestions = quizDefinition.totalQuestions;
 
   // Quiz state
@@ -26,6 +26,16 @@ export function useSequencerState(quizDefinition) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const [bpm, setBpm] = useState(120);
+
+  // Reset state when quiz changes
+  useEffect(() => {
+    setHiddenSequences(quizDefinition.patterns);
+    setCurrentQuestionIndex(0);
+    setQuizResults(Array(quizDefinition.totalQuestions).fill(null));
+    setIsQuizComplete(false);
+    setHasSubmitted(false);
+    setUserSequence(createEmptySequence(quizDefinition.patterns[0].totalSteps));
+  }, [quizDefinition.id]);
 
   // Toggle a step in the user sequence
   const toggleStep = useCallback((trackIndex, stepIndex) => {

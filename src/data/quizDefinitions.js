@@ -45,6 +45,52 @@ export const QUIZ_DEFINITIONS = {
     ],
   },
 
+  backbeatFocus: {
+    id: 'backbeatFocus',
+    title: 'Backbeat Basics',
+    description: 'Snare locked on 2 & 4 - practice hi-hat and kick variations',
+    difficulty: 'beginner',
+    totalQuestions: 6,
+    patterns: [
+      // Pattern 1: Kick on 1 & 3, steady eighth hi-hats (classic rock beat)
+      createPattern([
+        [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],                  // HH (eighths)
+        [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],      // SN (on 2 & 4)
+        [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD (on 1 & 3)
+      ], 'eighth', 2),
+      // Pattern 2: Kick on 1, 3, and-of-3, steady eighth hi-hats
+      createPattern([
+        [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],                  // HH (eighths)
+        [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],      // SN (on 2 & 4)
+        [true, false, false, false, true, true, false, false, true, false, false, false, true, true, false, false],        // KD (1, 3, and-of-3)
+      ], 'eighth', 2),
+      // Pattern 3: Kick on 1 and and-of-2, steady eighth hi-hats
+      createPattern([
+        [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],                  // HH (eighths)
+        [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],      // SN (on 2 & 4)
+        [true, false, false, true, false, false, false, false, true, false, false, true, false, false, false, false],      // KD (1, and-of-2)
+      ], 'eighth', 2),
+      // Pattern 4: Kick on 1, and-of-1, 3, quarter note hi-hats
+      createPattern([
+        [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],          // HH (quarters)
+        [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],      // SN (on 2 & 4)
+        [true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, false],        // KD (1, and-of-1, 3)
+      ], 'eighth', 2),
+      // Pattern 5: Kick on 1 & 3, syncopated hi-hats (pattern 1)
+      createPattern([
+        [true, false, true, true, false, true, false, true, true, false, true, true, false, true, false, true],            // HH (syncopated)
+        [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],      // SN (on 2 & 4)
+        [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD (1 & 3)
+      ], 'eighth', 2),
+      // Pattern 6: Kick on 1, and-of-2, 3, syncopated hi-hats (pattern 2)
+      createPattern([
+        [true, true, false, true, false, false, true, true, true, true, false, true, false, false, true, true],            // HH (syncopated variation)
+        [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],      // SN (on 2 & 4)
+        [true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, false],        // KD (1, and-of-2, 3)
+      ], 'eighth', 2),
+    ],
+  },
+
   // Future quizzes can be added here, for example:
   // hiHatPatterns: {
   //   id: 'hiHatPatterns',
