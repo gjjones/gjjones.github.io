@@ -7,8 +7,9 @@ import { usePlaybackEngine } from './usePlaybackEngine';
  *
  * @param {Function} sendNoteTrigger - MIDI note trigger function from useMidi
  * @param {String} playbackMode - Which sequence to play: 'user' or 'hidden'
+ * @param {Object} quizDefinition - Quiz configuration with patterns and metadata
  */
-export function useSequencer(sendNoteTrigger, playbackMode = 'user') {
+export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinition) {
   // State management (sequences, quiz state, tempo)
   const {
     hiddenSequences,
@@ -19,13 +20,15 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user') {
     quizResults,
     isQuizComplete,
     hasSubmitted,
+    totalQuestions,
     toggleStep,
     submitAnswer,
     goToNextQuestion,
     restartQuiz,
+    exitQuiz,
     bpm,
     setBpm,
-  } = useSequencerState();
+  } = useSequencerState(quizDefinition);
 
   // Determine which sequence to play
   const playbackSequence = playbackMode === 'hidden' ? currentHiddenSequence : userSequence;
@@ -58,11 +61,13 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user') {
     quizResults,
     isQuizComplete,
     hasSubmitted,
+    totalQuestions,
 
     // Quiz actions
     submitAnswer,
     goToNextQuestion,
     restartQuiz,
+    exitQuiz,
 
     // Sequencer actions
     toggleStep,

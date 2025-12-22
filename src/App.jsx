@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { theme } from './theme';
 import { useMidi } from './hooks/useMidi';
 import { useSequencer } from './hooks/useSequencer';
@@ -7,9 +7,11 @@ import { ListenMode } from './components/ListenMode';
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
 import { QuizComplete } from './components/QuizComplete';
+import { MainMenu } from './components/MainMenu';
 import { BrowserNotSupported } from './components/ErrorStates/BrowserNotSupported';
 import { PermissionRequest } from './components/ErrorStates/PermissionRequest';
 import { getDifferences } from './utils/sequenceComparison';
+import { getQuizById } from './data/quizDefinitions';
 
 function App() {
   const {
@@ -23,9 +25,17 @@ function App() {
     sendNoteTrigger,
   } = useMidi();
 
+  // Navigation state
+  const [appView, setAppView] = useState('menu'); // 'menu' | 'quiz' | 'quizComplete'
+  const [selectedQuizId, setSelectedQuizId] = useState(null);
+
+  // Get selected quiz definition
+  const selectedQuiz = selectedQuizId ? getQuizById(selectedQuizId) : null;
+
   // Playback mode: 'user' or 'hidden'
   const [playbackMode, setPlaybackMode] = useState('hidden');
 
+  // Initialize sequencer with selected quiz (or default to basicGrooves to maintain hook rules)
   const {
     userSequence,
     currentHiddenSequence,
@@ -34,9 +44,11 @@ function App() {
     quizResults,
     isQuizComplete,
     hasSubmitted,
+    totalQuestions,
     submitAnswer,
     goToNextQuestion,
     restartQuiz,
+    exitQuiz,
     bpm,
     setBpm,
     isPlaying,
@@ -45,7 +57,7 @@ function App() {
     start,
     stop,
     restart,
-  } = useSequencer(sendNoteTrigger, playbackMode);
+  } = useSequencer(sendNoteTrigger, playbackMode, selectedQuiz || getQuizById('basicGrooves'));
 
   // Hint system state
   const [showHints, setShowHints] = useState(false);
@@ -90,6 +102,38 @@ function App() {
     restart(); // Automatically start playing the hidden sequence from the beginning
   };
 
+  // Navigation handlers
+  const handleSelectQuiz = (quizId) => {
+    setSelectedQuizId(quizId);
+    setAppView('quiz');
+  };
+
+  const handleExitQuiz = () => {
+    exitQuiz();
+    setAppView('menu');
+    setSelectedQuizId(null);
+    setPlaybackMode('hidden');
+    setShowHints(false);
+  };
+
+  const handleReturnToMenu = () => {
+    handleExitQuiz();
+  };
+
+  const handleRestartQuiz = () => {
+    restartQuiz();
+    setAppView('quiz');
+    setShowHints(false);
+    setPlaybackMode('hidden');
+  };
+
+  // Transition to quiz complete view when quiz finishes
+  useEffect(() => {
+    if (isQuizComplete && appView === 'quiz') {
+      setAppView('quizComplete');
+    }
+  }, [isQuizComplete, appView]);
+
   // Calculate differences for hints
   const differences = getDifferences(userSequence, currentPattern.steps);
   const highlightedCells = showHints ? differences : [];
@@ -118,15 +162,18 @@ function App() {
         overflow: 'hidden',
       }}
     >
-      <Header
-        outputs={outputs}
-        selectedOutput={selectedOutput}
-        onSelectOutputDevice={selectOutputDevice}
-        bpm={bpm}
-        onBpmChange={setBpm}
-        currentQuestionIndex={isQuizComplete ? undefined : currentQuestionIndex}
-        totalQuestions={5}
-      />
+      {appView !== 'menu' && (
+        <Header
+          outputs={outputs}
+          selectedOutput={selectedOutput}
+          onSelectOutputDevice={selectOutputDevice}
+          bpm={bpm}
+          onBpmChange={setBpm}
+          currentQuestionIndex={appView === 'quiz' ? currentQuestionIndex : undefined}
+          totalQuestions={selectedQuiz?.totalQuestions}
+          onExit={appView === 'quiz' ? handleExitQuiz : undefined}
+        />
+      )}
 
       <main
         style={{
@@ -138,9 +185,12 @@ function App() {
           overflow: 'auto',
         }}
       >
-        {isQuizComplete ? (
-          <QuizComplete quizResults={quizResults} onRestart={restartQuiz} />
-        ) : selectedOutput && selectedOutput.state === 'connected' ? (
+        {/* View routing */}
+        {appView === 'menu' && (
+          <MainMenu onSelectQuiz={handleSelectQuiz} />
+        )}
+
+        {appView === 'quiz' && selectedOutput && selectedOutput.state === 'connected' && (
           <>
             {playbackMode === 'hidden' ? (
               <ListenMode
@@ -165,14 +215,24 @@ function App() {
               />
             )}
           </>
-        ) : (
+        )}
+
+        {appView === 'quiz' && (!selectedOutput || selectedOutput.state !== 'connected') && (
           <div style={{ textAlign: 'center', color: theme.colors.text.secondary, marginTop: theme.spacing.xl }}>
             <p style={{ fontSize: theme.typography.fontSize.lg }}>Select a MIDI device to begin</p>
           </div>
         )}
+
+        {appView === 'quizComplete' && (
+          <QuizComplete
+            quizResults={quizResults}
+            onRestart={handleRestartQuiz}
+            onReturnToMenu={handleReturnToMenu}
+          />
+        )}
       </main>
 
-      {!isQuizComplete && (
+      {appView === 'quiz' && (
         <Footer
           currentQuestionIndex={currentQuestionIndex}
           hasSubmitted={hasSubmitted}

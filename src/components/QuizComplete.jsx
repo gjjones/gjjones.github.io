@@ -1,6 +1,6 @@
 import { theme } from '../theme';
 
-export function QuizComplete({ quizResults, onRestart }) {
+export function QuizComplete({ quizResults, onRestart, onReturnToMenu }) {
   // Calculate score
   const correctCount = quizResults.filter((result) => result === true).length;
   const totalQuestions = quizResults.length;
@@ -111,25 +111,59 @@ export function QuizComplete({ quizResults, onRestart }) {
         {percentage < 40 && 'Keep practicing! Every drummer starts somewhere.'}
       </div>
 
-      {/* Restart button */}
-      <button
-        onClick={onRestart}
+      {/* Button group */}
+      <div
         style={{
-          padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-          fontSize: theme.typography.fontSize.lg,
-          fontWeight: theme.typography.fontWeight.medium,
-          background: theme.colors.primary,
-          color: 'white',
-          border: 'none',
-          borderRadius: theme.borderRadius.base,
-          cursor: 'pointer',
-          transition: 'opacity 0.2s',
+          display: 'flex',
+          gap: theme.spacing.md,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
         }}
-        onMouseEnter={(e) => (e.target.style.opacity = '0.9')}
-        onMouseLeave={(e) => (e.target.style.opacity = '1')}
       >
-        Restart Quiz
-      </button>
+        <button
+          onClick={onRestart}
+          style={{
+            padding: `${theme.spacing.md} ${theme.spacing.xl}`,
+            fontSize: theme.typography.fontSize.lg,
+            fontWeight: theme.typography.fontWeight.medium,
+            background: theme.colors.primary,
+            color: 'white',
+            border: 'none',
+            borderRadius: theme.borderRadius.base,
+            cursor: 'pointer',
+            transition: 'opacity 0.2s',
+          }}
+          onMouseEnter={(e) => (e.target.style.opacity = '0.9')}
+          onMouseLeave={(e) => (e.target.style.opacity = '1')}
+        >
+          Retry Quiz
+        </button>
+
+        <button
+          onClick={onReturnToMenu}
+          style={{
+            padding: `${theme.spacing.md} ${theme.spacing.xl}`,
+            fontSize: theme.typography.fontSize.lg,
+            fontWeight: theme.typography.fontWeight.medium,
+            background: theme.colors.bg.secondary,
+            color: theme.colors.text.primary,
+            border: `2px solid ${theme.colors.border.default}`,
+            borderRadius: theme.borderRadius.base,
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.borderColor = theme.colors.primary;
+            e.target.style.background = theme.colors.bg.primary;
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.borderColor = theme.colors.border.default;
+            e.target.style.background = theme.colors.bg.secondary;
+          }}
+        >
+          Return to Menu
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,44 +1,15 @@
 import { useState, useCallback } from 'react';
-import { createPattern, createEmptySequence } from '../utils/patternUtils';
+import { createEmptySequence } from '../utils/patternUtils';
 
 /**
  * Manages sequencer state (sequences, quiz progression, tempo)
  * Separated from playback timing logic for better organization
+ * @param {object} quizDefinition - Quiz configuration with patterns and metadata
  */
-export function useSequencerState() {
-  // Quiz: 5 hidden sequences with progressive difficulty
-  const [hiddenSequences] = useState([
-    // Question 1 - EASY: Simple four-on-the-floor kick
-    createPattern([
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // SN
-      [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD
-    ], 'eighth', 2),
-    // Question 2 - EASY-MEDIUM: Add snare backbeat (2 and 4)
-    createPattern([
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH
-      [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN
-      [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD
-    ], 'eighth', 2),
-    // Question 3 - MEDIUM: Basic rock beat (kick + snare + hi-hat eighth notes)
-    createPattern([
-      [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],                  // HH
-      [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN
-      [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD
-    ], 'eighth', 2),
-    // Question 4 - MEDIUM-HARD: Syncopated hi-hat pattern
-    createPattern([
-      [true, false, true, false, true, false, true, true, true, false, true, false, true, false, true, true],            // HH (syncopated)
-      [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN
-      [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],    // KD (half-time)
-    ], 'eighth', 2),
-    // Question 5 - HARD: Complex polyrhythm
-    createPattern([
-      [true, false, false, true, false, false, true, false, false, true, false, false, true, false, false, true],        // HH (3:4 polyrhythm)
-      [false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true],      // SN (offbeat)
-      [true, false, false, false, false, true, false, false, true, false, false, false, false, true, false, false],      // KD (irregular)
-    ], 'eighth', 2),
-  ]);
+export function useSequencerState(quizDefinition) {
+  // Quiz patterns from definition
+  const [hiddenSequences] = useState(quizDefinition.patterns);
+  const totalQuestions = quizDefinition.totalQuestions;
 
   // Quiz state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -50,7 +21,7 @@ export function useSequencerState() {
   const [userSequence, setUserSequence] = useState(
     createEmptySequence(currentPattern.totalSteps)
   );
-  const [quizResults, setQuizResults] = useState(Array(5).fill(null)); // null = not attempted, true = correct, false = incorrect
+  const [quizResults, setQuizResults] = useState(Array(totalQuestions).fill(null)); // null = not attempted, true = correct, false = incorrect
   const [isQuizComplete, setIsQuizComplete] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -82,7 +53,7 @@ export function useSequencerState() {
 
   // Move to the next question
   const goToNextQuestion = useCallback(() => {
-    if (currentQuestionIndex < 4) {
+    if (currentQuestionIndex < totalQuestions - 1) {
       const nextIndex = currentQuestionIndex + 1;
       const nextPattern = hiddenSequences[nextIndex];
       setCurrentQuestionIndex(nextIndex);
@@ -92,16 +63,25 @@ export function useSequencerState() {
       // Quiz is complete
       setIsQuizComplete(true);
     }
-  }, [currentQuestionIndex, hiddenSequences]);
+  }, [currentQuestionIndex, totalQuestions, hiddenSequences]);
 
   // Restart the entire quiz
   const restartQuiz = useCallback(() => {
     setCurrentQuestionIndex(0);
-    setQuizResults(Array(5).fill(null));
+    setQuizResults(Array(totalQuestions).fill(null));
     setIsQuizComplete(false);
     setHasSubmitted(false);
     setUserSequence(createEmptySequence(hiddenSequences[0].totalSteps));
-  }, [hiddenSequences]);
+  }, [totalQuestions, hiddenSequences]);
+
+  // Exit quiz and return to menu (cleans up all state)
+  const exitQuiz = useCallback(() => {
+    setCurrentQuestionIndex(0);
+    setQuizResults(Array(totalQuestions).fill(null));
+    setIsQuizComplete(false);
+    setHasSubmitted(false);
+    setUserSequence(createEmptySequence(hiddenSequences[0].totalSteps));
+  }, [totalQuestions, hiddenSequences]);
 
   // Get the current hidden sequence for the current question
   const currentHiddenSequence = currentPattern.steps;
@@ -118,12 +98,14 @@ export function useSequencerState() {
     quizResults,
     isQuizComplete,
     hasSubmitted,
+    totalQuestions,
 
     // Actions
     toggleStep,
     submitAnswer,
     goToNextQuestion,
     restartQuiz,
+    exitQuiz,
 
     // Other state
     bpm,
