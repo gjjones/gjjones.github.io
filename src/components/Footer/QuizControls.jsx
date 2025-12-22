@@ -20,8 +20,8 @@ export function QuizControls({
         gap: theme.spacing.md,
       }}
     >
-      {/* Hint button (only before submit) */}
-      {!hasSubmitted && onToggleHints && (
+      {/* Hint button - show before submit OR after submit if incorrect */}
+      {(!hasSubmitted || (hasSubmitted && isCorrect === false)) && onToggleHints && (
         <button
           onClick={onToggleHints}
           style={{
@@ -45,6 +45,27 @@ export function QuizControls({
         >
           {showHints ? 'Hide Hints' : 'Hints'}
         </button>
+      )}
+
+      {/* Feedback message shown after submission */}
+      {hasSubmitted && isCorrect !== null && (
+        <div
+          style={{
+            padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+            fontSize: theme.typography.fontSize.lg,
+            fontWeight: theme.typography.fontWeight.semibold,
+            color: isCorrect ? theme.colors.success : theme.colors.danger,
+            display: 'flex',
+            alignItems: 'center',
+            gap: theme.spacing.sm,
+            transition: 'opacity 0.3s ease-in',
+          }}
+        >
+          <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>
+            {isCorrect ? '✓' : '✗'}
+          </span>
+          <span>{isCorrect ? 'Correct!' : 'Incorrect'}</span>
+        </div>
       )}
 
       {/* Submit or Next button */}

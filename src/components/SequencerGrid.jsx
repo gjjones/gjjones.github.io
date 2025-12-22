@@ -1,21 +1,22 @@
 import { useRef, useEffect, memo } from 'react';
 import { theme } from '../theme';
+import { BeatGrid } from './BeatGrid';
 
-function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [] }) {
+function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [], totalSteps, stepsPerMeasure, measures }) {
   const tracks = [
     { label: 'HH', name: 'Hi-Hat' },
     { label: 'SN', name: 'Snare' },
     { label: 'KD', name: 'Kick' },
   ];
-
-  const steps = 16; // 2 measures × 8 eighth notes
   const prevStepRef = useRef(currentStep);
   const playheadRef = useRef(null);
   const stepStartTimeRef = useRef(Date.now());
   const animationFrameRef = useRef(null);
 
-  // Calculate step duration in milliseconds (eighth notes)
-  const stepDuration = (60 / bpm) * 1000 / 2;
+  // Calculate step duration based on measures and steps
+  // This matches the playback engine's calculation
+  const division = totalSteps / measures / 4; // 4 quarter notes per measure
+  const stepDuration = (60 / bpm) * 1000 / division;
 
   const handleCellClick = (trackIndex, stepIndex) => {
     if (isEditable && onToggleStep) {
@@ -48,7 +49,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
 
       const elapsed = Date.now() - stepStartTimeRef.current;
       const progress = Math.min(elapsed / stepDuration, 1);
-      const playheadPosition = ((currentStep + progress) / 16) * 100;
+      const playheadPosition = ((currentStep + progress) / totalSteps) * 100;
 
       const gridWidth = `calc(100% - 60px)`;
       const position = `calc(60px + ${gridWidth} * ${playheadPosition / 100})`;
@@ -71,25 +72,12 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
 
   return (
     <div style={{ width: '100%', maxWidth: '100%', position: 'relative' }}>
-      {/* Measure markers */}
-      <div style={{ display: 'flex', marginBottom: theme.spacing.xs, paddingLeft: '60px' }}>
-        {[1, 2].map((measure) => {
-          return (
-            <div
-              key={measure}
-              style={{
-                flex: 1,
-                textAlign: 'center',
-                fontSize: theme.typography.fontSize.xs,
-                color: theme.colors.text.secondary,
-                borderLeft: measure === 1 ? 'none' : `2px solid ${theme.colors.border.measure}`,
-              }}
-            >
-              {measure}
-            </div>
-          );
-        })}
-      </div>
+      {/* Beat grid (replaces measure markers) */}
+      <BeatGrid
+        measures={measures}
+        stepsPerMeasure={stepsPerMeasure}
+        currentStep={currentStep}
+      />
 
       {/* Playhead bar */}
       {currentStep >= 0 && (
@@ -139,10 +127,10 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
 
             {/* Steps */}
             <div style={{ display: 'flex', gap: '2px', flex: 1 }}>
-              {Array.from({ length: steps }).map((_, stepIndex) => {
+              {Array.from({ length: totalSteps }).map((_, stepIndex) => {
                 const isActive = sequence[trackIndex][stepIndex];
                 const isCurrentStep = stepIndex === currentStep;
-                const isMeasureBoundary = stepIndex === 8;
+                const isMeasureBoundary = stepIndex > 0 && stepIndex % stepsPerMeasure === 0;
 
                 // Check if this cell has a hint
                 const hint = highlightedCells.find(
@@ -200,7 +188,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
 
 // Memoize to prevent unnecessary grid re-renders
 export const SequencerGrid = memo(SequencerGridComponent, (prevProps, nextProps) => {
-  // Only re-render if sequence, currentStep, bpm, isEditable, hideNotes, or highlightedCells changes
+  // Only re-render if sequence, currentStep, bpm, isEditable, hideNotes, highlightedCells, or pattern metadata changes
   // Playhead animation is handled internally via requestAnimationFrame
   return (
     prevProps.sequence === nextProps.sequence &&
@@ -208,6 +196,9 @@ export const SequencerGrid = memo(SequencerGridComponent, (prevProps, nextProps)
     prevProps.bpm === nextProps.bpm &&
     prevProps.isEditable === nextProps.isEditable &&
     prevProps.hideNotes === nextProps.hideNotes &&
-    prevProps.highlightedCells === nextProps.highlightedCells
+    prevProps.highlightedCells === nextProps.highlightedCells &&
+    prevProps.totalSteps === nextProps.totalSteps &&
+    prevProps.stepsPerMeasure === nextProps.stepsPerMeasure &&
+    prevProps.measures === nextProps.measures
   );
 });

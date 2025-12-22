@@ -11,7 +11,9 @@
       "WebFetch(domain:caniuse.com)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(tasklist:*)",
+      "Bash(taskkill //F //PID 15484)"
     ],
     "deny": [],
     "ask": []

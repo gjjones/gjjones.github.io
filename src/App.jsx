@@ -3,6 +3,7 @@ import { theme } from './theme';
 import { useMidi } from './hooks/useMidi';
 import { useSequencer } from './hooks/useSequencer';
 import { SequencerGrid } from './components/SequencerGrid';
+import { ListenMode } from './components/ListenMode';
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
 import { QuizComplete } from './components/QuizComplete';
@@ -28,6 +29,7 @@ function App() {
   const {
     userSequence,
     currentHiddenSequence,
+    currentPattern,
     currentQuestionIndex,
     quizResults,
     isQuizComplete,
@@ -68,6 +70,18 @@ function App() {
     }
   };
 
+  const handleSubmitAnswer = () => {
+    submitAnswer(); // Call original hook function
+
+    // Auto-show hints if answer is incorrect
+    const differences = getDifferences(userSequence, currentPattern.steps);
+    const isCorrect = differences.length === 0;
+
+    if (!isCorrect) {
+      setShowHints(true);
+    }
+  };
+
   // Reset hints and playback mode when moving to next question
   const handleNextQuestion = () => {
     setShowHints(false);
@@ -77,11 +91,11 @@ function App() {
   };
 
   // Calculate differences for hints
-  const differences = getDifferences(userSequence, currentHiddenSequence);
+  const differences = getDifferences(userSequence, currentPattern.steps);
   const highlightedCells = showHints ? differences : [];
 
   // Determine which sequence to display in the grid
-  const displayedSequence = playbackMode === 'hidden' ? currentHiddenSequence : userSequence;
+  const displayedSequence = playbackMode === 'hidden' ? currentPattern.steps : userSequence;
   const isGridEditable = playbackMode === 'user';
   const hideNotes = playbackMode === 'hidden'; // Hide notes when viewing hidden sequence
 
@@ -127,15 +141,30 @@ function App() {
         {isQuizComplete ? (
           <QuizComplete quizResults={quizResults} onRestart={restartQuiz} />
         ) : selectedOutput && selectedOutput.state === 'connected' ? (
-          <SequencerGrid
-            sequence={displayedSequence}
-            onToggleStep={toggleStep}
-            currentStep={currentStep}
-            bpm={bpm}
-            isEditable={isGridEditable}
-            hideNotes={hideNotes}
-            highlightedCells={highlightedCells}
-          />
+          <>
+            {playbackMode === 'hidden' ? (
+              <ListenMode
+                currentStep={currentStep}
+                totalSteps={currentPattern.totalSteps}
+                stepsPerMeasure={currentPattern.stepsPerMeasure}
+                measures={currentPattern.measures}
+                bpm={bpm}
+              />
+            ) : (
+              <SequencerGrid
+                sequence={displayedSequence}
+                onToggleStep={toggleStep}
+                currentStep={currentStep}
+                bpm={bpm}
+                isEditable={isGridEditable}
+                hideNotes={hideNotes}
+                highlightedCells={highlightedCells}
+                totalSteps={currentPattern.totalSteps}
+                stepsPerMeasure={currentPattern.stepsPerMeasure}
+                measures={currentPattern.measures}
+              />
+            )}
+          </>
         ) : (
           <div style={{ textAlign: 'center', color: theme.colors.text.secondary, marginTop: theme.spacing.xl }}>
             <p style={{ fontSize: theme.typography.fontSize.lg }}>Select a MIDI device to begin</p>
@@ -149,7 +178,7 @@ function App() {
           hasSubmitted={hasSubmitted}
           isQuizComplete={isQuizComplete}
           quizResults={quizResults}
-          submitAnswer={submitAnswer}
+          submitAnswer={handleSubmitAnswer}
           goToNextQuestion={handleNextQuestion}
           restartQuiz={restartQuiz}
           showHints={showHints}

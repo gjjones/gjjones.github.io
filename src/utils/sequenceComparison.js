@@ -24,10 +24,27 @@ export function compareSequences(userSeq, hiddenSeq) {
 export function getDifferences(userSeq, hiddenSeq) {
   const differences = [];
 
+  // Validation: Ensure both sequences have same number of tracks
+  if (userSeq.length !== hiddenSeq.length) {
+    console.error('Sequence track count mismatch:', userSeq.length, 'vs', hiddenSeq.length);
+    return differences;
+  }
+
   for (let trackIdx = 0; trackIdx < userSeq.length; trackIdx++) {
-    for (let stepIdx = 0; stepIdx < userSeq[trackIdx].length; stepIdx++) {
-      const userHasNote = userSeq[trackIdx][stepIdx];
-      const hiddenHasNote = hiddenSeq[trackIdx][stepIdx];
+    const userTrack = userSeq[trackIdx];
+    const hiddenTrack = hiddenSeq[trackIdx];
+
+    // Validation: Ensure both tracks have same length
+    if (userTrack.length !== hiddenTrack.length) {
+      console.error(
+        `Track ${trackIdx} length mismatch: user=${userTrack.length}, hidden=${hiddenTrack.length}`
+      );
+      continue;
+    }
+
+    for (let stepIdx = 0; stepIdx < userTrack.length; stepIdx++) {
+      const userHasNote = userTrack[stepIdx];
+      const hiddenHasNote = hiddenTrack[stepIdx];
 
       if (userHasNote !== hiddenHasNote) {
         differences.push({

@@ -14,6 +14,7 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user') {
     hiddenSequences,
     currentHiddenSequence,
     userSequence,
+    currentPattern,
     currentQuestionIndex,
     quizResults,
     isQuizComplete,
@@ -40,6 +41,8 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user') {
     sequence: playbackSequence,
     bpm,
     sendNoteTrigger,
+    division: currentPattern.division,
+    totalSteps: currentPattern.totalSteps,
   });
 
   // Return combined API
@@ -48,6 +51,7 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user') {
     hiddenSequences,
     currentHiddenSequence,
     userSequence,
+    currentPattern,
 
     // Quiz state
     currentQuestionIndex,

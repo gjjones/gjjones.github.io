@@ -8,8 +8,10 @@ import { useState, useCallback, useEffect, useRef } from 'react';
  * @param {Array} params.sequence - Current sequence to play
  * @param {number} params.bpm - Beats per minute
  * @param {Function} params.sendNoteTrigger - MIDI note trigger function
+ * @param {number} params.division - Note division (1=quarter, 2=eighth, 4=sixteenth)
+ * @param {number} params.totalSteps - Total number of steps in the pattern
  */
-export function usePlaybackEngine({ sequence, bpm, sendNoteTrigger }) {
+export function usePlaybackEngine({ sequence, bpm, sendNoteTrigger, division, totalSteps }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
 
@@ -17,8 +19,9 @@ export function usePlaybackEngine({ sequence, bpm, sendNoteTrigger }) {
   const sendNoteTriggerRef = useRef(sendNoteTrigger);
   const sequenceRef = useRef(sequence);
 
-  // Calculate step duration in milliseconds (eighth notes)
-  const stepDuration = (60 / bpm) * 1000 / 2;
+  // Calculate step duration in milliseconds based on note division
+  // division: 1 = quarter notes, 2 = eighth notes, 4 = sixteenth notes
+  const stepDuration = (60 / bpm) * 1000 / division;
 
   // MIDI note mappings (Channel 10 - drums)
   const NOTE_MAP = {
@@ -73,10 +76,10 @@ export function usePlaybackEngine({ sequence, bpm, sendNoteTrigger }) {
     // Set up interval for step progression
     playbackTimerRef.current = setInterval(() => {
       setCurrentStep((prev) => {
-        const nextStep = (prev + 1) % 16;
+        const nextStep = (prev + 1) % totalSteps;
 
         // Trigger notes for the new step using current ref values
-        if (nextStep >= 0 && nextStep < 16) {
+        if (nextStep >= 0 && nextStep < totalSteps) {
           const currentSequence = sequenceRef.current;
           const triggerFn = sendNoteTriggerRef.current;
           currentSequence.forEach((track, trackIndex) => {
