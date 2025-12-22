@@ -1,9 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.jsx';
+import { RouterProvider } from '@tanstack/react-router';
+import { MidiProvider } from './contexts/MidiContext';
+import { router } from './router';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <MidiProvider>
+      <RouterProvider router={router} />
+    </MidiProvider>
   </StrictMode>
 );

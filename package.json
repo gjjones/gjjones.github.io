@@ -9,12 +9,13 @@
     "preview": "rspack serve --mode production"
   },
   "dependencies": {
+    "@tanstack/react-router": "^1.142.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@rspack/core": "^1.1.7",
     "@rspack/cli": "^1.1.7",
+    "@rspack/core": "^1.1.7",
     "@rspack/plugin-react-refresh": "^1.0.0"
   }
 }

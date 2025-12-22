@@ -13,7 +13,8 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(tasklist:*)",
-      "Bash(taskkill //F //PID 15484)"
+      "Bash(taskkill //F //PID 15484)",
+      "Bash(dir \"C:\\\\Users\\\\gjjon\\\\src\\\\gjjones.github.io\\\\src\\\\components\")"
     ],
     "deny": [],
     "ask": []
