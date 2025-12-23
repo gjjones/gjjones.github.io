@@ -86,11 +86,15 @@ export function QuizRoute() {
       }
       return newMode;
     });
-    // Restart playback if currently playing to hear the switched sequence
+    // Restart happens in useEffect below to ensure sequence updates first
+  };
+
+  // Restart playback when mode changes (after sequence has updated)
+  useEffect(() => {
     if (sequencer.isPlaying) {
       sequencer.restart();
     }
-  };
+  }, [playbackMode]); // Restart when playbackMode changes
 
   const handleSubmitAnswer = () => {
     sequencer.submitAnswer();
