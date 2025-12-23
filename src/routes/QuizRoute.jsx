@@ -47,7 +47,8 @@ export function QuizRoute() {
     return () => {
       sequencer.stop();
     };
-  }, [sequencer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only cleanup on unmount, not when sequencer reference changes
 
   // Transition to completion state when quiz finishes (but stay on same route)
   useEffect(() => {
@@ -214,6 +215,7 @@ export function QuizRoute() {
                 stepsPerMeasure={sequencer.currentPattern.stepsPerMeasure}
                 measures={sequencer.currentPattern.measures}
                 bpm={sequencer.bpm}
+                getMusicalPosition={sequencer.getMusicalPosition}
               />
             ) : (
               <SequencerGrid
@@ -227,6 +229,7 @@ export function QuizRoute() {
                 totalSteps={sequencer.currentPattern.totalSteps}
                 stepsPerMeasure={sequencer.currentPattern.stepsPerMeasure}
                 measures={sequencer.currentPattern.measures}
+                getMusicalPosition={sequencer.getMusicalPosition}
               />
             )}
           </>

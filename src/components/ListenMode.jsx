@@ -7,22 +7,14 @@ export function ListenMode({
   totalSteps,
   stepsPerMeasure,
   measures,
-  bpm
+  bpm,
+  getMusicalPosition
 }) {
   const playheadRef = useRef(null);
-  const stepStartTimeRef = useRef(Date.now());
   const animationFrameRef = useRef(null);
 
-  // Calculate step duration based on measures and steps
-  const division = totalSteps / measures / 4; // 4 quarter notes per measure
-  const stepDuration = (60 / bpm) * 1000 / division;
-
-  // Reset step start time when currentStep changes
-  useEffect(() => {
-    stepStartTimeRef.current = Date.now();
-  }, [currentStep]);
-
   // Smooth playhead animation using requestAnimationFrame
+  // Query scheduler for precise musical position
   useEffect(() => {
     if (currentStep < 0) {
       // Not playing, cancel animation
@@ -34,11 +26,11 @@ export function ListenMode({
     }
 
     const updatePlayhead = () => {
-      if (!playheadRef.current) return;
+      if (!playheadRef.current || !getMusicalPosition) return;
 
-      const elapsed = Date.now() - stepStartTimeRef.current;
-      const progress = Math.min(elapsed / stepDuration, 1);
-      const playheadPosition = ((currentStep + progress) / totalSteps) * 100;
+      // Query scheduler for current musical position
+      const { currentStep: musicalStep, progress } = getMusicalPosition();
+      const playheadPosition = ((musicalStep + progress) / totalSteps) * 100;
 
       const gridWidth = `calc(100% - 60px)`;
       const position = `calc(60px + ${gridWidth} * ${playheadPosition / 100})`;
@@ -57,7 +49,7 @@ export function ListenMode({
         animationFrameRef.current = null;
       }
     };
-  }, [currentStep, stepDuration, totalSteps]);
+  }, [currentStep, totalSteps, getMusicalPosition]);
 
   return (
     <div style={{ width: '100%', maxWidth: '100%', position: 'relative' }}>

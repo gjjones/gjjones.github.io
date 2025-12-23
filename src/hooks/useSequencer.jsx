@@ -40,10 +40,11 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinit
     start,
     stop,
     restart,
+    getMusicalPosition,
   } = usePlaybackEngine({
     sequence: playbackSequence,
     bpm,
-    sendNoteTrigger,
+    scheduleNoteFn: sendNoteTrigger,
     division: currentPattern.division,
     totalSteps: currentPattern.totalSteps,
   });
@@ -78,6 +79,7 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinit
     start,
     stop,
     restart,
+    getMusicalPosition,
 
     // Other
     bpm,

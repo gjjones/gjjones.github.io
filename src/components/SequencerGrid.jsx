@@ -2,7 +2,7 @@ import { useRef, useEffect, memo } from 'react';
 import { theme } from '../theme';
 import { BeatGrid } from './BeatGrid';
 
-function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [], totalSteps, stepsPerMeasure, measures }) {
+function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [], totalSteps, stepsPerMeasure, measures, getMusicalPosition }) {
   const tracks = [
     { label: 'HH', name: 'Hi-Hat' },
     { label: 'SN', name: 'Snare' },
@@ -10,13 +10,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
   ];
   const prevStepRef = useRef(currentStep);
   const playheadRef = useRef(null);
-  const stepStartTimeRef = useRef(Date.now());
   const animationFrameRef = useRef(null);
-
-  // Calculate step duration based on measures and steps
-  // This matches the playback engine's calculation
-  const division = totalSteps / measures / 4; // 4 quarter notes per measure
-  const stepDuration = (60 / bpm) * 1000 / division;
 
   const handleCellClick = (trackIndex, stepIndex) => {
     if (isEditable && onToggleStep) {
@@ -27,13 +21,13 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
   // Detect if we wrapped around
   const isWrapping = prevStepRef.current > currentStep && currentStep === 0;
 
-  // Reset step start time when currentStep changes
+  // Track previous step
   useEffect(() => {
-    stepStartTimeRef.current = Date.now();
     prevStepRef.current = currentStep;
   }, [currentStep]);
 
   // Smooth playhead animation using requestAnimationFrame
+  // Query scheduler for precise musical position
   useEffect(() => {
     if (currentStep < 0) {
       // Not playing, cancel animation
@@ -45,11 +39,11 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
     }
 
     const updatePlayhead = () => {
-      if (!playheadRef.current) return;
+      if (!playheadRef.current || !getMusicalPosition) return;
 
-      const elapsed = Date.now() - stepStartTimeRef.current;
-      const progress = Math.min(elapsed / stepDuration, 1);
-      const playheadPosition = ((currentStep + progress) / totalSteps) * 100;
+      // Query scheduler for current musical position
+      const { currentStep: musicalStep, progress } = getMusicalPosition();
+      const playheadPosition = ((musicalStep + progress) / totalSteps) * 100;
 
       const gridWidth = `calc(100% - 60px)`;
       const position = `calc(60px + ${gridWidth} * ${playheadPosition / 100})`;
@@ -68,7 +62,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
         animationFrameRef.current = null;
       }
     };
-  }, [currentStep, stepDuration]);
+  }, [currentStep, totalSteps, getMusicalPosition]);
 
   return (
     <div style={{ width: '100%', maxWidth: '100%', position: 'relative' }}>
@@ -199,6 +193,7 @@ export const SequencerGrid = memo(SequencerGridComponent, (prevProps, nextProps)
     prevProps.highlightedCells === nextProps.highlightedCells &&
     prevProps.totalSteps === nextProps.totalSteps &&
     prevProps.stepsPerMeasure === nextProps.stepsPerMeasure &&
-    prevProps.measures === nextProps.measures
+    prevProps.measures === nextProps.measures &&
+    prevProps.getMusicalPosition === nextProps.getMusicalPosition
   );
 });

@@ -1,106 +1,203 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useTimingClock } from './useTimingClock';
+import { useSchedulerEngine } from './useSchedulerEngine';
+import { useMidiPlayer } from './useMidiPlayer';
+
+// MIDI note mappings (Channel 10 - drums) - defined outside component to prevent recreation
+const NOTE_MAP = {
+  0: 42, // HH - Hi-Hat
+  1: 38, // SN - Snare
+  2: 36, // KD - Kick
+};
 
 /**
- * Manages playback timing and MIDI note triggering
- * Separated from sequencer state for better organization
+ * Manages playback timing and MIDI note triggering using game loop patterns
+ *
+ * Uses three-layer architecture:
+ * - useTimingClock: Web Audio clock for high-precision timing
+ * - useSchedulerEngine: Fixed timestep scheduler with lookahead
+ * - useMidiPlayer: Timestamp-based MIDI event player
  *
  * @param {Object} params
  * @param {Array} params.sequence - Current sequence to play
  * @param {number} params.bpm - Beats per minute
- * @param {Function} params.sendNoteTrigger - MIDI note trigger function
+ * @param {Function} params.scheduleNoteFn - Function to schedule MIDI notes
  * @param {number} params.division - Note division (1=quarter, 2=eighth, 4=sixteenth)
  * @param {number} params.totalSteps - Total number of steps in the pattern
  */
-export function usePlaybackEngine({ sequence, bpm, sendNoteTrigger, division, totalSteps }) {
+export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, division, totalSteps }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
 
-  const playbackTimerRef = useRef(null);
-  const sendNoteTriggerRef = useRef(sendNoteTrigger);
+  const scheduleNoteFnRef = useRef(scheduleNoteFn);
   const sequenceRef = useRef(sequence);
 
-  // Calculate step duration in milliseconds based on note division
-  // division: 1 = quarter notes, 2 = eighth notes, 4 = sixteenth notes
-  const stepDuration = (60 / bpm) * 1000 / division;
+  // Layer 1: High-precision timing clock
+  const timingClock = useTimingClock({ bpm, division, totalSteps });
 
-  // MIDI note mappings (Channel 10 - drums)
-  const NOTE_MAP = {
-    0: 42, // HH - Hi-Hat
-    1: 38, // SN - Snare
-    2: 36, // KD - Kick
-  };
+  // Store getCurrentTime in ref to avoid recreating midiPlayer
+  const getCurrentTimeRef = useRef(timingClock.getCurrentTime);
+  useEffect(() => {
+    getCurrentTimeRef.current = timingClock.getCurrentTime;
+  }, [timingClock]);
+
+  // Layer 3: MIDI player with event queue (memoized to prevent recreation)
+  const midiPlayer = useMemo(() => {
+    // Closure-scoped state (not global) - lives as long as this memoized object
+    let eventQueue = [];
+    let isActive = false;
+    let animationFrameId = null;
+
+    return {
+      scheduleNote: (timestamp, channel, note, velocity, duration) => {
+        const event = { timestamp, channel, note, velocity, duration };
+        eventQueue.push(event);
+      },
+      start: () => {
+        if (isActive) return;
+
+        isActive = true;
+        eventQueue = [];
+
+        const playerTick = () => {
+          if (!isActive) return;
+
+          const now = getCurrentTimeRef.current();
+
+          // Fire ready events
+          const readyEvents = eventQueue.filter(e => e.timestamp <= now);
+          readyEvents.forEach(event => {
+            if (scheduleNoteFnRef.current) {
+              scheduleNoteFnRef.current(event.channel, event.note, event.velocity, event.duration);
+            }
+          });
+
+          // Remove fired events
+          eventQueue = eventQueue.filter(e => e.timestamp > now);
+
+          if (isActive) {
+            animationFrameId = requestAnimationFrame(playerTick);
+          }
+        };
+
+        animationFrameId = requestAnimationFrame(playerTick);
+      },
+      stop: () => {
+        isActive = false;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      },
+      clearScheduledEvents: () => {
+        eventQueue = [];
+      },
+    };
+  }, []); // Empty deps - midiPlayer created once, uses getCurrentTimeRef.current
+
+  // Callback when scheduler wants to schedule a step
+  const handleScheduleStep = useCallback((step, timestamp) => {
+    const currentSequence = sequenceRef.current;
+
+    // Schedule all active notes in this step
+    currentSequence.forEach((track, trackIndex) => {
+      if (track[step]) {
+        const note = NOTE_MAP[trackIndex];
+        midiPlayer.scheduleNote(timestamp, 10, note, 100, 20);
+      }
+    });
+
+    // Update visual current step
+    setCurrentStep(step);
+  }, [midiPlayer]);
+
+  // Layer 2: Scheduler engine with fixed timestep
+  const scheduler = useSchedulerEngine({
+    getCurrentTime: timingClock.getCurrentTime,
+    getStepDuration: timingClock.getStepDuration,
+    totalSteps,
+    onScheduleStep: handleScheduleStep,
+    updateStepTracking: timingClock.updateStepTracking,
+  });
 
   // Keep refs in sync
   useEffect(() => {
-    sendNoteTriggerRef.current = sendNoteTrigger;
-  }, [sendNoteTrigger]);
+    scheduleNoteFnRef.current = scheduleNoteFn;
+  }, [scheduleNoteFn]);
 
   useEffect(() => {
     sequenceRef.current = sequence;
   }, [sequence]);
 
   // Start playback
-  const start = useCallback(() => {
-    if (isPlaying) return;
+  const start = useCallback(async () => {
+    if (isPlaying) {
+      return;
+    }
+
+    // CRITICAL: Resume AudioContext on user gesture (click)
+    if (timingClock.audioContext && timingClock.audioContext.state === 'suspended') {
+      await timingClock.audioContext.resume();
+    }
+
     setIsPlaying(true);
     setCurrentStep(-1);
-  }, [isPlaying]);
+
+    // Start all three layers
+    timingClock.start();
+    timingClock.setPlaying(true);
+
+    midiPlayer.clearScheduledEvents();
+    midiPlayer.start();
+
+    scheduler.start();
+  }, [isPlaying, timingClock, midiPlayer, scheduler]);
 
   // Stop playback
   const stop = useCallback(() => {
     setIsPlaying(false);
     setCurrentStep(-1);
-    if (playbackTimerRef.current) {
-      clearInterval(playbackTimerRef.current);
-      playbackTimerRef.current = null;
-    }
-  }, []);
 
-  // Restart playback from beginning (without stopping)
+    // Stop all three layers
+    scheduler.stop();
+    midiPlayer.stop();
+    midiPlayer.clearScheduledEvents();
+    timingClock.stop();
+    timingClock.setPlaying(false);
+  }, [scheduler, midiPlayer, timingClock]);
+
+  // Restart playback from beginning
   const restart = useCallback(() => {
-    if (isPlaying) {
-      setCurrentStep(-1);
+    const wasPlaying = isPlaying;
+
+    // Stop everything
+    scheduler.stop();
+    midiPlayer.stop();
+    midiPlayer.clearScheduledEvents();
+    timingClock.stop();
+    timingClock.setPlaying(false);
+
+    // Reset timing
+    setCurrentStep(-1);
+    timingClock.reset();
+
+    // Restart if we were playing
+    if (wasPlaying) {
+      setIsPlaying(true);
+      timingClock.start();
+      timingClock.setPlaying(true);
+      midiPlayer.start();
+      scheduler.start();
     }
-  }, [isPlaying]);
+  }, [isPlaying, scheduler, midiPlayer, timingClock]);
 
-  // Playback engine
-  useEffect(() => {
-    if (!isPlaying) {
-      if (playbackTimerRef.current) {
-        clearInterval(playbackTimerRef.current);
-        playbackTimerRef.current = null;
-      }
-      return;
-    }
-
-    // Set up interval for step progression
-    playbackTimerRef.current = setInterval(() => {
-      setCurrentStep((prev) => {
-        const nextStep = (prev + 1) % totalSteps;
-
-        // Trigger notes for the new step using current ref values
-        if (nextStep >= 0 && nextStep < totalSteps) {
-          const currentSequence = sequenceRef.current;
-          const triggerFn = sendNoteTriggerRef.current;
-          currentSequence.forEach((track, trackIndex) => {
-            if (track[nextStep] && triggerFn) {
-              const note = NOTE_MAP[trackIndex];
-              triggerFn(10, note, 100, 20);
-            }
-          });
-        }
-
-        return nextStep;
-      });
-    }, stepDuration);
-
-    return () => {
-      if (playbackTimerRef.current) {
-        clearInterval(playbackTimerRef.current);
-        playbackTimerRef.current = null;
-      }
-    };
-  }, [isPlaying, stepDuration]);
+  /**
+   * Get musical position for visual components
+   * @returns {{currentStep: number, progress: number}}
+   */
+  const getMusicalPosition = useCallback(() => {
+    return timingClock.getMusicalPosition();
+  }, [timingClock]);
 
   return {
     isPlaying,
@@ -108,5 +205,6 @@ export function usePlaybackEngine({ sequence, bpm, sendNoteTrigger, division, to
     start,
     stop,
     restart,
+    getMusicalPosition,
   };
 }
