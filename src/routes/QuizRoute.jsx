@@ -70,7 +70,14 @@ export function QuizRoute() {
   };
 
   const handleTogglePlaybackMode = () => {
-    setPlaybackMode((prev) => prev === 'user' ? 'hidden' : 'user');
+    setPlaybackMode((prev) => {
+      const newMode = prev === 'user' ? 'hidden' : 'user';
+      // Auto-hide hints when viewing 'Hidden' (they're redundant when seeing the answer)
+      if (newMode === 'hidden') {
+        setShowHints(false);
+      }
+      return newMode;
+    });
     // Restart playback if currently playing to hear the switched sequence
     if (sequencer.isPlaying) {
       sequencer.restart();
@@ -80,12 +87,13 @@ export function QuizRoute() {
   const handleSubmitAnswer = () => {
     sequencer.submitAnswer();
 
-    // Auto-show hints if answer is incorrect
+    // Auto-show hints and switch to 'Your' view if answer is incorrect
     const differences = getDifferences(sequencer.userSequence, sequencer.currentPattern.steps);
     const isCorrect = differences.length === 0;
 
     if (!isCorrect) {
       setShowHints(true);
+      setPlaybackMode('user'); // Show user's answer with hints for editing
     }
   };
 

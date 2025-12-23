@@ -1,11 +1,6 @@
 import { theme } from '../../theme';
 
-export function PlaybackModeToggle({ playbackMode, onToggle, hasSubmitted }) {
-  // Don't show after submit
-  if (hasSubmitted) {
-    return <div style={{ width: '200px' }} />; // Spacer for balance
-  }
-
+export function PlaybackModeToggle({ playbackMode, onToggle }) {
   return (
     <div style={{ display: 'flex', gap: '2px', minWidth: '200px' }}>
       <button
