@@ -1,33 +1,20 @@
 import { theme } from '../../theme';
 
 export function ConnectionStatus({ selectedOutput }) {
-  const getStatusColor = () => {
-    if (selectedOutput && selectedOutput.state === 'connected') {
-      return theme.colors.success;
-    }
-    return theme.colors.text.secondary;
-  };
-
-  const getStatusText = () => {
-    if (selectedOutput && selectedOutput.state === 'connected') {
-      return 'Connected';
-    }
-    return 'Disconnected';
-  };
+  const isConnected = selectedOutput && selectedOutput.state === 'connected';
+  const deviceName = isConnected
+    ? (selectedOutput.name || selectedOutput.id || 'Unknown Device')
+    : 'No device';
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.sm }}>
-      <span
-        style={{
-          width: theme.other.statusIndicatorSize,
-          height: theme.other.statusIndicatorSize,
-          borderRadius: '50%',
-          background: getStatusColor(),
-          display: 'inline-block',
-        }}
-      />
-      <span style={{ fontSize: theme.typography.fontSize.sm, fontWeight: theme.typography.fontWeight.medium }}>
-        {getStatusText()}
+    <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.xs }}>
+      {/* Status dot - green filled circle if connected, gray outline circle if not */}
+      <span style={{ color: isConnected ? '#22c55e' : '#9ca3af', fontSize: theme.typography.fontSize.base }}>
+        {isConnected ? '●' : '○'}
+      </span>
+      {/* Device name or "No device" */}
+      <span style={{ fontSize: theme.typography.fontSize.sm, color: theme.colors.text.secondary }}>
+        {deviceName}
       </span>
     </div>
   );

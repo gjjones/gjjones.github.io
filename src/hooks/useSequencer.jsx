@@ -8,8 +8,10 @@ import { usePlaybackEngine } from './usePlaybackEngine';
  * @param {Function} sendNoteTrigger - MIDI note trigger function from useMidi
  * @param {String} playbackMode - Which sequence to play: 'user' or 'hidden'
  * @param {Object} quizDefinition - Quiz configuration with patterns and metadata
+ * @param {Function} getMidiParams - Function to get MIDI params for a track index
+ * @param {Array} instruments - Array of instrument configurations
  */
-export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinition) {
+export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinition, getMidiParams, instruments) {
   // State management (sequences, quiz state, tempo)
   const {
     hiddenSequences,
@@ -45,6 +47,7 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinit
     sequence: playbackSequence,
     bpm,
     scheduleNoteFn: sendNoteTrigger,
+    getMidiParams,
     division: currentPattern.division,
     totalSteps: currentPattern.totalSteps,
   });
@@ -84,5 +87,6 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinit
     // Other
     bpm,
     setBpm,
+    instruments,
   };
 }

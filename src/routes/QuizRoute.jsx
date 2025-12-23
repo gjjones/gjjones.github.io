@@ -3,12 +3,14 @@ import { useNavigate, useParams } from '@tanstack/react-router';
 import { useMidiContext } from '../contexts/MidiContext';
 import { getQuizById } from '../data/quizDefinitions';
 import { useSequencer } from '../hooks/useSequencer';
+import { useDrumSettings } from '../hooks/useDrumSettings';
 import { PermissionRequest } from '../components/ErrorStates/PermissionRequest';
 import { QuizComplete } from '../components/QuizComplete';
 import { Header } from '../components/Header/Header';
 import { Footer } from '../components/Footer/Footer';
 import { ListenMode } from '../components/ListenMode';
 import { SequencerGrid } from '../components/SequencerGrid';
+import { DrumSettings } from '../components/DrumSettings/DrumSettings';
 import { getDifferences } from '../utils/sequenceComparison';
 import { theme } from '../theme';
 
@@ -27,6 +29,10 @@ export function QuizRoute() {
   const selectedQuiz = getQuizById(quizId);
   const [playbackMode, setPlaybackMode] = useState('hidden');
   const [showHints, setShowHints] = useState(false);
+  const [viewMode, setViewMode] = useState('sequencer'); // 'sequencer' | 'settings'
+
+  // Initialize drum settings
+  const drumSettings = useDrumSettings();
 
   // If invalid quiz ID, redirect to home
   useEffect(() => {
@@ -39,7 +45,9 @@ export function QuizRoute() {
   const sequencer = useSequencer(
     sendNoteTrigger,
     playbackMode,
-    selectedQuiz || getQuizById('basicGrooves')
+    selectedQuiz || getQuizById('basicGrooves'),
+    drumSettings.getMidiParams,
+    drumSettings.instruments
   );
 
   // Stop playback on unmount
@@ -120,6 +128,17 @@ export function QuizRoute() {
     setPlaybackMode('hidden');
   };
 
+  const handleToggleSettings = () => {
+    setViewMode((prev) => {
+      const newMode = prev === 'settings' ? 'sequencer' : 'settings';
+      // Stop playback when entering settings
+      if (newMode === 'settings' && sequencer.isPlaying) {
+        sequencer.stop();
+      }
+      return newMode;
+    });
+  };
+
   // Calculate differences for hints
   const differences = getDifferences(sequencer.userSequence, sequencer.currentPattern.steps);
   const highlightedCells = showHints ? differences : [];
@@ -160,9 +179,7 @@ export function QuizRoute() {
         overflow: 'hidden',
       }}>
         <Header
-          outputs={outputs}
           selectedOutput={selectedOutput}
-          onSelectOutputDevice={selectOutputDevice}
           bpm={sequencer.bpm}
           onBpmChange={sequencer.setBpm}
           currentQuestionIndex={undefined}
@@ -197,9 +214,7 @@ export function QuizRoute() {
       overflow: 'hidden',
     }}>
       <Header
-        outputs={outputs}
         selectedOutput={selectedOutput}
-        onSelectOutputDevice={selectOutputDevice}
         bpm={sequencer.bpm}
         onBpmChange={sequencer.setBpm}
         currentQuestionIndex={sequencer.currentQuestionIndex}
@@ -214,7 +229,19 @@ export function QuizRoute() {
         padding: theme.spacing.xl,
         overflow: 'auto',
       }}>
-        {selectedOutput && selectedOutput.state === 'connected' ? (
+        {viewMode === 'settings' ? (
+          <DrumSettings
+            instruments={drumSettings.instruments}
+            updateInstrument={drumSettings.updateInstrument}
+            loadPreset={drumSettings.loadPreset}
+            resetToDefault={drumSettings.resetToDefault}
+            onClose={handleToggleSettings}
+            sendNoteTrigger={sendNoteTrigger}
+            selectedOutput={selectedOutput}
+            outputs={outputs}
+            onSelectOutputDevice={selectOutputDevice}
+          />
+        ) : selectedOutput && selectedOutput.state === 'connected' ? (
           <>
             {playbackMode === 'hidden' ? (
               <ListenMode
@@ -238,6 +265,7 @@ export function QuizRoute() {
                 stepsPerMeasure={sequencer.currentPattern.stepsPerMeasure}
                 measures={sequencer.currentPattern.measures}
                 getMusicalPosition={sequencer.getMusicalPosition}
+                instruments={sequencer.instruments}
               />
             )}
           </>
@@ -267,6 +295,8 @@ export function QuizRoute() {
         isPlaying={sequencer.isPlaying}
         selectedOutput={selectedOutput}
         onTogglePlayback={handleTogglePlayback}
+        viewMode={viewMode}
+        onToggleSettings={handleToggleSettings}
       />
     </div>
   );

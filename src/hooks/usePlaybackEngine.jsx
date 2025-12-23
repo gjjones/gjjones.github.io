@@ -3,13 +3,6 @@ import { useTimingClock } from './useTimingClock';
 import { useSchedulerEngine } from './useSchedulerEngine';
 import { useMidiPlayer } from './useMidiPlayer';
 
-// MIDI note mappings (Channel 10 - drums) - defined outside component to prevent recreation
-const NOTE_MAP = {
-  0: 42, // HH - Hi-Hat
-  1: 38, // SN - Snare
-  2: 36, // KD - Kick
-};
-
 /**
  * Manages playback timing and MIDI note triggering using game loop patterns
  *
@@ -22,10 +15,11 @@ const NOTE_MAP = {
  * @param {Array} params.sequence - Current sequence to play
  * @param {number} params.bpm - Beats per minute
  * @param {Function} params.scheduleNoteFn - Function to schedule MIDI notes
+ * @param {Function} params.getMidiParams - Function to get MIDI params for a track index
  * @param {number} params.division - Note division (1=quarter, 2=eighth, 4=sixteenth)
  * @param {number} params.totalSteps - Total number of steps in the pattern
  */
-export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, division, totalSteps }) {
+export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams, division, totalSteps }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
 
@@ -102,14 +96,22 @@ export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, division, tot
     // Schedule all active notes in this step
     currentSequence.forEach((track, trackIndex) => {
       if (track[step]) {
-        const note = NOTE_MAP[trackIndex];
-        midiPlayer.scheduleNote(timestamp, 10, note, 100, 20);
+        const midiParams = getMidiParams(trackIndex);
+        if (midiParams) {
+          midiPlayer.scheduleNote(
+            timestamp,
+            midiParams.channel,
+            midiParams.note,
+            midiParams.velocity,
+            midiParams.duration
+          );
+        }
       }
     });
 
     // Update visual current step
     setCurrentStep(step);
-  }, [midiPlayer]);
+  }, [midiPlayer, getMidiParams]);
 
   // Layer 2: Scheduler engine with fixed timestep
   const scheduler = useSchedulerEngine({

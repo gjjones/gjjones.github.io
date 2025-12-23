@@ -1,9 +1,8 @@
 import { theme } from '../../theme';
-import { MidiDeviceSelector } from './MidiDeviceSelector';
 import { ConnectionStatus } from './ConnectionStatus';
 import { BpmControl } from './BpmControl';
 
-export function Header({ outputs, selectedOutput, onSelectOutputDevice, bpm, onBpmChange, currentQuestionIndex, totalQuestions, onExit }) {
+export function Header({ selectedOutput, bpm, onBpmChange, currentQuestionIndex, totalQuestions, onExit }) {
   return (
     <header
       style={{
@@ -18,11 +17,6 @@ export function Header({ outputs, selectedOutput, onSelectOutputDevice, bpm, onB
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.lg, flexWrap: 'wrap' }}>
-        <MidiDeviceSelector
-          outputs={outputs}
-          selectedOutput={selectedOutput}
-          onSelectOutputDevice={onSelectOutputDevice}
-        />
         <ConnectionStatus selectedOutput={selectedOutput} />
         <BpmControl bpm={bpm} onBpmChange={onBpmChange} />
       </div>

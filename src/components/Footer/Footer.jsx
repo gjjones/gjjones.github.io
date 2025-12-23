@@ -2,6 +2,7 @@ import { theme } from '../../theme';
 import { QuizControls } from './QuizControls';
 import { PlaybackControls } from './PlaybackControls';
 import { PlaybackModeToggle } from './PlaybackModeToggle';
+import { SettingsButton } from './SettingsButton';
 
 export function Footer({
   currentQuestionIndex,
@@ -19,6 +20,8 @@ export function Footer({
   isPlaying,
   selectedOutput,
   onTogglePlayback,
+  viewMode,
+  onToggleSettings,
 }) {
   // Get the current question's result
   const isCorrect = quizResults[currentQuestionIndex];
@@ -35,12 +38,19 @@ export function Footer({
         gap: theme.spacing.lg,
       }}
     >
-      {/* Left: Playback mode toggle */}
-      <PlaybackModeToggle
-        playbackMode={playbackMode}
-        onToggle={onTogglePlaybackMode}
-        hasSubmitted={hasSubmitted}
-      />
+      {/* Left: Settings button and Playback mode toggle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md }}>
+        <SettingsButton
+          onClick={onToggleSettings}
+          isActive={viewMode === 'settings'}
+          disabled={isQuizComplete}
+        />
+        <PlaybackModeToggle
+          playbackMode={playbackMode}
+          onToggle={onTogglePlaybackMode}
+          hasSubmitted={hasSubmitted}
+        />
+      </div>
 
       {/* Center: Playback controls */}
       <PlaybackControls

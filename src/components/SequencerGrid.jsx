@@ -2,12 +2,8 @@ import { useRef, useEffect, memo } from 'react';
 import { theme } from '../theme';
 import { BeatGrid } from './BeatGrid';
 
-function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [], totalSteps, stepsPerMeasure, measures, getMusicalPosition }) {
-  const tracks = [
-    { label: 'HH', name: 'Hi-Hat' },
-    { label: 'SN', name: 'Snare' },
-    { label: 'KD', name: 'Kick' },
-  ];
+function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [], totalSteps, stepsPerMeasure, measures, getMusicalPosition, instruments }) {
+  const tracks = instruments;
   const prevStepRef = useRef(currentStep);
   const playheadRef = useRef(null);
   const animationFrameRef = useRef(null);
@@ -182,7 +178,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
 
 // Memoize to prevent unnecessary grid re-renders
 export const SequencerGrid = memo(SequencerGridComponent, (prevProps, nextProps) => {
-  // Only re-render if sequence, currentStep, bpm, isEditable, hideNotes, highlightedCells, or pattern metadata changes
+  // Only re-render if sequence, currentStep, bpm, isEditable, hideNotes, highlightedCells, instruments, or pattern metadata changes
   // Playhead animation is handled internally via requestAnimationFrame
   return (
     prevProps.sequence === nextProps.sequence &&
@@ -194,6 +190,7 @@ export const SequencerGrid = memo(SequencerGridComponent, (prevProps, nextProps)
     prevProps.totalSteps === nextProps.totalSteps &&
     prevProps.stepsPerMeasure === nextProps.stepsPerMeasure &&
     prevProps.measures === nextProps.measures &&
-    prevProps.getMusicalPosition === nextProps.getMusicalPosition
+    prevProps.getMusicalPosition === nextProps.getMusicalPosition &&
+    prevProps.instruments === nextProps.instruments
   );
 });
