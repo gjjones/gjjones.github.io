@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { theme } from '../../theme';
 import { PRESETS } from '../../constants/drumPresets';
 import { InstrumentConfig } from './InstrumentConfig';
+import { useAudioSamplePlayer } from '../../hooks/useAudioSamplePlayer';
+import { useTimingClock } from '../../hooks/useTimingClock';
 
 /**
- * Main drum MIDI settings component
+ * Main drum settings component (MIDI and audio samples)
  * Provides preset selection, per-instrument configuration, and test functionality
  */
 export function DrumSettings({
@@ -16,10 +18,20 @@ export function DrumSettings({
   sendNoteTrigger,
   selectedOutput,
   outputs,
-  onSelectOutputDevice
+  onSelectOutputDevice,
+  setAudioBuffer,
+  getAudioBuffer,
 }) {
   const [selectedPreset, setSelectedPreset] = useState('');
   const [isDirty, setIsDirty] = useState(false);
+
+  // Initialize timing clock for sample playback testing
+  const timingClock = useTimingClock({ bpm: 120, division: 4, totalSteps: 16 });
+
+  // Initialize sample player for testing
+  const samplePlayer = useAudioSamplePlayer({
+    audioContext: timingClock.audioContext,
+  });
 
   // Detect which preset matches current instruments on mount only
   useEffect(() => {
@@ -64,9 +76,31 @@ export function DrumSettings({
     setIsDirty(false);
   };
 
-  const handleTest = (instrument) => {
-    if (selectedOutput && selectedOutput.state === 'connected') {
-      sendNoteTrigger(instrument.channel, instrument.note, instrument.velocity, instrument.duration);
+  const handleTest = (instrument, index) => {
+    if (instrument.type === 'sample') {
+      // Test sample playback
+      const audioBuffer = getAudioBuffer(index);
+      if (audioBuffer && samplePlayer && timingClock.audioContext) {
+        const now = timingClock.audioContext.currentTime;
+        samplePlayer.scheduleSample(audioBuffer, now, instrument.velocity || 100);
+      }
+    } else {
+      // Test MIDI playback
+      if (selectedOutput && selectedOutput.state === 'connected') {
+        sendNoteTrigger(instrument.channel, instrument.note, instrument.velocity, instrument.duration);
+      }
+    }
+  };
+
+  const handleSampleLoad = async (index, file) => {
+    try {
+      const audioBuffer = await samplePlayer.loadSampleFromFile(file);
+      setAudioBuffer(index, audioBuffer);
+      setIsDirty(true);
+      setSelectedPreset(''); // Clear preset when loading samples
+    } catch (error) {
+      console.error('Failed to load sample:', error);
+      alert('Failed to load audio sample. Please try a different file.');
     }
   };
 
@@ -199,7 +233,9 @@ export function DrumSettings({
             instrument={instrument}
             index={index}
             onChange={handleInstrumentChange}
-            onTest={() => handleTest(instrument)}
+            onTest={() => handleTest(instrument, index)}
+            onSampleLoad={(file) => handleSampleLoad(index, file)}
+            audioBuffer={getAudioBuffer(index)}
             disabled={!selectedOutput || selectedOutput.state !== 'connected'}
           />
         ))}

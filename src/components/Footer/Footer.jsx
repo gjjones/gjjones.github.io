@@ -22,6 +22,8 @@ export function Footer({
   onTogglePlayback,
   viewMode,
   onToggleSettings,
+  instruments,
+  getAudioBuffer,
 }) {
   // Get the current question's result
   const isCorrect = quizResults[currentQuestionIndex];
@@ -57,6 +59,8 @@ export function Footer({
         isPlaying={isPlaying}
         selectedOutput={selectedOutput}
         onTogglePlayback={onTogglePlayback}
+        instruments={instruments}
+        getAudioBuffer={getAudioBuffer}
       />
 
       {/* Right: Quiz controls (Hint + Submit) */}

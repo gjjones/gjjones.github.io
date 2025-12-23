@@ -13,6 +13,7 @@ import { SequencerGrid } from '../components/SequencerGrid';
 import { DrumSettings } from '../components/DrumSettings/DrumSettings';
 import { getDifferences } from '../utils/sequenceComparison';
 import { theme } from '../theme';
+import { requiresMidiPermission, canPlayback } from '../utils/playbackUtils';
 
 export function QuizRoute() {
   const { quizId } = useParams({ from: '/quiz/$quizId' });
@@ -30,9 +31,25 @@ export function QuizRoute() {
   const [playbackMode, setPlaybackMode] = useState('hidden');
   const [showHints, setShowHints] = useState(false);
   const [viewMode, setViewMode] = useState('sequencer'); // 'sequencer' | 'settings'
+  const [isMidiAvailable, setIsMidiAvailable] = useState(true);
 
   // Initialize drum settings
   const drumSettings = useDrumSettings();
+
+  // Detect Web MIDI API availability
+  useEffect(() => {
+    const checkMidiAvailability = () => {
+      const available = !!(navigator.requestMIDIAccess);
+      setIsMidiAvailable(available);
+
+      // If MIDI unavailable, suggest user switch to sample mode
+      if (!available) {
+        console.warn('[QuizRoute] Web MIDI API not available. Consider using sample playback mode.');
+      }
+    };
+
+    checkMidiAvailability();
+  }, []);
 
   // If invalid quiz ID, redirect to home
   useEffect(() => {
@@ -47,6 +64,7 @@ export function QuizRoute() {
     playbackMode,
     selectedQuiz || getQuizById('basicGrooves'),
     drumSettings.getMidiParams,
+    drumSettings.getInstrument,
     drumSettings.instruments
   );
 
@@ -157,20 +175,8 @@ export function QuizRoute() {
     return null;
   }
 
-  // If MIDI permission not granted, show permission request
-  if (permissionStatus !== 'granted') {
-    return (
-      <div style={{
-        fontFamily: theme.typography.fontFamily.base,
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <PermissionRequest onRequestAccess={requestAccess} />
-      </div>
-    );
-  }
+  // Check if we have any way to play back audio
+  const hasPlaybackCapability = canPlayback(selectedOutput, drumSettings.instruments, drumSettings.getAudioBuffer);
 
   // If quiz complete, show results
   if (sequencer.isQuizComplete) {
@@ -244,8 +250,10 @@ export function QuizRoute() {
             selectedOutput={selectedOutput}
             outputs={outputs}
             onSelectOutputDevice={selectOutputDevice}
+            setAudioBuffer={drumSettings.setAudioBuffer}
+            getAudioBuffer={drumSettings.getAudioBuffer}
           />
-        ) : selectedOutput && selectedOutput.state === 'connected' ? (
+        ) : hasPlaybackCapability ? (
           <>
             {playbackMode === 'hidden' ? (
               <ListenMode
@@ -277,9 +285,50 @@ export function QuizRoute() {
           <div style={{
             textAlign: 'center',
             color: theme.colors.text.secondary,
-            marginTop: theme.spacing.xl
+            marginTop: theme.spacing.xl,
+            padding: theme.spacing.xl,
           }}>
-            <p style={{ fontSize: theme.typography.fontSize.lg }}>Select a MIDI device to begin</p>
+            <p style={{ fontSize: theme.typography.fontSize.lg, marginBottom: theme.spacing.md }}>
+              No playback method configured
+            </p>
+            <p style={{
+              fontSize: theme.typography.fontSize.sm,
+              color: theme.colors.text.secondary,
+              marginBottom: theme.spacing.lg,
+            }}>
+              To begin, choose one of the following:
+            </p>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: theme.spacing.md,
+              maxWidth: '600px',
+              margin: '0 auto',
+              textAlign: 'left',
+            }}>
+              <div style={{
+                padding: theme.spacing.md,
+                background: theme.colors.bg.secondary,
+                borderRadius: theme.borderRadius.sm,
+              }}>
+                <strong>Option 1: Connect a MIDI device</strong>
+                <p style={{ fontSize: theme.typography.fontSize.sm, margin: `${theme.spacing.sm} 0 0 0` }}>
+                  {isMidiAvailable
+                    ? 'Connect a MIDI device and grant permission when prompted'
+                    : 'Your browser doesn\'t support Web MIDI API'}
+                </p>
+              </div>
+              <div style={{
+                padding: theme.spacing.md,
+                background: theme.colors.bg.secondary,
+                borderRadius: theme.borderRadius.sm,
+              }}>
+                <strong>Option 2: Use audio samples</strong>
+                <p style={{ fontSize: theme.typography.fontSize.sm, margin: `${theme.spacing.sm} 0 0 0` }}>
+                  Open Settings (gear icon below) and switch instruments to Sample mode, then load audio files
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </main>
@@ -301,6 +350,8 @@ export function QuizRoute() {
         onTogglePlayback={handleTogglePlayback}
         viewMode={viewMode}
         onToggleSettings={handleToggleSettings}
+        instruments={drumSettings.instruments}
+        getAudioBuffer={drumSettings.getAudioBuffer}
       />
     </div>
   );

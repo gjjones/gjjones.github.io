@@ -9,9 +9,10 @@ import { usePlaybackEngine } from './usePlaybackEngine';
  * @param {String} playbackMode - Which sequence to play: 'user' or 'hidden'
  * @param {Object} quizDefinition - Quiz configuration with patterns and metadata
  * @param {Function} getMidiParams - Function to get MIDI params for a track index
+ * @param {Function} getInstrument - Function to get full instrument config (type, MIDI/sample params)
  * @param {Array} instruments - Array of instrument configurations
  */
-export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinition, getMidiParams, instruments) {
+export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinition, getMidiParams, getInstrument, instruments) {
   // State management (sequences, quiz state, tempo)
   const {
     hiddenSequences,
@@ -35,7 +36,7 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinit
   // Determine which sequence to play
   const playbackSequence = playbackMode === 'hidden' ? currentHiddenSequence : userSequence;
 
-  // Playback engine (timing, MIDI triggering)
+  // Playback engine (timing, MIDI/sample triggering)
   const {
     isPlaying,
     currentStep,
@@ -48,6 +49,7 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinit
     bpm,
     scheduleNoteFn: sendNoteTrigger,
     getMidiParams,
+    getInstrument,
     division: currentPattern.division,
     totalSteps: currentPattern.totalSteps,
   });

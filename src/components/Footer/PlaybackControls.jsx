@@ -1,7 +1,8 @@
 import { theme } from '../../theme';
+import { canPlayback } from '../../utils/playbackUtils';
 
-export function PlaybackControls({ isPlaying, selectedOutput, onTogglePlayback }) {
-  const isDisabled = !selectedOutput || selectedOutput.state !== 'connected';
+export function PlaybackControls({ isPlaying, selectedOutput, onTogglePlayback, instruments, getAudioBuffer }) {
+  const isDisabled = !canPlayback(selectedOutput, instruments, getAudioBuffer);
 
   return (
     <button

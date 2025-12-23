@@ -2,24 +2,27 @@ import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useTimingClock } from './useTimingClock';
 import { useSchedulerEngine } from './useSchedulerEngine';
 import { useMidiPlayer } from './useMidiPlayer';
+import { useAudioSamplePlayer } from './useAudioSamplePlayer';
 
 /**
- * Manages playback timing and MIDI note triggering using game loop patterns
+ * Manages playback timing and note triggering (MIDI and samples) using game loop patterns
  *
  * Uses three-layer architecture:
  * - useTimingClock: Web Audio clock for high-precision timing
  * - useSchedulerEngine: Fixed timestep scheduler with lookahead
  * - useMidiPlayer: Timestamp-based MIDI event player
+ * - useAudioSamplePlayer: Web Audio sample playback
  *
  * @param {Object} params
  * @param {Array} params.sequence - Current sequence to play
  * @param {number} params.bpm - Beats per minute
  * @param {Function} params.scheduleNoteFn - Function to schedule MIDI notes
  * @param {Function} params.getMidiParams - Function to get MIDI params for a track index
+ * @param {Function} params.getInstrument - Function to get full instrument config (type, MIDI/sample params)
  * @param {number} params.division - Note division (1=quarter, 2=eighth, 4=sixteenth)
  * @param {number} params.totalSteps - Total number of steps in the pattern
  */
-export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams, division, totalSteps }) {
+export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams, getInstrument, division, totalSteps }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
 
@@ -35,7 +38,7 @@ export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams
     getCurrentTimeRef.current = timingClock.getCurrentTime;
   }, [timingClock]);
 
-  // Layer 3: MIDI player with event queue (memoized to prevent recreation)
+  // Layer 3a: MIDI player with event queue (memoized to prevent recreation)
   const midiPlayer = useMemo(() => {
     // Closure-scoped state (not global) - lives as long as this memoized object
     let eventQueue = [];
@@ -89,6 +92,11 @@ export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams
     };
   }, []); // Empty deps - midiPlayer created once, uses getCurrentTimeRef.current
 
+  // Layer 3b: Audio sample player
+  const samplePlayer = useAudioSamplePlayer({
+    audioContext: timingClock.audioContext,
+  });
+
   // Callback when scheduler wants to schedule a step
   const handleScheduleStep = useCallback((step, timestamp) => {
     const currentSequence = sequenceRef.current;
@@ -96,22 +104,52 @@ export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams
     // Schedule all active notes in this step
     currentSequence.forEach((track, trackIndex) => {
       if (track[step]) {
-        const midiParams = getMidiParams(trackIndex);
-        if (midiParams) {
-          midiPlayer.scheduleNote(
-            timestamp,
-            midiParams.channel,
-            midiParams.note,
-            midiParams.velocity,
-            midiParams.duration
-          );
+        // Get instrument configuration (includes type and params)
+        const instrument = getInstrument ? getInstrument(trackIndex) : null;
+
+        if (instrument) {
+          if (instrument.type === 'sample') {
+            // Sample playback
+            if (instrument.audioBuffer && samplePlayer) {
+              samplePlayer.scheduleSample(
+                instrument.audioBuffer,
+                timestamp,
+                instrument.velocity || 100,
+                instrument.duration
+              );
+            }
+          } else {
+            // MIDI playback (default)
+            const midiParams = getMidiParams(trackIndex);
+            if (midiParams) {
+              midiPlayer.scheduleNote(
+                timestamp,
+                midiParams.channel,
+                midiParams.note,
+                midiParams.velocity,
+                midiParams.duration
+              );
+            }
+          }
+        } else {
+          // Fallback to MIDI if getInstrument not provided (backward compatibility)
+          const midiParams = getMidiParams(trackIndex);
+          if (midiParams) {
+            midiPlayer.scheduleNote(
+              timestamp,
+              midiParams.channel,
+              midiParams.note,
+              midiParams.velocity,
+              midiParams.duration
+            );
+          }
         }
       }
     });
 
     // Update visual current step
     setCurrentStep(step);
-  }, [midiPlayer, getMidiParams]);
+  }, [midiPlayer, samplePlayer, getMidiParams, getInstrument]);
 
   // Layer 2: Scheduler engine with fixed timestep
   const scheduler = useSchedulerEngine({
@@ -160,13 +198,16 @@ export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams
     setIsPlaying(false);
     setCurrentStep(-1);
 
-    // Stop all three layers
+    // Stop all layers
     scheduler.stop();
     midiPlayer.stop();
     midiPlayer.clearScheduledEvents();
+    if (samplePlayer) {
+      samplePlayer.stopAll();
+    }
     timingClock.stop();
     timingClock.setPlaying(false);
-  }, [scheduler, midiPlayer, timingClock]);
+  }, [scheduler, midiPlayer, samplePlayer, timingClock]);
 
   // Restart playback from beginning
   const restart = useCallback(() => {
@@ -176,6 +217,9 @@ export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams
     scheduler.stop();
     midiPlayer.stop();
     midiPlayer.clearScheduledEvents();
+    if (samplePlayer) {
+      samplePlayer.stopAll();
+    }
     timingClock.stop();
     timingClock.setPlaying(false);
 
@@ -191,7 +235,7 @@ export function usePlaybackEngine({ sequence, bpm, scheduleNoteFn, getMidiParams
       midiPlayer.start();
       scheduler.start();
     }
-  }, [isPlaying, scheduler, midiPlayer, timingClock]);
+  }, [isPlaying, scheduler, midiPlayer, samplePlayer, timingClock]);
 
   /**
    * Get musical position for visual components

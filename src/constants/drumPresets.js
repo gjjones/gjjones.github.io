@@ -13,9 +13,9 @@ export const PRESET_GM_DRUMS = {
   id: 'gm-drums',
   name: 'GM Drums (Channel 10)',
   instruments: [
-    { label: 'HH', name: 'Hi-Hat', channel: 10, note: 42, velocity: 100, duration: 20 },
-    { label: 'SN', name: 'Snare', channel: 10, note: 38, velocity: 100, duration: 20 },
-    { label: 'KD', name: 'Kick', channel: 10, note: 36, velocity: 100, duration: 20 },
+    { label: 'HH', name: 'Hi-Hat', type: 'midi', channel: 10, note: 42, velocity: 100, duration: 20 },
+    { label: 'SN', name: 'Snare', type: 'midi', channel: 10, note: 38, velocity: 100, duration: 20 },
+    { label: 'KD', name: 'Kick', type: 'midi', channel: 10, note: 36, velocity: 100, duration: 20 },
   ]
 };
 
@@ -24,9 +24,9 @@ export const PRESET_TR6S = {
   id: 'tr-6s',
   name: 'Roland TR-6S',
   instruments: [
-    { label: 'HH', name: 'Hi-Hat', channel: 10, note: 42, velocity: 100, duration: 20 },
-    { label: 'SN', name: 'Snare', channel: 10, note: 38, velocity: 100, duration: 20 },
-    { label: 'KD', name: 'Kick', channel: 10, note: 36, velocity: 100, duration: 20 },
+    { label: 'HH', name: 'Hi-Hat', type: 'midi', channel: 10, note: 42, velocity: 100, duration: 20 },
+    { label: 'SN', name: 'Snare', type: 'midi', channel: 10, note: 38, velocity: 100, duration: 20 },
+    { label: 'KD', name: 'Kick', type: 'midi', channel: 10, note: 36, velocity: 100, duration: 20 },
   ]
 };
 
@@ -35,9 +35,9 @@ export const PRESET_TR8S = {
   id: 'tr-8s',
   name: 'Roland TR-8S',
   instruments: [
-    { label: 'HH', name: 'Hi-Hat', channel: 10, note: 42, velocity: 100, duration: 20 },
-    { label: 'SN', name: 'Snare', channel: 10, note: 38, velocity: 100, duration: 20 },
-    { label: 'KD', name: 'Kick', channel: 10, note: 36, velocity: 100, duration: 20 },
+    { label: 'HH', name: 'Hi-Hat', type: 'midi', channel: 10, note: 42, velocity: 100, duration: 20 },
+    { label: 'SN', name: 'Snare', type: 'midi', channel: 10, note: 38, velocity: 100, duration: 20 },
+    { label: 'KD', name: 'Kick', type: 'midi', channel: 10, note: 36, velocity: 100, duration: 20 },
   ]
 };
 
