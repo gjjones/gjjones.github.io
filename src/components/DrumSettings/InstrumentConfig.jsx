@@ -157,8 +157,9 @@ export function InstrumentConfig({ instrument, index, onChange, onTest, disabled
         onClick={onTest}
         disabled={disabled}
         style={{
-          padding: `${theme.spacing.sm} ${theme.spacing.md}`,
-          fontSize: theme.typography.fontSize.sm,
+          padding: theme.buttons.size.padding,
+          fontSize: theme.buttons.size.fontSize,
+          fontWeight: theme.buttons.size.fontWeight,
           cursor: disabled ? 'not-allowed' : 'pointer',
           borderRadius: theme.borderRadius.sm,
           border: `1px solid ${theme.colors.border.medium}`,

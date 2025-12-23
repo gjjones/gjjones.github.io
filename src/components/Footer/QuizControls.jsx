@@ -28,12 +28,12 @@ export function QuizControls({
             padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
             fontSize: theme.typography.fontSize.base,
             fontWeight: theme.typography.fontWeight.medium,
-            background: showHints ? '#f59e0b' : theme.colors.bg.tertiary,
+            background: showHints ? theme.colors.warning : theme.colors.bg.tertiary,
             color: showHints ? 'white' : theme.colors.text.primary,
             border: `1px solid ${theme.colors.border.default}`,
             borderRadius: theme.borderRadius.base,
             cursor: 'pointer',
-            transition: 'all 0.2s',
+            transition: theme.transitions.base,
             minWidth: '100px',
           }}
           onMouseEnter={(e) => {
@@ -58,7 +58,7 @@ export function QuizControls({
             display: 'flex',
             alignItems: 'center',
             gap: theme.spacing.sm,
-            transition: 'opacity 0.3s ease-in',
+            transition: theme.transitions.slow,
           }}
         >
           <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>
@@ -72,15 +72,15 @@ export function QuizControls({
       <button
         onClick={!hasSubmitted ? onSubmit : onNext}
         style={{
-          padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-          fontSize: theme.typography.fontSize.lg,
+          padding: theme.buttons.size.padding,
+          fontSize: theme.buttons.size.fontSize,
           fontWeight: theme.typography.fontWeight.bold,
           background: theme.colors.primary,
           color: 'white',
           border: 'none',
           borderRadius: theme.borderRadius.base,
           cursor: 'pointer',
-          transition: 'opacity 0.2s',
+          transition: theme.transitions.base,
           minWidth: '140px',
           textTransform: 'uppercase',
           letterSpacing: '0.05em',

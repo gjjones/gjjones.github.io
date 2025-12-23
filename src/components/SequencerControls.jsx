@@ -1,3 +1,5 @@
+import { theme } from '../theme';
+
 export function SequencerControls({
   activeView,
   onViewChange,
@@ -48,14 +50,14 @@ export function SequencerControls({
         <button
           onClick={handleToggle}
           style={{
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
+            padding: theme.buttons.size.padding,
+            fontSize: theme.buttons.size.fontSize,
+            fontWeight: theme.buttons.size.fontWeight,
             cursor: 'pointer',
-            borderRadius: '4px',
-            border: `1px solid ${isPlaying ? '#c00' : '#0a0'}`,
-            background: isPlaying ? '#c00' : '#0a0',
+            borderRadius: theme.borderRadius.sm,
+            border: `1px solid ${isPlaying ? theme.colors.danger : theme.colors.success}`,
+            background: isPlaying ? theme.colors.danger : theme.colors.success,
             color: 'white',
-            fontWeight: '500',
             minWidth: '120px',
           }}
         >
@@ -67,14 +69,14 @@ export function SequencerControls({
           onClick={handleViewToggle}
           disabled={isPlaying}
           style={{
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
+            padding: theme.buttons.size.padding,
+            fontSize: theme.buttons.size.fontSize,
+            fontWeight: theme.buttons.size.fontWeight,
             cursor: isPlaying ? 'not-allowed' : 'pointer',
-            borderRadius: '4px',
-            border: '1px solid #06c',
-            background: isPlaying ? '#ccc' : '#06c',
+            borderRadius: theme.borderRadius.sm,
+            border: `1px solid ${theme.colors.primary}`,
+            background: isPlaying ? theme.colors.border.medium : theme.colors.primary,
             color: 'white',
-            fontWeight: '500',
             opacity: isPlaying ? 0.5 : 1,
           }}
           title={isPlaying ? 'Stop playback to switch views' : 'Toggle between test pattern and your pattern'}

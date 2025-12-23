@@ -1,4 +1,5 @@
 import { createPattern } from '../utils/patternUtils.js';
+import { theme } from '../theme.js';
 
 /**
  * Central registry of all available quizzes
@@ -127,7 +128,7 @@ export function getAllQuizzes() {
  * Used for UI badges and visual indicators
  */
 export const DIFFICULTY_COLORS = {
-  beginner: '#22c55e',
-  intermediate: '#f59e0b',
-  advanced: '#ef4444',
+  beginner: theme.colors.success,
+  intermediate: theme.colors.warning,
+  advanced: theme.colors.danger,
 };

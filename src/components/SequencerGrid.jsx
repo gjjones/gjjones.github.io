@@ -135,7 +135,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
 
                 if (hasHint) {
                   // Hint styling takes precedence over current step
-                  const hintColor = hintType === 'add' ? '#22c55e' : '#ef4444'; // green for add, red for remove
+                  const hintColor = hintType === 'add' ? theme.colors.success : theme.colors.danger;
                   outlineStyle = `3px solid ${hintColor}`;
                 } else if (isCurrentStep) {
                   outlineStyle = `2px solid ${theme.colors.highlight}`;
@@ -161,7 +161,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
                       cursor: isEditable ? 'pointer' : 'default',
                       outline: outlineStyle,
                       outlineOffset: '-2px',
-                      transition: 'background 0.1s',
+                      transition: `background ${theme.transitions.fast}`,
                     }}
                     disabled={!isEditable}
                     title={`${track.label} - Step ${stepIndex + 1}${hasHint ? ` (${hintType === 'add' ? 'Add note here' : 'Remove this note'})` : ''}`}

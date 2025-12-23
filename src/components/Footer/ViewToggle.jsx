@@ -6,14 +6,14 @@ export function ViewToggle({ activeView, onViewChange, isPlaying }) {
       <button
         onClick={() => onViewChange('user')}
         style={{
-          padding: `0.75rem ${theme.spacing.lg}`,
-          fontSize: theme.typography.fontSize.base,
+          padding: theme.buttons.size.padding,
+          fontSize: theme.buttons.size.fontSize,
+          fontWeight: theme.buttons.size.fontWeight,
           cursor: 'pointer',
           borderRadius: theme.borderRadius.sm,
           border: `2px solid ${activeView === 'user' ? theme.colors.primary : theme.colors.text.secondary}`,
           background: activeView === 'user' ? theme.colors.primary : theme.colors.bg.main,
           color: activeView === 'user' ? theme.colors.text.white : theme.colors.text.primary,
-          fontWeight: theme.typography.fontWeight.medium,
         }}
         title={isPlaying ? 'Show your pattern (restarts from beginning)' : 'Show your pattern'}
       >
@@ -22,14 +22,14 @@ export function ViewToggle({ activeView, onViewChange, isPlaying }) {
       <button
         onClick={() => onViewChange('test')}
         style={{
-          padding: `0.75rem ${theme.spacing.lg}`,
-          fontSize: theme.typography.fontSize.base,
+          padding: theme.buttons.size.padding,
+          fontSize: theme.buttons.size.fontSize,
+          fontWeight: theme.buttons.size.fontWeight,
           cursor: 'pointer',
           borderRadius: theme.borderRadius.sm,
           border: `2px solid ${activeView === 'test' ? theme.colors.primary : theme.colors.text.secondary}`,
           background: activeView === 'test' ? theme.colors.primary : theme.colors.bg.main,
           color: activeView === 'test' ? theme.colors.text.white : theme.colors.text.primary,
-          fontWeight: theme.typography.fontWeight.medium,
         }}
         title={isPlaying ? 'Hide test pattern (restarts from beginning)' : 'Hide test pattern'}
       >

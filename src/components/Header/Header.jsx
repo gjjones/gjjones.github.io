@@ -39,15 +39,15 @@ export function Header({ selectedOutput, bpm, onBpmChange, currentQuestionIndex,
         <button
           onClick={onExit}
           style={{
-            padding: `${theme.spacing.sm} ${theme.spacing.md}`,
-            fontSize: theme.typography.fontSize.base,
-            fontWeight: theme.typography.fontWeight.medium,
+            padding: theme.buttons.size.padding,
+            fontSize: theme.buttons.size.fontSize,
+            fontWeight: theme.buttons.size.fontWeight,
             background: 'transparent',
             color: theme.colors.text.secondary,
             border: `1px solid ${theme.colors.border.default}`,
             borderRadius: theme.borderRadius.sm,
             cursor: 'pointer',
-            transition: 'all 0.2s',
+            transition: `all ${theme.transitions.base}`,
           }}
           onMouseEnter={(e) => {
             e.target.style.borderColor = theme.colors.danger;

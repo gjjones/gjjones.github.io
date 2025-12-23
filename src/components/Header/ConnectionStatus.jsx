@@ -9,7 +9,7 @@ export function ConnectionStatus({ selectedOutput }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.xs }}>
       {/* Status dot - green filled circle if connected, gray outline circle if not */}
-      <span style={{ color: isConnected ? '#22c55e' : '#9ca3af', fontSize: theme.typography.fontSize.base }}>
+      <span style={{ color: isConnected ? theme.colors.success : theme.colors.text.tertiary, fontSize: theme.typography.fontSize.base }}>
         {isConnected ? '●' : '○'}
       </span>
       {/* Device name or "No device" */}

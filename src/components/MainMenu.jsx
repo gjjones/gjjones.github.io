@@ -84,7 +84,7 @@ function QuizCard({ quiz, onSelect }) {
         borderRadius: theme.borderRadius.md,
         cursor: 'pointer',
         textAlign: 'left',
-        transition: 'all 0.2s ease',
+        transition: `all ${theme.transitions.base}`,
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = theme.colors.primary;

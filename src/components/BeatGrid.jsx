@@ -37,7 +37,7 @@ export function BeatGrid({
               color: isActive ? theme.colors.text.primary : theme.colors.text.secondary,
               background: isActive ? theme.colors.highlight : 'transparent',
               borderLeft: isMeasureStart ? `2px solid ${theme.colors.border.measure}` : `1px solid ${theme.colors.border.dark}`,
-              transition: 'background 0.1s, color 0.1s',
+              transition: `background ${theme.transitions.fast}, color ${theme.transitions.fast}`,
             }}
           >
             {isMeasureStart ? measureNumber : ''}

@@ -47,7 +47,7 @@ export function QuizComplete({ quizResults, onRestart, onReturnToMenu }) {
         style={{
           fontSize: '80px',
           fontWeight: theme.typography.fontWeight.bold,
-          color: percentage >= 70 ? '#22c55e' : percentage >= 50 ? '#f59e0b' : '#ef4444',
+          color: percentage >= 70 ? theme.colors.success : percentage >= 50 ? theme.colors.warning : theme.colors.danger,
           marginBottom: theme.spacing.md,
         }}
       >
@@ -80,7 +80,7 @@ export function QuizComplete({ quizResults, onRestart, onReturnToMenu }) {
               width: '50px',
               height: '50px',
               borderRadius: '50%',
-              background: result ? '#22c55e' : '#ef4444',
+              background: result ? theme.colors.success : theme.colors.danger,
               color: 'white',
               display: 'flex',
               alignItems: 'center',
@@ -123,15 +123,15 @@ export function QuizComplete({ quizResults, onRestart, onReturnToMenu }) {
         <button
           onClick={onRestart}
           style={{
-            padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-            fontSize: theme.typography.fontSize.lg,
-            fontWeight: theme.typography.fontWeight.medium,
+            padding: theme.buttons.size.padding,
+            fontSize: theme.buttons.size.fontSize,
+            fontWeight: theme.buttons.size.fontWeight,
             background: theme.colors.primary,
             color: 'white',
             border: 'none',
             borderRadius: theme.borderRadius.base,
             cursor: 'pointer',
-            transition: 'opacity 0.2s',
+            transition: theme.transitions.base,
           }}
           onMouseEnter={(e) => (e.target.style.opacity = '0.9')}
           onMouseLeave={(e) => (e.target.style.opacity = '1')}
@@ -142,15 +142,15 @@ export function QuizComplete({ quizResults, onRestart, onReturnToMenu }) {
         <button
           onClick={onReturnToMenu}
           style={{
-            padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-            fontSize: theme.typography.fontSize.lg,
-            fontWeight: theme.typography.fontWeight.medium,
+            padding: theme.buttons.size.padding,
+            fontSize: theme.buttons.size.fontSize,
+            fontWeight: theme.buttons.size.fontWeight,
             background: theme.colors.bg.secondary,
             color: theme.colors.text.primary,
             border: `2px solid ${theme.colors.border.default}`,
             borderRadius: theme.borderRadius.base,
             cursor: 'pointer',
-            transition: 'all 0.2s',
+            transition: `all ${theme.transitions.base}`,
           }}
           onMouseEnter={(e) => {
             e.target.style.borderColor = theme.colors.primary;

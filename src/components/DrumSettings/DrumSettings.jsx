@@ -157,7 +157,7 @@ export function DrumSettings({
             alignItems: 'center',
             gap: theme.spacing.xs,
           }}>
-            <span style={{ color: '#22c55e' }}>●</span>
+            <span style={{ color: theme.colors.success }}>●</span>
             <span>Connected</span>
           </div>
         )}

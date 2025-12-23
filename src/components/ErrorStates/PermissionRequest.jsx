@@ -17,14 +17,14 @@ export function PermissionRequest({ onRequestAccess }) {
         <button
           onClick={onRequestAccess}
           style={{
-            padding: `${theme.spacing.md} ${theme.spacing.xl}`,
-            fontSize: theme.typography.fontSize.lg,
+            padding: theme.buttons.size.padding,
+            fontSize: theme.buttons.size.fontSize,
+            fontWeight: theme.buttons.size.fontWeight,
             cursor: 'pointer',
             borderRadius: theme.borderRadius.sm,
             border: `1px solid ${theme.colors.primary}`,
             background: theme.colors.primary,
             color: theme.colors.text.white,
-            fontWeight: theme.typography.fontWeight.medium,
           }}
         >
           Request MIDI Access
