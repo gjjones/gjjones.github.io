@@ -65,6 +65,17 @@ export default defineConfig({
       template: './src/index.html',
       title: 'gjjones.github.io',
     }),
+    new rspack.CopyRspackPlugin({
+      patterns: [
+        {
+          from: 'public',
+          to: '.',
+          globOptions: {
+            ignore: ['**/.DS_Store'],
+          },
+        },
+      ],
+    }),
     !isDev && new rspack.CssExtractRspackPlugin({
       filename: '[name].[contenthash].css',
     }),

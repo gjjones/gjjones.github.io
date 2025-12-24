@@ -55,6 +55,32 @@ export function DrumSettings({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run on mount
 
+  // Auto-load samples when preset with sampleUrls is selected
+  useEffect(() => {
+    const loadPresetSamples = async () => {
+      const needsSampleLoading = instruments.some((inst, index) => {
+        return inst.type === 'sample' && inst.sampleUrl && !getAudioBuffer(index);
+      });
+
+      if (needsSampleLoading && samplePlayer.loadSample) {
+        const loadPromises = instruments.map(async (instrument, index) => {
+          if (instrument.type === 'sample' && instrument.sampleUrl && !getAudioBuffer(index)) {
+            try {
+              const audioBuffer = await samplePlayer.loadSample(instrument.sampleUrl);
+              setAudioBuffer(index, audioBuffer);
+            } catch (error) {
+              console.error(`[DrumSettings] Failed to load sample for ${instrument.name}:`, error);
+            }
+          }
+        });
+        await Promise.all(loadPromises);
+      }
+    };
+
+    loadPresetSamples();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instruments]);
+
   const handlePresetChange = (e) => {
     const presetId = e.target.value;
     setSelectedPreset(presetId);

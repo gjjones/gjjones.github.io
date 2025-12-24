@@ -4,6 +4,9 @@ import { useMidiContext } from '../contexts/MidiContext';
 import { getQuizById } from '../data/quizDefinitions';
 import { useSequencer } from '../hooks/useSequencer';
 import { useDrumSettings } from '../hooks/useDrumSettings';
+import { useAudioSamplePlayer } from '../hooks/useAudioSamplePlayer';
+import { useTimingClock } from '../hooks/useTimingClock';
+import { DEFAULT_PRESET } from '../constants/drumPresets';
 import { PermissionRequest } from '../components/ErrorStates/PermissionRequest';
 import { QuizComplete } from '../components/QuizComplete';
 import { Header } from '../components/Header/Header';
@@ -36,6 +39,12 @@ export function QuizRoute() {
   // Initialize drum settings
   const drumSettings = useDrumSettings();
 
+  // Initialize timing clock and sample player for auto-loading
+  const timingClockForSamples = useTimingClock({ bpm: 120, division: 4, totalSteps: 16 });
+  const samplePlayer = useAudioSamplePlayer({
+    audioContext: timingClockForSamples.audioContext,
+  });
+
   // Detect Web MIDI API availability
   useEffect(() => {
     const checkMidiAvailability = () => {
@@ -50,6 +59,46 @@ export function QuizRoute() {
 
     checkMidiAvailability();
   }, []);
+
+  // Auto-load 808 samples on first visit or reload samples from localStorage
+  useEffect(() => {
+    const checkAndLoadSamples = async () => {
+      // Wait for AudioContext to be available
+      if (!timingClockForSamples.audioContext) {
+        console.log('[QuizRoute] Waiting for AudioContext to be ready...');
+        return;
+      }
+
+      const hasSavedSettings = localStorage.getItem('drumSettings') !== null;
+
+      if (!hasSavedSettings) {
+        // First-time user: auto-load 808 kit
+        console.log('[QuizRoute] First visit - auto-loading 808 sample kit');
+        if (DEFAULT_PRESET && samplePlayer.loadSample) {
+          await drumSettings.loadSamplesFromPreset(
+            DEFAULT_PRESET.instruments,
+            samplePlayer.loadSample
+          );
+        }
+      } else {
+        // Returning user: reload samples if they have sample-type instruments
+        const needsSampleLoading = drumSettings.instruments.some((inst, index) => {
+          return inst.type === 'sample' && inst.sampleUrl && !drumSettings.getAudioBuffer(index);
+        });
+
+        if (needsSampleLoading && samplePlayer.loadSample) {
+          console.log('[QuizRoute] Reloading samples from saved settings');
+          await drumSettings.loadSamplesFromPreset(
+            drumSettings.instruments,
+            samplePlayer.loadSample
+          );
+        }
+      }
+    };
+
+    checkAndLoadSamples();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timingClockForSamples.audioContext]); // Re-run when audioContext becomes available
 
   // If invalid quiz ID, redirect to home
   useEffect(() => {

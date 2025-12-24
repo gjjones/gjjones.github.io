@@ -27,6 +27,9 @@ export function useDrumSettings() {
   // Store audio buffers separately (not persisted to localStorage)
   const [audioBuffers, setAudioBuffers] = useState({});
 
+  // Track sample loading state
+  const [samplesLoadingState, setSamplesLoadingState] = useState('idle');
+
   // Initialize from localStorage or use default
   const [instruments, setInstruments] = useState(() => {
     try {
@@ -115,6 +118,44 @@ export function useDrumSettings() {
     };
   }, [instruments, audioBuffers]);
 
+  // Load samples from preset configuration
+  const loadSamplesFromPreset = useCallback(async (instruments, loadSample) => {
+    if (!loadSample) {
+      console.warn('[useDrumSettings] loadSample function not provided');
+      return;
+    }
+
+    setSamplesLoadingState('loading');
+
+    const loadPromises = instruments.map(async (instrument, index) => {
+      if (instrument.type === 'sample' && instrument.sampleUrl) {
+        try {
+          const audioBuffer = await loadSample(instrument.sampleUrl);
+          return { index, audioBuffer };
+        } catch (error) {
+          console.error(`[useDrumSettings] Failed to load sample for ${instrument.name}:`, error);
+          return { index, audioBuffer: null };
+        }
+      }
+      return { index, audioBuffer: null };
+    });
+
+    try {
+      const results = await Promise.all(loadPromises);
+      const newBuffers = {};
+      results.forEach(({ index, audioBuffer }) => {
+        if (audioBuffer) {
+          newBuffers[index] = audioBuffer;
+        }
+      });
+      setAudioBuffers(prev => ({ ...prev, ...newBuffers }));
+      setSamplesLoadingState('loaded');
+    } catch (error) {
+      console.error('[useDrumSettings] Error loading samples:', error);
+      setSamplesLoadingState('error');
+    }
+  }, []);
+
   return {
     instruments,
     updateInstrument,
@@ -124,5 +165,7 @@ export function useDrumSettings() {
     setAudioBuffer,
     getAudioBuffer,
     getInstrument,
+    loadSamplesFromPreset,
+    samplesLoadingState,
   };
 }

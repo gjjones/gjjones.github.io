@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 
 // Singleton Web Audio context for high-precision timing
 let audioContextInstance = null;
@@ -61,6 +61,7 @@ export function closeTimingClock() {
  */
 export function useTimingClock({ bpm, division, totalSteps }) {
   const audioContextRef = useRef(null);
+  const [audioContext, setAudioContext] = useState(null);
   const playbackStartTimeRef = useRef(null);
   const currentStepRef = useRef(-1);
   const accumulatorRef = useRef(0);
@@ -70,6 +71,7 @@ export function useTimingClock({ bpm, division, totalSteps }) {
   useEffect(() => {
     try {
       audioContextRef.current = getAudioContext();
+      setAudioContext(audioContextRef.current);
 
       // Resume context if suspended (can happen after page load or sleep)
       if (audioContextRef.current.state === 'suspended') {
@@ -83,7 +85,7 @@ export function useTimingClock({ bpm, division, totalSteps }) {
 
     // Handle visibility changes (resume context when tab becomes visible)
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && audioContextRef.current.state === 'suspended') {
+      if (document.visibilityState === 'visible' && audioContextRef.current && audioContextRef.current.state === 'suspended') {
         audioContextRef.current.resume();
       }
     };
@@ -198,6 +200,6 @@ export function useTimingClock({ bpm, division, totalSteps }) {
     reset,
     updateStepTracking,
     setPlaying,
-    audioContext: audioContextRef.current,
+    audioContext,
   };
 }

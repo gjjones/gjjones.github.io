@@ -41,8 +41,46 @@ export const PRESET_TR8S = {
   ]
 };
 
+// 808 Sample Kit preset (audio sample-based playback)
+export const PRESET_808_KIT = {
+  id: '808-kit',
+  name: '808 Sample Kit',
+  instruments: [
+    {
+      label: 'HH',
+      name: 'Hi-Hat',
+      type: 'sample',
+      channel: 10,
+      note: 42,
+      velocity: 100,
+      duration: 20,
+      sampleUrl: '/samples/808-hihat.wav'
+    },
+    {
+      label: 'SN',
+      name: 'Snare',
+      type: 'sample',
+      channel: 10,
+      note: 38,
+      velocity: 100,
+      duration: 20,
+      sampleUrl: '/samples/808-snare.wav'
+    },
+    {
+      label: 'KD',
+      name: 'Kick',
+      type: 'sample',
+      channel: 10,
+      note: 36,
+      velocity: 100,
+      duration: 20,
+      sampleUrl: '/samples/808-kick.wav'
+    },
+  ]
+};
+
 // Array of all available presets
-export const PRESETS = [PRESET_GM_DRUMS, PRESET_TR6S, PRESET_TR8S];
+export const PRESETS = [PRESET_GM_DRUMS, PRESET_TR6S, PRESET_TR8S, PRESET_808_KIT];
 
 // Default preset to use when no settings exist
-export const DEFAULT_PRESET = PRESET_GM_DRUMS;
+export const DEFAULT_PRESET = PRESET_808_KIT;
