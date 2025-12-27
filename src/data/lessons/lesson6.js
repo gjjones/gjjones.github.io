@@ -72,7 +72,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (beats 2 & 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (beats 1 & 3) - LOCKED
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 88),
 
   // ===== PATTERN 2: EASY - Add one "e" ghost on beat 2 =====
   // Snares: beats 2 & 4, plus "e" of beat 2 (step 5)
@@ -80,7 +80,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, false, false, false],      // SN (2, 2e, 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 86),
 
   // ===== PATTERN 3: EASY - "e" ghosts on beats 2 & 4 =====
   // Snares: beats 2 & 4, plus "e" of each (steps 5, 13, 21, 29)
@@ -88,7 +88,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false],        // SN (2e, 4e)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 90),
+  ], 'sixteenth', 2, 84),
 
   // ===== PATTERN 4: MEDIUM - Adding "a" ghost on beat 4 =====
   // Snares: beats 2 & 4, plus "a" of beat 4 (steps 15, 31)
@@ -96,7 +96,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, true],      // SN (2, 4, 4a)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 90),
+  ], 'sixteenth', 2, 81),
 
   // ===== PATTERN 5: MEDIUM - Mix of "e" and "a" ghosts =====
   // Snares: beats 2 & 4, plus "e" of 2 and "a" of 4
@@ -104,7 +104,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, true, false, false, false, false, false, false, true, false, false, true, false, false, false, false, true, true, false, false, false, false, false, false, true, false, false, true],        // SN (2e, 4a)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 95),
+  ], 'sixteenth', 2, 85),
 
   // ===== PATTERN 6: MEDIUM - Ghost before beat 1 (measure 2) =====
   // Snares: beats 2 & 4, "e" ghosts, plus "a" before beat 1 of measure 2 (step 19)
@@ -112,7 +112,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, true, true, true, false, false, false, false, false, false, true, true, false, false],          // SN (2e, 4e, plus ghost before m2 beat 1)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 95),
+  ], 'sixteenth', 2, 83),
 
   // ===== PATTERN 7: MEDIUM - Double-tap feel =====
   // Snares: beats 2 & 4 with consecutive 16th notes (2e&, 4e&)
@@ -120,7 +120,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, true, true, false, false, false, false, false, true, true, true, false, false, false, false, false, true, true, true, false, false, false, false, false, true, true, true, false],            // SN (2e&, 4e&)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 100),
+  ], 'sixteenth', 2, 87),
 
   // ===== PATTERN 8: HARD - Complex ghost pattern =====
   // Snares: mix of ghosts on multiple subdivisions
@@ -128,7 +128,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, true, true, true, false, false, false, false, false, true, true, true, false, true, false, false, false, true, true, true, false, false, false, false, false, true, true, true, false, true],              // SN (complex pattern)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 105),
+  ], 'sixteenth', 2, 85),
 
   // ===== PATTERN 9: HARD - Advanced subdivision patterns =====
   // Snares: varied ghosts across all subdivisions
@@ -136,7 +136,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, true, false, false, true, true, false, true, false, true, false, false, true, true, false, true, false, true, false, false, true, true, false, true, false, true, false, false, true, true, false, true],                // SN (varied)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 110),
+  ], 'sixteenth', 2, 89),
 
   // ===== PATTERN 10: HARD - Maximum complexity ghost notes =====
   // Snares: very complex ghost note pattern with multiple consecutive hits
@@ -144,7 +144,7 @@ export const LESSON_6_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, true, true, true, true, true, false, true, false, true, true, true, true, true, false, false, false, true, true, true, true, true, false, true, false, true, true, true, true, true],                      // SN (very complex)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD - LOCKED
-  ], 'sixteenth', 2, 115),
+  ], 'sixteenth', 2, 82),
 ];
 
 /**

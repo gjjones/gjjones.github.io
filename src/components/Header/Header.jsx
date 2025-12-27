@@ -1,8 +1,11 @@
 import { theme } from '../../theme';
 import { ConnectionStatus } from './ConnectionStatus';
 import { BpmControl } from './BpmControl';
+import { useWarmupMode } from '../../hooks/useWarmupMode';
 
 export function Header({ selectedOutput, bpm, onBpmChange, currentQuestionIndex, totalQuestions, onExit }) {
+  const { isWarmupMode } = useWarmupMode();
+
   return (
     <header
       style={{
@@ -19,6 +22,24 @@ export function Header({ selectedOutput, bpm, onBpmChange, currentQuestionIndex,
       <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.lg, flexWrap: 'wrap' }}>
         <ConnectionStatus selectedOutput={selectedOutput} />
         <BpmControl bpm={bpm} onBpmChange={onBpmChange} />
+
+        {/* Warmup Mode Indicator - only show when active */}
+        {isWarmupMode && (
+          <div style={{
+            padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+            background: theme.colors.warning,
+            color: 'white',
+            borderRadius: theme.borderRadius.sm,
+            fontSize: theme.typography.fontSize.sm,
+            fontWeight: theme.typography.fontWeight.medium,
+            display: 'flex',
+            alignItems: 'center',
+            gap: theme.spacing.xs,
+          }}>
+            <span>🔥</span>
+            <span>WARMUP MODE</span>
+          </div>
+        )}
       </div>
 
       {currentQuestionIndex !== undefined && totalQuestions && (

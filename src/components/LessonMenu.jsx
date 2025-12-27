@@ -1,6 +1,7 @@
 import { theme } from '../theme';
 import { getAllLessons, getLessonsByPhase } from '../utils/curriculumLoader';
 import { useProgressTracking } from '../hooks/useProgressTracking';
+import { useWarmupMode } from '../hooks/useWarmupMode';
 
 /**
  * Lesson menu component for curriculum navigation
@@ -9,6 +10,7 @@ import { useProgressTracking } from '../hooks/useProgressTracking';
 export function LessonMenu({ onSelectLesson }) {
   const lessons = getAllLessons();
   const { progress: progressData } = useProgressTracking();
+  const { isWarmupMode, toggleWarmupMode, warmupReduction } = useWarmupMode();
 
   // Group lessons by phase
   const phase1Lessons = getLessonsByPhase(1);
@@ -51,6 +53,66 @@ export function LessonMenu({ onSelectLesson }) {
       >
         Master drum transcription through structured lessons
       </p>
+
+      {/* Warmup Mode Toggle */}
+      <div style={{
+        width: '100%',
+        maxWidth: '900px',
+        marginBottom: theme.spacing.lg,
+        padding: theme.spacing.md,
+        background: isWarmupMode ? theme.colors.warning : theme.colors.bg.secondary,
+        border: `2px solid ${isWarmupMode ? theme.colors.warning : theme.colors.border.default}`,
+        borderRadius: theme.borderRadius.md,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: theme.spacing.md,
+        transition: `all ${theme.transitions.base}`,
+      }}>
+        <div>
+          <div style={{
+            fontSize: theme.typography.fontSize.lg,
+            fontWeight: theme.typography.fontWeight.semibold,
+            color: theme.colors.text.primary,
+            marginBottom: theme.spacing.xs,
+          }}>
+            Warmup Mode {isWarmupMode ? 'ON' : 'OFF'}
+          </div>
+          <p style={{
+            margin: 0,
+            fontSize: theme.typography.fontSize.sm,
+            color: theme.colors.text.secondary
+          }}>
+            {isWarmupMode
+              ? `All patterns play ${warmupReduction} BPM slower for easier practice`
+              : 'Practice at normal lesson tempos'}
+          </p>
+        </div>
+
+        <button
+          onClick={toggleWarmupMode}
+          style={{
+            padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+            fontSize: theme.typography.fontSize.base,
+            fontWeight: theme.typography.fontWeight.medium,
+            background: isWarmupMode ? theme.colors.success : theme.colors.primary,
+            color: 'white',
+            border: 'none',
+            borderRadius: theme.borderRadius.sm,
+            cursor: 'pointer',
+            transition: `all ${theme.transitions.base}`,
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.opacity = '0.9';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.opacity = '1';
+          }}
+        >
+          {isWarmupMode ? 'Disable' : 'Enable'} Warmup
+        </button>
+      </div>
 
       {/* Phase 1: Core Lessons */}
       {phase1Lessons.length > 0 && (

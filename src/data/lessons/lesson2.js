@@ -56,70 +56,70 @@ export const LESSON_2_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // KD (and-of-1)
-  ], 'eighth', 2, 85),
+  ], 'eighth', 2, 84),
 
   // ===== PATTERN 2: EASY - Kick on "and-of-3" only =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false],   // KD (and-of-3)
-  ], 'eighth', 2, 90),
+  ], 'eighth', 2, 88),
 
   // ===== PATTERN 3: EASY - Kicks on "and-of-1" and "and-of-3" =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false],    // KD (and-of-1, and-of-3)
-  ], 'eighth', 2, 88),
+  ], 'eighth', 2, 86),
 
   // ===== PATTERN 4: MEDIUM - Kick on "and-of-2" =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false],   // KD (and-of-2)
-  ], 'eighth', 2, 95),
+  ], 'eighth', 2, 82),
 
   // ===== PATTERN 5: MEDIUM - Kicks on "and-of-1" and "and-of-2" =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false],    // KD (and-of-1, and-of-2)
-  ], 'eighth', 2, 102),
+  ], 'eighth', 2, 87),
 
   // ===== PATTERN 6: MEDIUM - All four "ands" =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false],      // KD (all ands)
-  ], 'eighth', 2, 98),
+  ], 'eighth', 2, 85),
 
   // ===== PATTERN 7: MEDIUM - Mix of downbeats and upbeats =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false],     // KD (1, and-of-2, and-of-3)
-  ], 'eighth', 2, 105),
+  ], 'eighth', 2, 89),
 
   // ===== PATTERN 8: HARD - Syncopated pattern =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, true, false, false, false, true, false, true, false, false, false, false, false, true],       // KD (lots of ands)
-  ], 'eighth', 2, 108),
+  ], 'eighth', 2, 83),
 
   // ===== PATTERN 9: HARD - Complex upbeat pattern =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, false, false, true, false, true, false, false, false, false, false, true, false, true, false, false],      // KD (and-of-e-1, and-of-2, and-of-e-3, and-of-4)
-  ], 'eighth', 2, 115),
+  ], 'eighth', 2, 86),
 
   // ===== PATTERN 10: HARD - Completely off-beat =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, false, false, true, false, false, false, true, false, false, false, true],      // KD (all ands of all 4 beats)
-  ], 'eighth', 2, 112),
+  ], 'eighth', 2, 84),
 ];
 
 /**

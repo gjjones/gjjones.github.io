@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { createEmptySequence, createSequenceWithLockedCells } from '../utils/patternUtils';
+import { useWarmupMode } from './useWarmupMode';
 
 /**
  * Manages sequencer state (sequences, quiz progression, tempo)
@@ -8,6 +9,9 @@ import { createEmptySequence, createSequenceWithLockedCells } from '../utils/pat
  * @param {Array} instruments - Array of instrument configurations
  */
 export function useSequencerState(quizDefinition, instruments = []) {
+  // Warmup mode hook
+  const { applyWarmup } = useWarmupMode();
+
   // Quiz patterns from definition
   const [hiddenSequences, setHiddenSequences] = useState(quizDefinition.patterns);
   const totalQuestions = quizDefinition.totalQuestions || quizDefinition.patterns.length;
@@ -33,7 +37,7 @@ export function useSequencerState(quizDefinition, instruments = []) {
 
   // Initialize BPM from first pattern's tempo, or fall back to 120
   const initialBpm = quizDefinition.patterns?.[0]?.tempo || 120;
-  const [bpm, setBpm] = useState(initialBpm);
+  const [bpm, setBpm] = useState(applyWarmup(initialBpm));
 
   // Reset state when quiz changes
   useEffect(() => {
@@ -46,7 +50,7 @@ export function useSequencerState(quizDefinition, instruments = []) {
 
     // Reset BPM to first pattern's tempo
     const initialBpm = quizDefinition.patterns?.[0]?.tempo || 120;
-    setBpm(initialBpm);
+    setBpm(applyWarmup(initialBpm));
 
     // Initialize with locked cells if it's a lesson
     const constraints = quizDefinition.constraints;
@@ -91,7 +95,7 @@ export function useSequencerState(quizDefinition, instruments = []) {
 
       // Update BPM to next pattern's tempo (if it has one)
       if (nextPattern.tempo) {
-        setBpm(nextPattern.tempo);
+        setBpm(applyWarmup(nextPattern.tempo));
       }
 
       // Initialize with locked cells if it's a lesson
@@ -118,7 +122,7 @@ export function useSequencerState(quizDefinition, instruments = []) {
 
     // Reset BPM to first pattern's tempo
     const initialBpm = hiddenSequences[0]?.tempo || 120;
-    setBpm(initialBpm);
+    setBpm(applyWarmup(initialBpm));
 
     // Initialize with locked cells if it's a lesson
     const constraints = quizDefinition.constraints;

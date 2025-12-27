@@ -76,7 +76,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (2 & 4 on beat)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 82),
 
   // ===== PATTERN 2: EASY - Beat 4 early (measure 1) =====
   // Snares: beat 2 on beat (4, 20), beat 4 early (11, 28)
@@ -84,7 +84,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (2, 4 early in m1, 2 & 4 in m2)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 89),
 
   // ===== PATTERN 3: EASY - Beat 4 late (measure 1) =====
   // Snares: beat 2 on beat (4, 20), beat 4 late (13, 28)
@@ -92,7 +92,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (2, 4 late in m1, 2 & 4 in m2)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 90),
+  ], 'sixteenth', 2, 85),
 
   // ===== PATTERN 4: MEDIUM - Both measures early =====
   // Snares: beat 2 on beat (4, 20), beat 4 early both measures (11, 27)
@@ -100,7 +100,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (2 & 4 early)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 95),
+  ], 'sixteenth', 2, 87),
 
   // ===== PATTERN 5: MEDIUM - Both measures late =====
   // Snares: beat 2 on beat (4, 20), beat 4 late both measures (13, 29)
@@ -108,7 +108,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false],     // SN (2 & 4 late)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 95),
+  ], 'sixteenth', 2, 83),
 
   // ===== PATTERN 6: MEDIUM - Mix: M1 early, M2 late =====
   // Snares: beat 2 on beat (4, 20), M1 beat 4 early (11), M2 beat 4 late (29)
@@ -116,7 +116,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false],     // SN (mixed)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 100),
+  ], 'sixteenth', 2, 86),
 
   // ===== PATTERN 7: MEDIUM - Early with syncopated kick =====
   // Snares: beat 2 & 4 early (4, 11, 20, 27)
@@ -125,7 +125,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (2 & 4 early)
     [true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false],     // KD (1, and-of-3)
-  ], 'sixteenth', 2, 105),
+  ], 'sixteenth', 2, 84),
 
   // ===== PATTERN 8: HARD - Late with complex kick pattern =====
   // Snares: beat 2 & 4 late (4, 13, 20, 29)
@@ -134,7 +134,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false],     // SN (2 & 4 late)
     [true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false],       // KD (1, e-of-1, and-of-3, and-of-3)
-  ], 'sixteenth', 2, 108),
+  ], 'sixteenth', 2, 88),
 
   // ===== PATTERN 9: HARD - Alternating displacement =====
   // Snares: M1 late, M2 early with varied kicks
@@ -142,7 +142,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (M1: 2, 4 late; M2: 2, 4 early)
     [true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false],       // KD (complex)
-  ], 'sixteenth', 2, 112),
+  ], 'sixteenth', 2, 85),
 
   // ===== PATTERN 10: HARD - Maximum complexity =====
   // Snares: Both early with very syncopated kicks
@@ -150,7 +150,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (2 & 4 early)
     [true, true, false, false, false, false, false, true, false, true, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, true, true, false, false, false, true, false],           // KD (very complex)
-  ], 'sixteenth', 2, 115),
+  ], 'sixteenth', 2, 81),
 ];
 
 /**

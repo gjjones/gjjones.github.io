@@ -33,6 +33,7 @@ export function QuizRoute() {
 
   // Get the lesson by ID
   const selectedQuiz = getLesson(quizId);
+  const isLesson = !!selectedQuiz;
 
   const [playbackMode, setPlaybackMode] = useState('hidden');
   const [showHints, setShowHints] = useState(false);

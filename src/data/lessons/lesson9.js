@@ -75,7 +75,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // HT (beat 3)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // MT
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // LT
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 84),
 
   // ===== PATTERN 2: EASY - High-Low tom pattern =====
   // Simple groove with high tom then low tom (beat 3)
@@ -86,7 +86,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // HT (beat 3)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // MT
     [false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false],     // LT (e-of-3)
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 82),
 
   // ===== PATTERN 3: EASY - Tom fill at end =====
   // Basic groove, then tom fill in last 4 steps
@@ -97,7 +97,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false],     // HT (step 28)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false],     // MT (step 29)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true],     // LT (steps 30, 31)
-  ], 'sixteenth', 2, 90),
+  ], 'sixteenth', 2, 86),
 
   // ===== PATTERN 4: MEDIUM - Tom answers snare =====
   // Snare plays, tom responds
@@ -108,7 +108,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false],     // HT (after snare)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false],     // MT (after snare)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // LT
-  ], 'sixteenth', 2, 95),
+  ], 'sixteenth', 2, 89),
 
   // ===== PATTERN 5: MEDIUM - Descending tom pattern =====
   // High-Mid-Low tom cascade
@@ -119,7 +119,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false],     // HT (step 28)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false],     // MT (step 29)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false],     // LT (step 30)
-  ], 'sixteenth', 2, 95),
+  ], 'sixteenth', 2, 85),
 
   // ===== PATTERN 6: MEDIUM - Tom dialogue throughout =====
   // Toms scattered through the groove
@@ -130,7 +130,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false],     // HT (and-of-3)
     [false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false],     // MT (a-of-2)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],     // LT (and-of-4)
-  ], 'sixteenth', 2, 100),
+  ], 'sixteenth', 2, 88),
 
   // ===== PATTERN 7: MEDIUM - Tom triplet feel =====
   // Three toms in quick succession
@@ -141,7 +141,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false],     // HT (step 30)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false],     // MT (step 29)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false],     // LT (step 28)
-  ], 'sixteenth', 2, 105),
+  ], 'sixteenth', 2, 81),
 
   // ===== PATTERN 8: HARD - Complex tom fills =====
   // Multiple tom fills throughout
@@ -152,7 +152,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, false],     // HT
     [false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true],     // MT
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],     // LT
-  ], 'sixteenth', 2, 108),
+  ], 'sixteenth', 2, 83),
 
   // ===== PATTERN 9: HARD - Syncopated tom groove =====
   // Toms integrated into the groove
@@ -163,7 +163,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false],     // HT
     [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true],       // MT
     [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // LT
-  ], 'sixteenth', 2, 112),
+  ], 'sixteenth', 2, 87),
 
   // ===== PATTERN 10: HARD - Maximum tom complexity =====
   // Dense tom patterns with full dialogue
@@ -174,7 +174,7 @@ export const LESSON_9_PATTERNS = [
     [false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, false],       // HT
     [false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, true, false, true],         // MT
     [false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false],     // LT
-  ], 'sixteenth', 2, 115),
+  ], 'sixteenth', 2, 85),
 ];
 
 /**
