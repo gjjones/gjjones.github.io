@@ -7,6 +7,7 @@ import { useDrumSettings } from '../hooks/useDrumSettings';
 import { useAudioSamplePlayer } from '../hooks/useAudioSamplePlayer';
 import { useTimingClock } from '../hooks/useTimingClock';
 import { useProgressTracking } from '../hooks/useProgressTracking';
+import { useTimer } from '../hooks/useTimer';
 import { DEFAULT_PRESET } from '../constants/drumPresets';
 import { PermissionRequest } from '../components/ErrorStates/PermissionRequest';
 import { QuizComplete } from '../components/QuizComplete';
@@ -45,6 +46,9 @@ export function QuizRoute() {
 
   // Initialize progress tracking for lessons
   const { recordLessonCompletion, recordPatternResult } = useProgressTracking();
+
+  // Initialize timer for tracking quiz session time
+  const timer = useTimer();
 
   // Initialize timing clock and sample player for auto-loading
   const timingClockForSamples = useTimingClock({ bpm: 120, division: 4, totalSteps: 16 });
@@ -199,10 +203,17 @@ export function QuizRoute() {
     lessonInstruments
   );
 
+  // Start timer when component mounts (quiz begins)
+  useEffect(() => {
+    timer.start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Start timer once on mount
+
   // Stop playback on unmount
   useEffect(() => {
     return () => {
       sequencer.stop();
+      timer.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only cleanup on unmount, not when sequencer reference changes
@@ -211,6 +222,7 @@ export function QuizRoute() {
   useEffect(() => {
     if (sequencer.isQuizComplete) {
       sequencer.stop();
+      timer.stop(); // Stop timer when quiz completes
 
       // Record lesson completion for lessons
       if (isLesson && recordLessonCompletion && selectedQuiz) {
@@ -221,12 +233,12 @@ export function QuizRoute() {
         recordLessonCompletion(quizId, {
           accuracy,
           patternResults: sequencer.quizResults,
-          timeTaken: 0, // TODO: track time
+          timeTaken: timer.elapsedSeconds, // Track actual elapsed time
           tempo: sequencer.bpm
         });
       }
     }
-  }, [sequencer.isQuizComplete, sequencer, isLesson, recordLessonCompletion, quizId, selectedQuiz]);
+  }, [sequencer.isQuizComplete, sequencer, isLesson, recordLessonCompletion, quizId, selectedQuiz, timer]);
 
   const handleTogglePlayback = () => {
     if (sequencer.isPlaying) {
