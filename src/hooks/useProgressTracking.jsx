@@ -416,4 +416,71 @@ export function getWeakQualities(progress, lessons, threshold = 0.7) {
     .sort((a, b) => a.accuracy - b.accuracy); // Worst first
 }
 
+/**
+ * Categorize accuracy into mastery levels
+ * @param {number} accuracy - 0-1 accuracy percentage
+ * @returns {Object} Mastery level with label and color
+ */
+function getMasteryLevel(accuracy) {
+  if (accuracy >= 0.9) {
+    return { level: 'mastered', label: 'Mastered', color: 'green' };
+  } else if (accuracy >= 0.7) {
+    return { level: 'developing', label: 'Developing', color: 'yellow' };
+  } else {
+    return { level: 'needs-practice', label: 'Needs Practice', color: 'red' };
+  }
+}
+
+/**
+ * Get progress for all qualities (not just weak ones)
+ * @param {Object} progress - Progress data
+ * @param {Array} lessons - All lesson objects
+ * @returns {Array} Quality progress with mastery levels
+ */
+export function getQualityProgress(progress, lessons) {
+  if (!progress || !lessons) return [];
+
+  const qualityAccuracy = {};
+
+  // Calculate accuracy per quality (same logic as getWeakQualities)
+  lessons.forEach(lesson => {
+    const quality = lesson.quality || lesson.metadata?.quality;
+    if (!quality) return;
+
+    const lessonProgress = progress.lessonProgress[lesson.id];
+    if (lessonProgress && lessonProgress.accuracy !== undefined) {
+      if (!qualityAccuracy[quality]) {
+        qualityAccuracy[quality] = {
+          total: 0,
+          sum: 0,
+          lastPracticed: null
+        };
+      }
+      qualityAccuracy[quality].total++;
+      qualityAccuracy[quality].sum += lessonProgress.accuracy;
+
+      // Track most recent practice time
+      if (!qualityAccuracy[quality].lastPracticed ||
+          lessonProgress.lastAttempted > qualityAccuracy[quality].lastPracticed) {
+        qualityAccuracy[quality].lastPracticed = lessonProgress.lastAttempted;
+      }
+    }
+  });
+
+  // Return all qualities with mastery levels
+  return Object.entries(qualityAccuracy)
+    .map(([quality, data]) => {
+      const accuracy = data.sum / data.total;
+      return {
+        quality,
+        accuracy: Math.round(accuracy * 100), // Convert to percentage
+        masteryLevel: getMasteryLevel(accuracy),
+        lessonCount: data.total,
+        lastPracticed: data.lastPracticed,
+        needsReview: accuracy < 0.7
+      };
+    })
+    .sort((a, b) => b.accuracy - a.accuracy); // Best first
+}
+
 export default useProgressTracking;
