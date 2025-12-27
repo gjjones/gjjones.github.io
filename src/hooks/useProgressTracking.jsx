@@ -432,6 +432,72 @@ function getMasteryLevel(accuracy) {
 }
 
 /**
+ * Get review interval in days based on mastery level
+ * @param {string} masteryLevel - Mastery level ('mastered', 'developing', 'needs-practice')
+ * @returns {number} Days until review recommended
+ */
+function getReviewIntervalDays(masteryLevel) {
+  switch (masteryLevel) {
+    case 'mastered':
+      return 21; // 3 weeks for mastered skills
+    case 'developing':
+      return 10; // 10 days for developing skills
+    case 'needs-practice':
+      return 5; // 5 days for skills needing practice
+    default:
+      return 7; // Default 1 week
+  }
+}
+
+/**
+ * Calculate days since last practice
+ * @param {string} lastPracticedISO - ISO timestamp of last practice
+ * @returns {number} Days since last practice
+ */
+function getDaysSinceLastPractice(lastPracticedISO) {
+  if (!lastPracticedISO) return Infinity;
+
+  const lastPracticed = new Date(lastPracticedISO);
+  const now = new Date();
+  const diffMs = now - lastPracticed;
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  return diffDays;
+}
+
+/**
+ * Format days into relative time string
+ * @param {number} days - Number of days
+ * @returns {string} Formatted string (e.g., "2 weeks ago", "3 days ago")
+ */
+function formatDaysAgo(days) {
+  if (days === 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 7) return `${days} days ago`;
+
+  const weeks = Math.floor(days / 7);
+  if (weeks === 1) return '1 week ago';
+  if (weeks < 4) return `${weeks} weeks ago`;
+
+  const months = Math.floor(days / 30);
+  if (months === 1) return '1 month ago';
+  return `${months} months ago`;
+}
+
+/**
+ * Determine if a quality is overdue for review
+ * @param {string} lastPracticedISO - ISO timestamp of last practice
+ * @param {string} masteryLevel - Mastery level
+ * @returns {boolean} True if overdue for review
+ */
+function isOverdueForReview(lastPracticedISO, masteryLevel) {
+  const daysSince = getDaysSinceLastPractice(lastPracticedISO);
+  const intervalDays = getReviewIntervalDays(masteryLevel);
+
+  return daysSince >= intervalDays;
+}
+
+/**
  * Get progress for all qualities (not just weak ones)
  * @param {Object} progress - Progress data
  * @param {Array} lessons - All lesson objects
@@ -467,17 +533,26 @@ export function getQualityProgress(progress, lessons) {
     }
   });
 
-  // Return all qualities with mastery levels
+  // Return all qualities with mastery levels and review schedule
   return Object.entries(qualityAccuracy)
     .map(([quality, data]) => {
       const accuracy = data.sum / data.total;
+      const masteryLevel = getMasteryLevel(accuracy);
+      const daysSince = getDaysSinceLastPractice(data.lastPracticed);
+      const isOverdue = isOverdueForReview(data.lastPracticed, masteryLevel.level);
+
       return {
         quality,
         accuracy: Math.round(accuracy * 100), // Convert to percentage
-        masteryLevel: getMasteryLevel(accuracy),
+        masteryLevel,
         lessonCount: data.total,
         lastPracticed: data.lastPracticed,
-        needsReview: accuracy < 0.7
+        needsReview: accuracy < 0.7,
+        // Spaced repetition fields
+        daysSinceLastPractice: daysSince,
+        lastPracticedFormatted: data.lastPracticed ? formatDaysAgo(daysSince) : 'never',
+        isOverdue,
+        reviewIntervalDays: getReviewIntervalDays(masteryLevel.level)
       };
     })
     .sort((a, b) => b.accuracy - a.accuracy); // Best first

@@ -157,16 +157,39 @@ export function LessonMenu({ onSelectLesson }) {
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
             gap: theme.spacing.md,
           }}>
-            {qualityProgress.map(({ quality, accuracy, masteryLevel, needsReview }) => (
+            {qualityProgress.map(({
+              quality,
+              accuracy,
+              masteryLevel,
+              needsReview,
+              isOverdue,
+              lastPracticedFormatted,
+              daysSinceLastPractice
+            }) => (
               <div
                 key={quality}
                 style={{
                   padding: theme.spacing.md,
                   background: theme.colors.bg.primary,
-                  border: `2px solid ${getMasteryColor(masteryLevel.level)}`,
+                  border: `2px solid ${isOverdue ? theme.colors.warning : getMasteryColor(masteryLevel.level)}`,
                   borderRadius: theme.borderRadius.sm,
+                  position: 'relative',
                 }}
               >
+                {/* Overdue indicator */}
+                {isOverdue && (
+                  <div style={{
+                    position: 'absolute',
+                    top: theme.spacing.xs,
+                    right: theme.spacing.xs,
+                    fontSize: theme.typography.fontSize.xs,
+                    fontWeight: theme.typography.fontWeight.medium,
+                    color: theme.colors.warning,
+                  }}>
+                    ⚠️ Overdue
+                  </div>
+                )}
+
                 <div style={{
                   fontSize: theme.typography.fontSize.sm,
                   fontWeight: theme.typography.fontWeight.medium,
@@ -185,10 +208,24 @@ export function LessonMenu({ onSelectLesson }) {
                 <div style={{
                   fontSize: theme.typography.fontSize.xs,
                   color: theme.colors.text.secondary,
+                  marginBottom: theme.spacing.xs,
                 }}>
                   {masteryLevel.label}
                   {needsReview && ' • Review Recommended'}
                 </div>
+
+                {/* Last practiced info */}
+                {daysSinceLastPractice !== Infinity && (
+                  <div style={{
+                    fontSize: theme.typography.fontSize.xs,
+                    color: isOverdue ? theme.colors.warning : theme.colors.text.secondary,
+                    fontStyle: 'italic',
+                    marginTop: theme.spacing.xs,
+                  }}>
+                    {isOverdue ? '🔄 ' : '📅 '}
+                    Last practiced {lastPracticedFormatted}
+                  </div>
+                )}
               </div>
             ))}
           </div>
