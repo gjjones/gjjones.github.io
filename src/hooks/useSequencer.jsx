@@ -31,7 +31,7 @@ export function useSequencer(sendNoteTrigger, playbackMode = 'user', quizDefinit
     exitQuiz,
     bpm,
     setBpm,
-  } = useSequencerState(quizDefinition);
+  } = useSequencerState(quizDefinition, instruments);
 
   // Determine which sequence to play
   const playbackSequence = playbackMode === 'hidden' ? currentHiddenSequence : userSequence;

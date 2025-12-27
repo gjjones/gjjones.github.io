@@ -1,12 +1,12 @@
 import { useNavigate } from '@tanstack/react-router';
-import { MainMenu } from '../components/MainMenu';
+import { LessonMenu } from '../components/LessonMenu';
 
 export function MenuRoute() {
   const navigate = useNavigate();
 
-  const handleSelectQuiz = (quizId) => {
-    navigate({ to: `/quiz/${quizId}` });
+  const handleSelectLesson = (lessonId) => {
+    navigate({ to: `/quiz/${lessonId}` });
   };
 
-  return <MainMenu onSelectQuiz={handleSelectQuiz} />;
+  return <LessonMenu onSelectLesson={handleSelectLesson} />;
 }

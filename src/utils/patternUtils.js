@@ -15,9 +15,10 @@ export const RESOLUTION_CONFIG = {
  * @param {Array<Array<boolean>>} steps - 3D array: [tracks][steps]
  * @param {'quarter'|'eighth'|'sixteenth'} resolution - Note subdivision
  * @param {number} measures - Number of measures (1-4)
+ * @param {number|null} tempo - Optional BPM for this pattern (defaults to null)
  * @returns {Object} Pattern object with steps and metadata
  */
-export function createPattern(steps, resolution, measures) {
+export function createPattern(steps, resolution, measures, tempo = null) {
   const config = RESOLUTION_CONFIG[resolution];
 
   if (!config) {
@@ -41,6 +42,7 @@ export function createPattern(steps, resolution, measures) {
     stepsPerMeasure,
     totalSteps,
     division: config.division,
+    tempo,  // Optional BPM for this pattern
   };
 }
 
@@ -48,12 +50,43 @@ export function createPattern(steps, resolution, measures) {
  * Creates an empty sequence (all steps false) for a given step count
  *
  * @param {number} stepCount - Number of steps per track
- * @returns {Array<Array<boolean>>} Empty 3-track sequence
+ * @param {number} trackCount - Number of tracks (default 3 for backward compatibility)
+ * @returns {Array<Array<boolean>>} Empty sequence with specified track count
  */
-export function createEmptySequence(stepCount) {
-  return [
-    Array(stepCount).fill(false), // HH
-    Array(stepCount).fill(false), // SN
-    Array(stepCount).fill(false), // KD
-  ];
+export function createEmptySequence(stepCount, trackCount = 3) {
+  return Array(trackCount).fill(null).map(() => Array(stepCount).fill(false));
+}
+
+/**
+ * Creates a sequence with locked cells pre-filled from lesson constraints
+ * Locked cells are set to true, all other cells are false
+ *
+ * @param {number} stepCount - Number of steps per track
+ * @param {Object} constraints - Lesson constraints with locked cells
+ * @param {Array} instruments - Array of instrument configs with labels
+ * @returns {Array<Array<boolean>>} Sequence with locked cells pre-filled
+ */
+export function createSequenceWithLockedCells(stepCount, constraints, instruments) {
+  // Start with empty sequence with correct number of tracks
+  const trackCount = instruments.length || 3;
+  const sequence = createEmptySequence(stepCount, trackCount);
+
+  // If no constraints, return empty sequence
+  if (!constraints || !constraints.locked) {
+    return sequence;
+  }
+
+  // Pre-fill locked cells
+  instruments.forEach((instrument, trackIndex) => {
+    const lockedSteps = constraints.locked[instrument.label];
+    if (lockedSteps && Array.isArray(lockedSteps)) {
+      lockedSteps.forEach(stepIndex => {
+        if (stepIndex >= 0 && stepIndex < stepCount) {
+          sequence[trackIndex][stepIndex] = true;
+        }
+      });
+    }
+  });
+
+  return sequence;
 }

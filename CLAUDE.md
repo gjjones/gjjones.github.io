@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Documentation Vault
+
+Development notes, feature planning, and content specifications are maintained in an Obsidian vault at:
+`C:\Users\gjjon\Documents\obsidian`
+
+Refer to the vault for feature requirements, design rationale, and drum lesson content. See the vault's `index.md` for organization details.
+
 ## Project Overview
 
 This is a React 19 application built with rspack and deployed to GitHub Pages. The application provides MIDI device management and sequencer transport control using the Web MIDI API.

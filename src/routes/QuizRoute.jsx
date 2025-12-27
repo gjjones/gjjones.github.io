@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { useMidiContext } from '../contexts/MidiContext';
-import { getQuizById } from '../data/quizDefinitions';
+import { getLesson } from '../utils/curriculumLoader';
 import { useSequencer } from '../hooks/useSequencer';
 import { useDrumSettings } from '../hooks/useDrumSettings';
 import { useAudioSamplePlayer } from '../hooks/useAudioSamplePlayer';
 import { useTimingClock } from '../hooks/useTimingClock';
+import { useProgressTracking } from '../hooks/useProgressTracking';
 import { DEFAULT_PRESET } from '../constants/drumPresets';
 import { PermissionRequest } from '../components/ErrorStates/PermissionRequest';
 import { QuizComplete } from '../components/QuizComplete';
@@ -30,7 +31,9 @@ export function QuizRoute() {
     sendNoteTrigger,
   } = useMidiContext();
 
-  const selectedQuiz = getQuizById(quizId);
+  // Get the lesson by ID
+  const selectedQuiz = getLesson(quizId);
+
   const [playbackMode, setPlaybackMode] = useState('hidden');
   const [showHints, setShowHints] = useState(false);
   const [viewMode, setViewMode] = useState('sequencer'); // 'sequencer' | 'settings'
@@ -38,6 +41,9 @@ export function QuizRoute() {
 
   // Initialize drum settings
   const drumSettings = useDrumSettings();
+
+  // Initialize progress tracking for lessons
+  const { recordLessonCompletion, recordPatternResult } = useProgressTracking();
 
   // Initialize timing clock and sample player for auto-loading
   const timingClockForSamples = useTimingClock({ bpm: 120, division: 4, totalSteps: 16 });
@@ -107,14 +113,89 @@ export function QuizRoute() {
     }
   }, [selectedQuiz, navigate]);
 
-  // Initialize sequencer with fallback quiz for hook rules
+  // Filter instruments based on lesson requirements
+  // Lessons can specify which instruments they need (e.g., for Lesson 5 with Open Hi-Hat)
+  // Memoized to prevent infinite re-renders
+  const { lessonInstruments, lessonToPresetIndexMap } = useMemo(() => {
+    if (!selectedQuiz?.instruments) {
+      // No specific instruments required, use all from settings
+      const indexMap = drumSettings.instruments.map((_, i) => i);
+      return { lessonInstruments: drumSettings.instruments, lessonToPresetIndexMap: indexMap };
+    }
+
+    // Lesson specifies required instruments - filter and reorder to match
+    const requiredLabels = selectedQuiz.instruments;
+    const filtered = [];
+    const indexMap = [];
+
+    requiredLabels.forEach(label => {
+      // First, try to find in user's saved settings
+      const presetIndex = drumSettings.instruments.findIndex(inst => inst.label === label);
+      let instrument = drumSettings.instruments[presetIndex];
+
+      // If not found, try to get from DEFAULT_PRESET (for new instruments like OH)
+      if (!instrument && DEFAULT_PRESET?.instruments) {
+        instrument = DEFAULT_PRESET.instruments.find(inst => inst.label === label);
+      }
+
+      if (instrument) {
+        filtered.push(instrument);
+        indexMap.push(presetIndex >= 0 ? presetIndex : -1);
+      }
+    });
+
+    return { lessonInstruments: filtered, lessonToPresetIndexMap: indexMap };
+  }, [selectedQuiz?.instruments, drumSettings.instruments]);
+
+  // Create lesson-specific instrument lookup functions
+  // These use lessonInstruments instead of the full drumSettings.instruments
+  const getLessonMidiParams = useCallback((trackIndex) => {
+    const instrument = lessonInstruments[trackIndex];
+    if (!instrument) return null;
+    return {
+      channel: instrument.channel,
+      note: instrument.note,
+      velocity: instrument.velocity,
+    };
+  }, [lessonInstruments]);
+
+  const getLessonInstrument = useCallback((trackIndex) => {
+    const instrument = lessonInstruments[trackIndex];
+    if (!instrument) return null;
+    return instrument;
+  }, [lessonInstruments]);
+
+  // Create Settings-specific functions that map lesson indices to preset indices
+  const updateLessonInstrument = useCallback((lessonIndex, updates) => {
+    const presetIndex = lessonToPresetIndexMap[lessonIndex];
+    if (presetIndex >= 0) {
+      drumSettings.updateInstrument(presetIndex, updates);
+    }
+  }, [lessonToPresetIndexMap, drumSettings]);
+
+  const setLessonAudioBuffer = useCallback((lessonIndex, audioBuffer) => {
+    const presetIndex = lessonToPresetIndexMap[lessonIndex];
+    if (presetIndex >= 0) {
+      drumSettings.setAudioBuffer(presetIndex, audioBuffer);
+    }
+  }, [lessonToPresetIndexMap, drumSettings]);
+
+  const getLessonAudioBuffer = useCallback((lessonIndex) => {
+    const presetIndex = lessonToPresetIndexMap[lessonIndex];
+    if (presetIndex >= 0) {
+      return drumSettings.getAudioBuffer(presetIndex);
+    }
+    return null;
+  }, [lessonToPresetIndexMap, drumSettings]);
+
+  // Initialize sequencer
   const sequencer = useSequencer(
     sendNoteTrigger,
     playbackMode,
-    selectedQuiz || getQuizById('basicGrooves'),
-    drumSettings.getMidiParams,
-    drumSettings.getInstrument,
-    drumSettings.instruments
+    selectedQuiz,
+    getLessonMidiParams,
+    getLessonInstrument,
+    lessonInstruments
   );
 
   // Stop playback on unmount
@@ -129,8 +210,22 @@ export function QuizRoute() {
   useEffect(() => {
     if (sequencer.isQuizComplete) {
       sequencer.stop();
+
+      // Record lesson completion for lessons
+      if (isLesson && recordLessonCompletion && selectedQuiz) {
+        const correctCount = sequencer.quizResults.filter(r => r === true).length;
+        const totalCount = sequencer.quizResults.length;
+        const accuracy = totalCount > 0 ? correctCount / totalCount : 0;
+
+        recordLessonCompletion(quizId, {
+          accuracy,
+          patternResults: sequencer.quizResults,
+          timeTaken: 0, // TODO: track time
+          tempo: sequencer.bpm
+        });
+      }
     }
-  }, [sequencer.isQuizComplete, sequencer]);
+  }, [sequencer.isQuizComplete, sequencer, isLesson, recordLessonCompletion, quizId, selectedQuiz]);
 
   const handleTogglePlayback = () => {
     if (sequencer.isPlaying) {
@@ -169,6 +264,11 @@ export function QuizRoute() {
     // Auto-show hints and switch to 'Your' view if answer is incorrect
     const differences = getDifferences(sequencer.userSequence, sequencer.currentPattern.steps);
     const isCorrect = differences.length === 0;
+
+    // Record pattern result for lessons
+    if (isLesson && recordPatternResult) {
+      recordPatternResult(quizId, sequencer.currentQuestionIndex, isCorrect);
+    }
 
     if (!isCorrect) {
       setShowHints(true);
@@ -290,8 +390,8 @@ export function QuizRoute() {
       }}>
         {viewMode === 'settings' ? (
           <DrumSettings
-            instruments={drumSettings.instruments}
-            updateInstrument={drumSettings.updateInstrument}
+            instruments={lessonInstruments}
+            updateInstrument={updateLessonInstrument}
             loadPreset={drumSettings.loadPreset}
             resetToDefault={drumSettings.resetToDefault}
             onClose={handleToggleSettings}
@@ -299,8 +399,8 @@ export function QuizRoute() {
             selectedOutput={selectedOutput}
             outputs={outputs}
             onSelectOutputDevice={selectOutputDevice}
-            setAudioBuffer={drumSettings.setAudioBuffer}
-            getAudioBuffer={drumSettings.getAudioBuffer}
+            setAudioBuffer={setLessonAudioBuffer}
+            getAudioBuffer={getLessonAudioBuffer}
           />
         ) : hasPlaybackCapability ? (
           <>
@@ -327,6 +427,7 @@ export function QuizRoute() {
                 measures={sequencer.currentPattern.measures}
                 getMusicalPosition={sequencer.getMusicalPosition}
                 instruments={sequencer.instruments}
+                lessonConstraints={isLesson ? selectedQuiz?.constraints : null}
               />
             )}
           </>

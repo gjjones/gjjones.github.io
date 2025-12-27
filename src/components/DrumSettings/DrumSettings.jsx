@@ -255,7 +255,7 @@ export function DrumSettings({
       <div style={{ marginBottom: theme.spacing.xl }}>
         {instruments.map((instrument, index) => (
           <InstrumentConfig
-            key={instrument.label}
+            key={index}
             instrument={instrument}
             index={index}
             onChange={handleInstrumentChange}

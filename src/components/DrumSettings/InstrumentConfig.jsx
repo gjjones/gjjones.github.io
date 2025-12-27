@@ -135,6 +135,15 @@ export function InstrumentConfig({ instrument, index, onChange, onTest, onSample
                 borderRadius: theme.borderRadius.sm,
               }}
             />
+            {instrument.sampleUrl && (
+              <div style={{
+                fontSize: theme.typography.fontSize.xs,
+                color: theme.colors.text.secondary,
+                marginTop: '2px',
+              }}>
+                {instrument.sampleUrl}
+              </div>
+            )}
             {audioBuffer && (
               <div style={{
                 fontSize: theme.typography.fontSize.xs,

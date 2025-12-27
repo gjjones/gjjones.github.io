@@ -1,14 +1,34 @@
 import { useRef, useEffect, memo } from 'react';
 import { theme } from '../theme';
 import { BeatGrid } from './BeatGrid';
+import { useResponsiveGrid, useTouchCellStyles } from '../hooks/useResponsiveGrid';
 
-function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [], totalSteps, stepsPerMeasure, measures, getMusicalPosition, instruments }) {
+function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEditable, hideNotes, highlightedCells = [], totalSteps, stepsPerMeasure, measures, getMusicalPosition, instruments, lessonConstraints = null }) {
   const tracks = instruments;
   const prevStepRef = useRef(currentStep);
   const playheadRef = useRef(null);
   const animationFrameRef = useRef(null);
 
+  // Responsive grid sizing
+  const { cellSize, isTouch, isMobile } = useResponsiveGrid(totalSteps);
+  const touchCellStyles = useTouchCellStyles(isTouch);
+
+  // Helper function to check if a cell is locked
+  const isCellLocked = (trackIndex, stepIndex) => {
+    if (!lessonConstraints || !lessonConstraints.locked) return false;
+
+    const track = tracks[trackIndex];
+    const lockedSteps = lessonConstraints.locked[track.label];
+
+    return lockedSteps && lockedSteps.includes(stepIndex);
+  };
+
   const handleCellClick = (trackIndex, stepIndex) => {
+    // Don't allow toggling locked cells
+    if (isCellLocked(trackIndex, stepIndex)) {
+      return;
+    }
+
     if (isEditable && onToggleStep) {
       onToggleStep(trackIndex, stepIndex);
     }
@@ -121,6 +141,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
                 const isActive = sequence[trackIndex][stepIndex];
                 const isCurrentStep = stepIndex === currentStep;
                 const isMeasureBoundary = stepIndex > 0 && stepIndex % stepsPerMeasure === 0;
+                const isLocked = isCellLocked(trackIndex, stepIndex);
 
                 // Check if this cell has a hint
                 const hint = highlightedCells.find(
@@ -147,24 +168,36 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
                   ? `2px solid ${theme.colors.border.measure}`
                   : `1px solid ${theme.colors.border.dark}`;
 
+                // Determine background color
+                let backgroundColor;
+                if (isLocked) {
+                  // Locked cells: use a distinct color (amber/orange for locked notes)
+                  backgroundColor = isActive ? '#f59e0b' : 'rgba(245, 158, 11, 0.1)';
+                } else {
+                  backgroundColor = (isActive && !hideNotes) ? theme.colors.primary : theme.colors.bg.grid;
+                }
+
                 return (
                   <button
                     key={stepIndex}
                     onClick={() => handleCellClick(trackIndex, stepIndex)}
                     style={{
                       flex: 1,
-                      minWidth: '20px',
-                      height: '40px',
+                      minWidth: touchCellStyles.minWidth,
+                      height: touchCellStyles.minHeight,
                       border: `1px solid ${theme.colors.border.dark}`,
                       borderLeft: borderStyle,
-                      background: (isActive && !hideNotes) ? theme.colors.primary : theme.colors.bg.grid,
-                      cursor: isEditable ? 'pointer' : 'default',
+                      background: backgroundColor,
+                      cursor: isLocked ? 'not-allowed' : (isEditable ? touchCellStyles.cursor : 'default'),
                       outline: outlineStyle,
                       outlineOffset: '-2px',
                       transition: `background ${theme.transitions.fast}`,
+                      opacity: isLocked ? 0.9 : 1,
+                      position: 'relative',
+                      touchAction: touchCellStyles.touchAction,
                     }}
-                    disabled={!isEditable}
-                    title={`${track.label} - Step ${stepIndex + 1}${hasHint ? ` (${hintType === 'add' ? 'Add note here' : 'Remove this note'})` : ''}`}
+                    disabled={!isEditable || isLocked}
+                    title={`${track.label} - Step ${stepIndex + 1}${isLocked ? ' (Locked)' : ''}${hasHint ? ` (${hintType === 'add' ? 'Add note here' : 'Remove this note'})` : ''}`}
                   />
                 );
               })}
@@ -178,7 +211,7 @@ function SequencerGridComponent({ sequence, onToggleStep, currentStep, bpm, isEd
 
 // Memoize to prevent unnecessary grid re-renders
 export const SequencerGrid = memo(SequencerGridComponent, (prevProps, nextProps) => {
-  // Only re-render if sequence, currentStep, bpm, isEditable, hideNotes, highlightedCells, instruments, or pattern metadata changes
+  // Only re-render if sequence, currentStep, bpm, isEditable, hideNotes, highlightedCells, instruments, pattern metadata, or constraints changes
   // Playhead animation is handled internally via requestAnimationFrame
   return (
     prevProps.sequence === nextProps.sequence &&
@@ -191,6 +224,7 @@ export const SequencerGrid = memo(SequencerGridComponent, (prevProps, nextProps)
     prevProps.stepsPerMeasure === nextProps.stepsPerMeasure &&
     prevProps.measures === nextProps.measures &&
     prevProps.getMusicalPosition === nextProps.getMusicalPosition &&
-    prevProps.instruments === nextProps.instruments
+    prevProps.instruments === nextProps.instruments &&
+    prevProps.lessonConstraints === nextProps.lessonConstraints
   );
 });
