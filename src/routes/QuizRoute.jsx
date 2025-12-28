@@ -167,8 +167,17 @@ export function QuizRoute() {
   const getLessonInstrument = useCallback((trackIndex) => {
     const instrument = lessonInstruments[trackIndex];
     if (!instrument) return null;
-    return instrument;
-  }, [lessonInstruments]);
+
+    const presetIndex = lessonToPresetIndexMap[trackIndex];
+    const audioBuffer = presetIndex >= 0 ? drumSettings.getAudioBuffer(presetIndex) : null;
+
+    return {
+      ...instrument,
+      ...(instrument.type === 'sample' && {
+        audioBuffer: audioBuffer,
+      }),
+    };
+  }, [lessonInstruments, lessonToPresetIndexMap, drumSettings]);
 
   // Create Settings-specific functions that map lesson indices to preset indices
   const updateLessonInstrument = useCallback((lessonIndex, updates) => {
