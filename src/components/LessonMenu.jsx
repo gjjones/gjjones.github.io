@@ -1,15 +1,17 @@
-import { theme } from '../theme';
+import { useMemo } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { theme, getButtonStyles } from '../theme';
 import { getAllLessons, getLessonsByPhase } from '../utils/curriculumLoader';
 import { useProgressTracking, getQualityProgress, getWeakQualities } from '../hooks/useProgressTracking';
 import { useWarmupMode } from '../hooks/useWarmupMode';
 import { getRecommendedLesson, STRATEGY } from '../utils/recommendationEngine';
-import { useMemo } from 'react';
 
 /**
  * Lesson menu component for curriculum navigation
  * Displays available lessons grouped by phase with progress indicators
  */
 export function LessonMenu({ onSelectLesson }) {
+  const navigate = useNavigate();
   const lessons = getAllLessons();
   const { progress: progressData } = useProgressTracking();
   const { isWarmupMode, toggleWarmupMode, warmupReduction } = useWarmupMode();
@@ -65,12 +67,23 @@ export function LessonMenu({ onSelectLesson }) {
         style={{
           fontSize: theme.typography.fontSize.lg,
           color: theme.colors.text.secondary,
-          marginBottom: theme.spacing.xl,
+          marginBottom: theme.spacing.lg,
           marginTop: theme.spacing.sm,
         }}
       >
         Master drum transcription through structured lessons
       </p>
+
+      {/* Dashboard Button */}
+      <button
+        onClick={() => navigate({ to: '/dashboard' })}
+        style={{
+          ...getButtonStyles('primary'),
+          marginBottom: theme.spacing.lg,
+        }}
+      >
+        View Progress Dashboard
+      </button>
 
       {/* Warmup Mode Toggle */}
       <div style={{

@@ -1,8 +1,9 @@
 import { createRouter, createRootRoute, createRoute, Outlet } from '@tanstack/react-router';
-import { MenuRoute } from './routes/MenuRoute';
-import { QuizRoute } from './routes/QuizRoute';
-import { BrowserNotSupported } from './components/ErrorStates/BrowserNotSupported';
-import { useMidiContext } from './contexts/MidiContext';
+import { MenuRoute } from './routes/MenuRoute.jsx';
+import { QuizRoute } from './routes/QuizRoute.jsx';
+import { DashboardRoute } from './routes/DashboardRoute.jsx';
+import { BrowserNotSupported } from './components/ErrorStates/BrowserNotSupported.jsx';
+import { useMidiContext } from './contexts/MidiContext.jsx';
 
 // Root route component (renders child routes)
 function RootComponent() {
@@ -34,8 +35,15 @@ const quizRoute = createRoute({
   component: QuizRoute,
 });
 
+// Define dashboard route
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/dashboard',
+  component: DashboardRoute,
+});
+
 // Create route tree
-const routeTree = rootRoute.addChildren([menuRoute, quizRoute]);
+const routeTree = rootRoute.addChildren([menuRoute, quizRoute, dashboardRoute]);
 
 // Create router instance
 export const router = createRouter({ routeTree });

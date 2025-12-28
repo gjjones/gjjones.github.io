@@ -54,6 +54,24 @@ export function useTimer() {
   }, []);
 
   /**
+   * Reset and immediately restart the timer
+   * This ensures a clean start without state batching issues
+   */
+  const restart = useCallback(() => {
+    // Stop and clear everything
+    setIsRunning(false);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    // Reset elapsed time and start fresh
+    setElapsedSeconds(0);
+    startTimeRef.current = Date.now(); // Set to current time (no offset)
+    setIsRunning(true);
+  }, []);
+
+  /**
    * Update elapsed time while running
    */
   useEffect(() => {
@@ -93,6 +111,7 @@ export function useTimer() {
     start,
     stop,
     reset,
+    restart, // NEW: atomic reset + start
 
     // Utilities
     formatTime

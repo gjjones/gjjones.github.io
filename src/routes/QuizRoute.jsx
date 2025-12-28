@@ -203,11 +203,11 @@ export function QuizRoute() {
     lessonInstruments
   );
 
-  // Start timer when component mounts (quiz begins)
+  // Restart timer when quiz changes or component mounts
   useEffect(() => {
-    timer.start();
+    timer.restart(); // Atomic reset + start to avoid state batching issues
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Start timer once on mount
+  }, [quizId]); // Restart timer for each new quiz
 
   // Stop playback on unmount
   useEffect(() => {
@@ -238,7 +238,8 @@ export function QuizRoute() {
         });
       }
     }
-  }, [sequencer.isQuizComplete, sequencer, isLesson, recordLessonCompletion, quizId, selectedQuiz, timer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sequencer.isQuizComplete]); // Only depend on isQuizComplete, not entire sequencer object to avoid infinite loop
 
   const handleTogglePlayback = () => {
     if (sequencer.isPlaying) {
