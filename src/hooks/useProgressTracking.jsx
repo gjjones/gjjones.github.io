@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { getAllLessons } from '../utils/curriculumLoader.js';
 
 /**
  * Storage key for progress data
@@ -15,7 +16,7 @@ const PROGRESS_STORAGE_KEY = 'rhythmCurriculum_progress';
 /**
  * Current schema version for migration support
  */
-const CURRENT_SCHEMA_VERSION = 1;
+const CURRENT_SCHEMA_VERSION = 2;
 
 /**
  * Initial progress data structure
@@ -27,6 +28,7 @@ const createInitialProgress = () => ({
   currentPhase: 1,
   completedLessons: [],
   masteredQualities: [],
+  qualityHistory: {}, // NEW in v2: Historical quality snapshots for trend tracking
   overallStats: {
     totalPatterns: 0,
     correctPatterns: 0,
@@ -158,6 +160,39 @@ export function useProgressTracking() {
         lastPracticed: new Date().toISOString()
       }
     };
+
+    // NEW in v2: Create quality history snapshot
+    const lessons = getAllLessons();
+    const lesson = lessons.find(l => l.id === lessonId);
+
+    if (lesson && lesson.quality) {
+      const quality = lesson.quality;
+
+      // Recalculate current quality accuracy with updated data
+      const qualityAccuracy = calculateQualityAccuracy(quality, updatedProgress);
+      const attemptCount = getQualityAttemptCount(quality, updatedProgress);
+
+      // Create snapshot
+      const snapshot = {
+        timestamp: new Date().toISOString(),
+        accuracy: qualityAccuracy,
+        lessonId: lessonId,
+        attempts: attemptCount
+      };
+
+      // Initialize qualityHistory if not present (for backward compatibility)
+      if (!updatedProgress.qualityHistory) {
+        updatedProgress.qualityHistory = {};
+      }
+
+      // Initialize quality array if not present
+      if (!updatedProgress.qualityHistory[quality]) {
+        updatedProgress.qualityHistory[quality] = [];
+      }
+
+      // Append snapshot to history
+      updatedProgress.qualityHistory[quality].push(snapshot);
+    }
 
     return saveProgress(updatedProgress);
   }, [progress, saveProgress]);
@@ -318,6 +353,189 @@ export function useProgressTracking() {
 }
 
 /**
+ * Calculate current accuracy for a specific quality from progress data
+ * @param {string} quality - The quality to calculate accuracy for
+ * @param {Object} progress - Current progress data
+ * @returns {number} Accuracy as decimal (0-1)
+ */
+function calculateQualityAccuracy(quality, progress) {
+  const lessons = getAllLessons();
+  const lessonsForQuality = lessons.filter(l => l.quality === quality);
+
+  let totalAccuracy = 0;
+  let count = 0;
+
+  lessonsForQuality.forEach(lesson => {
+    const lessonData = progress.lessonProgress[lesson.id];
+    if (lessonData?.attempted) {
+      totalAccuracy += lessonData.accuracy;
+      count++;
+    }
+  });
+
+  return count > 0 ? totalAccuracy / count : 0;
+}
+
+/**
+ * Get cumulative attempt count for a quality
+ * @param {string} quality - The quality to count attempts for
+ * @param {Object} progress - Current progress data
+ * @returns {number} Total attempts across all lessons of this quality
+ */
+function getQualityAttemptCount(quality, progress) {
+  const lessons = getAllLessons();
+  const lessonsForQuality = lessons.filter(l => l.quality === quality);
+
+  let totalAttempts = 0;
+
+  lessonsForQuality.forEach(lesson => {
+    const lessonData = progress.lessonProgress[lesson.id];
+    if (lessonData?.attempts) {
+      totalAttempts += lessonData.attempts;
+    }
+  });
+
+  return totalAttempts;
+}
+
+/**
+ * Detect quality trend using linear regression
+ * @param {Array} snapshots - Array of quality snapshots
+ * @param {number} windowDays - Time window in days (default 30)
+ * @returns {Object} Trend analysis object
+ */
+function detectQualityTrend(snapshots, windowDays = 30) {
+  if (!snapshots || snapshots.length < 2) {
+    return {
+      direction: 'insufficient-data',
+      slope: 0,
+      recentAccuracy: 0,
+      oldestAccuracy: 0,
+      changePercentage: 0,
+      snapshotCount: snapshots?.length || 0
+    };
+  }
+
+  // Filter snapshots to recent window
+  const now = new Date();
+  const windowStart = new Date(now.getTime() - (windowDays * 24 * 60 * 60 * 1000));
+
+  const recentSnapshots = snapshots.filter(s => {
+    const snapshotDate = new Date(s.timestamp);
+    return snapshotDate >= windowStart;
+  });
+
+  if (recentSnapshots.length < 2) {
+    // Not enough recent data, use all available
+    const recent = snapshots[snapshots.length - 1];
+    return {
+      direction: 'insufficient-data',
+      slope: 0,
+      recentAccuracy: recent.accuracy,
+      oldestAccuracy: snapshots[0].accuracy,
+      changePercentage: 0,
+      snapshotCount: snapshots.length
+    };
+  }
+
+  // Calculate linear regression slope
+  const baseTime = new Date(recentSnapshots[0].timestamp).getTime();
+
+  // Convert to points (x: days, y: accuracy)
+  const points = recentSnapshots.map(s => ({
+    x: (new Date(s.timestamp).getTime() - baseTime) / (1000 * 60 * 60 * 24), // days from first snapshot
+    y: s.accuracy
+  }));
+
+  // Calculate means
+  const xMean = points.reduce((sum, p) => sum + p.x, 0) / points.length;
+  const yMean = points.reduce((sum, p) => sum + p.y, 0) / points.length;
+
+  // Calculate slope: m = Σ((x - x̄)(y - ȳ)) / Σ((x - x̄)²)
+  const numerator = points.reduce((sum, p) => sum + (p.x - xMean) * (p.y - yMean), 0);
+  const denominator = points.reduce((sum, p) => sum + Math.pow(p.x - xMean, 2), 0);
+
+  const slope = denominator !== 0 ? numerator / denominator : 0;
+
+  // Get recent and oldest accuracy from the window
+  const oldestAccuracy = recentSnapshots[0].accuracy;
+  const recentAccuracy = recentSnapshots[recentSnapshots.length - 1].accuracy;
+  const changePercentage = ((recentAccuracy - oldestAccuracy) * 100);
+
+  // Categorize trend based on slope threshold
+  let direction;
+  if (slope > 0.05) {
+    direction = 'improving'; // Gaining 5+ percentage points over window
+  } else if (slope < -0.05) {
+    direction = 'declining'; // Losing 5+ percentage points over window
+  } else {
+    direction = 'stable'; // Within ±5 percentage points
+  }
+
+  return {
+    direction,
+    slope,
+    recentAccuracy,
+    oldestAccuracy,
+    changePercentage,
+    snapshotCount: recentSnapshots.length
+  };
+}
+
+/**
+ * Get trend for a specific quality
+ * @param {string} quality - Quality name
+ * @param {Object} progress - Progress data
+ * @param {number} windowDays - Time window in days
+ * @returns {Object} Trend object
+ */
+function getQualityTrend(quality, progress, windowDays = 30) {
+  if (!progress.qualityHistory || !progress.qualityHistory[quality]) {
+    return {
+      direction: 'insufficient-data',
+      slope: 0,
+      recentAccuracy: 0,
+      oldestAccuracy: 0,
+      changePercentage: 0,
+      snapshotCount: 0
+    };
+  }
+
+  return detectQualityTrend(progress.qualityHistory[quality], windowDays);
+}
+
+/**
+ * Get trends for all qualities
+ * @param {Object} progress - Progress data
+ * @param {number} windowDays - Time window in days
+ * @returns {Object} Map of quality → trend object
+ */
+function getAllQualityTrends(progress, windowDays = 30) {
+  const trends = {};
+
+  if (!progress.qualityHistory) {
+    return trends;
+  }
+
+  Object.keys(progress.qualityHistory).forEach(quality => {
+    trends[quality] = getQualityTrend(quality, progress, windowDays);
+  });
+
+  return trends;
+}
+
+/**
+ * Migrate from v1 to v2: Add qualityHistory field
+ */
+function migrateV1ToV2(progressV1) {
+  return {
+    ...progressV1,
+    version: 2,
+    qualityHistory: {} // Start with empty history for existing users
+  };
+}
+
+/**
  * Migrate progress data to current schema version
  */
 function migrateProgress(data) {
@@ -326,17 +544,15 @@ function migrateProgress(data) {
     return data;
   }
 
-  // No previous versions yet, but this is where migrations would go
-  // Example migration:
-  // if (data.version === 0 || !data.version) {
-  //   // Migrate from v0 to v1
-  //   data = migrateV0ToV1(data);
-  // }
+  // Apply migrations sequentially
+  let migrated = data;
 
-  // Update version
-  data.version = CURRENT_SCHEMA_VERSION;
+  // v1 → v2: Add qualityHistory
+  if (migrated.version === 1 || !migrated.version) {
+    migrated = migrateV1ToV2(migrated);
+  }
 
-  return data;
+  return migrated;
 }
 
 /**
@@ -541,6 +757,9 @@ export function getQualityProgress(progress, lessons) {
       const daysSince = getDaysSinceLastPractice(data.lastPracticed);
       const isOverdue = isOverdueForReview(data.lastPracticed, masteryLevel.level);
 
+      // NEW in v2: Get trend data
+      const trend = getQualityTrend(quality, progress);
+
       return {
         quality,
         accuracy: Math.round(accuracy * 100), // Convert to percentage
@@ -552,7 +771,15 @@ export function getQualityProgress(progress, lessons) {
         daysSinceLastPractice: daysSince,
         lastPracticedFormatted: data.lastPracticed ? formatDaysAgo(daysSince) : 'never',
         isOverdue,
-        reviewIntervalDays: getReviewIntervalDays(masteryLevel.level)
+        reviewIntervalDays: getReviewIntervalDays(masteryLevel.level),
+        // NEW in v2: Trend data
+        trend: {
+          direction: trend.direction,
+          changePercentage: Math.round(trend.changePercentage),
+          slope: trend.slope
+        },
+        // Optional: Include recent history snapshots
+        history: progress.qualityHistory?.[quality] || []
       };
     })
     .sort((a, b) => b.accuracy - a.accuracy); // Best first

@@ -63,10 +63,31 @@ export function QualityMasteryChart({ data }) {
     return chartColors.needsPractice;
   };
 
+  // Get trend arrow and color
+  const getTrendArrow = (direction) => {
+    switch (direction) {
+      case 'improving': return '↗️';
+      case 'declining': return '↘️';
+      case 'stable': return '→';
+      default: return '';
+    }
+  };
+
+  const getTrendColor = (direction) => {
+    switch (direction) {
+      case 'improving': return theme.colors.success;
+      case 'declining': return theme.colors.danger;
+      case 'stable': return theme.colors.text.secondary;
+      default: return theme.colors.text.secondary;
+    }
+  };
+
   // Custom tooltip to show detailed information
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
+      const hasTrend = data.trend && data.trend.direction !== 'insufficient-data';
+
       return (
         <div style={defaultTooltipStyle}>
           <p
@@ -81,6 +102,19 @@ export function QualityMasteryChart({ data }) {
           <p style={{ margin: 0, color: getBarColor(data.accuracy) }}>
             {data.accuracy}% - {data.masteryLevel.label}
           </p>
+          {hasTrend && (
+            <p
+              style={{
+                margin: 0,
+                marginTop: theme.spacing.xs,
+                fontSize: theme.typography.fontSize.sm,
+                color: getTrendColor(data.trend.direction),
+              }}
+            >
+              {getTrendArrow(data.trend.direction)} {data.trend.changePercentage > 0 ? '+' : ''}
+              {data.trend.changePercentage}% (30 days)
+            </p>
+          )}
           <p
             style={{
               margin: 0,

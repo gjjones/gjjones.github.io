@@ -11,6 +11,7 @@ import { DashboardHeader } from './DashboardHeader.jsx';
 import { StatsOverview } from './StatsOverview.jsx';
 import { QualityMasteryChart } from './charts/QualityMasteryChart.jsx';
 import { CompletionOverview } from './charts/CompletionOverview.jsx';
+import { QualityTrendChart } from './charts/QualityTrendChart.jsx';
 
 /**
  * Progress Dashboard Component
@@ -118,6 +119,13 @@ export function Dashboard() {
       <DashboardHeader onBack={() => navigate({ to: '/' })} />
 
       <StatsOverview summary={summary} qualityProgress={qualityProgress} />
+
+      {/* Quality Trend Chart - Full width */}
+      {progress.qualityHistory && Object.keys(progress.qualityHistory).length > 0 && (
+        <div style={{ marginTop: theme.spacing.xl }}>
+          <QualityTrendChart qualityHistory={progress.qualityHistory} />
+        </div>
+      )}
 
       {/* Chart Grid - Easy to add more charts in the future */}
       <div
