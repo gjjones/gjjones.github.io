@@ -16,9 +16,22 @@ export const RESOLUTION_CONFIG = {
  * @param {'quarter'|'eighth'|'sixteenth'} resolution - Note subdivision
  * @param {number} measures - Number of measures (1-4)
  * @param {number|null} tempo - Optional BPM for this pattern (defaults to null)
+ * @param {string[]|null} qualities - Optional array of quality identifiers (e.g., ['downbeat-identification', 'kick-drum-precision'])
  * @returns {Object} Pattern object with steps and metadata
+ *
+ * @example
+ * // Pattern with single quality
+ * createPattern(grid, 'eighth', 2, 85, ['downbeat-identification'])
+ *
+ * @example
+ * // Pattern with multiple qualities
+ * createPattern(grid, 'eighth', 2, 87, ['downbeat-identification', 'kick-drum-precision'])
+ *
+ * @example
+ * // Pattern without qualities (backward compatible, will inherit lesson.quality)
+ * createPattern(grid, 'eighth', 2, 85)
  */
-export function createPattern(steps, resolution, measures, tempo = null) {
+export function createPattern(steps, resolution, measures, tempo = null, qualities = null) {
   const config = RESOLUTION_CONFIG[resolution];
 
   if (!config) {
@@ -43,6 +56,7 @@ export function createPattern(steps, resolution, measures, tempo = null) {
     totalSteps,
     division: config.division,
     tempo,  // Optional BPM for this pattern
+    qualities  // Optional array of quality identifiers
   };
 }
 
@@ -89,4 +103,34 @@ export function createSequenceWithLockedCells(stepCount, constraints, instrument
   });
 
   return sequence;
+}
+
+/**
+ * Gets the quality identifiers for a pattern with fallback to lesson quality
+ *
+ * This helper centralizes the logic for determining which qualities a pattern tests:
+ * 1. If pattern has explicit qualities array, use it
+ * 2. Otherwise fall back to the lesson's quality (backward compatibility)
+ * 3. If neither exist, return empty array
+ *
+ * @param {Object} pattern - Pattern object (from createPattern)
+ * @param {Object} lesson - Lesson metadata object
+ * @returns {string[]} Array of quality identifiers
+ *
+ * @example
+ * // Pattern with explicit qualities
+ * const pattern = { qualities: ['downbeat-identification', 'kick-precision'] };
+ * getPatternQualities(pattern, lesson); // => ['downbeat-identification', 'kick-precision']
+ *
+ * @example
+ * // Pattern without qualities, falls back to lesson
+ * const pattern = { qualities: null };
+ * const lesson = { quality: 'downbeat-identification' };
+ * getPatternQualities(pattern, lesson); // => ['downbeat-identification']
+ */
+export function getPatternQualities(pattern, lesson) {
+  if (pattern.qualities && Array.isArray(pattern.qualities)) {
+    return pattern.qualities;
+  }
+  return lesson.quality ? [lesson.quality] : [];
 }

@@ -17,6 +17,7 @@ import { ListenMode } from '../components/ListenMode';
 import { SequencerGrid } from '../components/SequencerGrid';
 import { DrumSettings } from '../components/DrumSettings/DrumSettings';
 import { getDifferences } from '../utils/sequenceComparison';
+import { getPatternQualities } from '../utils/patternUtils.js';
 import { theme } from '../theme';
 import { requiresMidiPermission, canPlayback } from '../utils/playbackUtils';
 
@@ -239,14 +240,29 @@ export function QuizRoute() {
         const totalCount = sequencer.quizResults.length;
         const accuracy = totalCount > 0 ? correctCount / totalCount : 0;
 
+        // Build pattern-quality results
+        const patternQualityResults = selectedQuiz.patterns?.map((pattern, index) => {
+          const qualities = getPatternQualities(pattern, selectedQuiz);
+          const isCorrect = sequencer.quizResults[index];
+
+          // All-or-nothing: pattern result applies to all qualities
+          const qualityResults = {};
+          qualities.forEach(quality => {
+            qualityResults[quality] = isCorrect;
+          });
+
+          return qualityResults;
+        }) || [];
+
         recordLessonCompletion(quizId, {
           accuracy,
           patternResults: sequencer.quizResults,
+          patternQualityResults,
           timeTaken: timer.elapsedSeconds, // Track actual elapsed time
           tempo: sequencer.bpm
         });
       }
-    }
+      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sequencer.isQuizComplete]); // Only depend on isQuizComplete, not entire sequencer object to avoid infinite loop
 
@@ -290,7 +306,22 @@ export function QuizRoute() {
 
     // Record pattern result for lessons
     if (isLesson && recordPatternResult) {
-      recordPatternResult(quizId, sequencer.currentQuestionIndex, isCorrect);
+      // Build quality results for this pattern
+      const pattern = selectedQuiz.patterns?.[sequencer.currentQuestionIndex];
+      const qualities = getPatternQualities(pattern, selectedQuiz);
+
+      const qualityResults = {};
+      qualities.forEach(quality => {
+        qualityResults[quality] = isCorrect;
+      });
+
+      recordPatternResult(
+        quizId,
+        sequencer.currentQuestionIndex,
+        isCorrect,
+        timer.elapsedSeconds,
+        qualityResults
+      );
     }
 
     if (!isCorrect) {

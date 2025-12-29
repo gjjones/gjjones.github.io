@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { getAllLessons } from '../utils/curriculumLoader.js';
+import { getPatternQualities } from '../utils/patternUtils.js';
 
 /**
  * Storage key for progress data
@@ -16,7 +17,7 @@ const PROGRESS_STORAGE_KEY = 'rhythmCurriculum_progress';
 /**
  * Current schema version for migration support
  */
-const CURRENT_SCHEMA_VERSION = 2;
+const CURRENT_SCHEMA_VERSION = 3;
 
 /**
  * Initial progress data structure
@@ -113,6 +114,7 @@ export function useProgressTracking() {
     const {
       accuracy,
       patternResults,
+      patternQualityResults,
       timeTaken,
       tempo
     } = results;
@@ -128,6 +130,7 @@ export function useProgressTracking() {
       attempts,
       lastAttempted: new Date().toISOString(),
       patternResults: patternResults || [],
+      patternQualityResults: patternQualityResults || [],
       averageTime: timeTaken || existingProgress.averageTime || 0,
       tempo,
       bestAccuracy: Math.max(accuracy, existingProgress.bestAccuracy || 0)
@@ -161,37 +164,37 @@ export function useProgressTracking() {
       }
     };
 
-    // NEW in v2: Create quality history snapshot
+    // NEW in v3: Create quality history snapshots for each pattern-quality combination
     const lessons = getAllLessons();
     const lesson = lessons.find(l => l.id === lessonId);
 
-    if (lesson && lesson.quality) {
-      const quality = lesson.quality;
+    if (lesson && lesson.patterns) {
+      lesson.patterns.forEach((pattern, patternIndex) => {
+        const qualities = getPatternQualities(pattern, lesson);
 
-      // Recalculate current quality accuracy with updated data
-      const qualityAccuracy = calculateQualityAccuracy(quality, updatedProgress);
-      const attemptCount = getQualityAttemptCount(quality, updatedProgress);
+        qualities.forEach(quality => {
+          // Calculate accuracy for this quality across all patterns
+          const qualityAccuracy = calculateQualityAccuracy(quality, updatedProgress);
+          const attemptCount = getQualityAttemptCount(quality, updatedProgress);
 
-      // Create snapshot
-      const snapshot = {
-        timestamp: new Date().toISOString(),
-        accuracy: qualityAccuracy,
-        lessonId: lessonId,
-        attempts: attemptCount
-      };
+          const snapshot = {
+            timestamp: new Date().toISOString(),
+            accuracy: qualityAccuracy,
+            lessonId: lessonId,
+            patternIndex: patternIndex,
+            attempts: attemptCount
+          };
 
-      // Initialize qualityHistory if not present (for backward compatibility)
-      if (!updatedProgress.qualityHistory) {
-        updatedProgress.qualityHistory = {};
-      }
+          if (!updatedProgress.qualityHistory) {
+            updatedProgress.qualityHistory = {};
+          }
+          if (!updatedProgress.qualityHistory[quality]) {
+            updatedProgress.qualityHistory[quality] = [];
+          }
 
-      // Initialize quality array if not present
-      if (!updatedProgress.qualityHistory[quality]) {
-        updatedProgress.qualityHistory[quality] = [];
-      }
-
-      // Append snapshot to history
-      updatedProgress.qualityHistory[quality].push(snapshot);
+          updatedProgress.qualityHistory[quality].push(snapshot);
+        });
+      });
     }
 
     return saveProgress(updatedProgress);
@@ -200,7 +203,7 @@ export function useProgressTracking() {
   /**
    * Record individual pattern result
    */
-  const recordPatternResult = useCallback((lessonId, patternIndex, isCorrect, timeTaken) => {
+  const recordPatternResult = useCallback((lessonId, patternIndex, isCorrect, timeTaken, qualityResults = null) => {
     if (!progress) return false;
 
     const existingProgress = progress.lessonProgress[lessonId] || {
@@ -209,12 +212,24 @@ export function useProgressTracking() {
       accuracy: 0,
       attempts: 1,
       patternResults: [],
+      patternQualityResults: [],
       lastAttempted: new Date().toISOString()
     };
 
     // Update pattern results
     const patternResults = [...(existingProgress.patternResults || [])];
     patternResults[patternIndex] = isCorrect;
+
+    // Initialize patternQualityResults if needed
+    const patternQualityResults = [...(existingProgress.patternQualityResults || [])];
+
+    // Store quality results for this pattern
+    if (qualityResults) {
+      patternQualityResults[patternIndex] = qualityResults;
+    } else {
+      // No quality results provided, store empty object
+      patternQualityResults[patternIndex] = {};
+    }
 
     // Recalculate accuracy
     const completedPatterns = patternResults.filter(r => r !== undefined).length;
@@ -228,6 +243,7 @@ export function useProgressTracking() {
         [lessonId]: {
           ...existingProgress,
           patternResults,
+          patternQualityResults,
           accuracy,
           lastAttempted: new Date().toISOString()
         }
@@ -360,20 +376,39 @@ export function useProgressTracking() {
  */
 function calculateQualityAccuracy(quality, progress) {
   const lessons = getAllLessons();
-  const lessonsForQuality = lessons.filter(l => l.quality === quality);
 
   let totalAccuracy = 0;
-  let count = 0;
+  let patternCount = 0;
 
-  lessonsForQuality.forEach(lesson => {
+  lessons.forEach(lesson => {
     const lessonData = progress.lessonProgress[lesson.id];
-    if (lessonData?.attempted) {
-      totalAccuracy += lessonData.accuracy;
-      count++;
-    }
+    if (!lessonData?.attempted) return;
+
+    // Iterate through patterns to find ones with this quality
+    lesson.patterns?.forEach((pattern, patternIndex) => {
+      const qualities = getPatternQualities(pattern, lesson);
+
+      if (qualities.includes(quality)) {
+        // Check if we have pattern-level quality results
+        const qualityResult = lessonData.patternQualityResults?.[patternIndex]?.[quality];
+
+        if (qualityResult !== undefined) {
+          // We have pattern-level quality data
+          totalAccuracy += qualityResult ? 1 : 0;
+          patternCount++;
+        } else {
+          // Fall back to pattern boolean result
+          const patternResult = lessonData.patternResults?.[patternIndex];
+          if (patternResult !== undefined) {
+            totalAccuracy += patternResult ? 1 : 0;
+            patternCount++;
+          }
+        }
+      }
+    });
   });
 
-  return count > 0 ? totalAccuracy / count : 0;
+  return patternCount > 0 ? totalAccuracy / patternCount : 0;
 }
 
 /**
@@ -384,14 +419,21 @@ function calculateQualityAccuracy(quality, progress) {
  */
 function getQualityAttemptCount(quality, progress) {
   const lessons = getAllLessons();
-  const lessonsForQuality = lessons.filter(l => l.quality === quality);
 
   let totalAttempts = 0;
 
-  lessonsForQuality.forEach(lesson => {
+  lessons.forEach(lesson => {
     const lessonData = progress.lessonProgress[lesson.id];
-    if (lessonData?.attempts) {
-      totalAttempts += lessonData.attempts;
+    if (!lessonData?.attempted) return;
+
+    // Check if any patterns in this lesson test this quality
+    const hasQuality = lesson.patterns?.some(pattern => {
+      const qualities = getPatternQualities(pattern, lesson);
+      return qualities.includes(quality);
+    });
+
+    if (hasQuality) {
+      totalAttempts += lessonData.attempts || 0;
     }
   });
 
@@ -534,10 +576,44 @@ function migrateV1ToV2(progressV1) {
     qualityHistory: {} // Start with empty history for existing users
   };
 }
-
 /**
- * Migrate progress data to current schema version
+ * Migrate from v2 to v3
+ * - Add patternQualityResults to lessonProgress
+ * - Add patternIndex to qualityHistory snapshots
  */
+function migrateV2ToV3(progressV2) {
+  console.log('Migrating progress from v2 to v3...');
+
+  return {
+    ...progressV2,
+    version: 3,
+
+    // Add empty patternQualityResults to existing lessons
+    lessonProgress: Object.entries(progressV2.lessonProgress || {}).reduce(
+      (acc, [lessonId, data]) => {
+        acc[lessonId] = {
+          ...data,
+          patternQualityResults: data.patternResults?.map(() => ({})) || []
+        };
+        return acc;
+      },
+      {}
+    ),
+
+    // Add patternIndex: null to legacy quality history snapshots
+    qualityHistory: Object.entries(progressV2.qualityHistory || {}).reduce(
+      (acc, [quality, snapshots]) => {
+        acc[quality] = snapshots.map(snapshot => ({
+          ...snapshot,
+          patternIndex: null  // Legacy data has no pattern granularity
+        }));
+        return acc;
+      },
+      {}
+    )
+  };
+}
+
 function migrateProgress(data) {
   // If already current version, return as-is
   if (data.version === CURRENT_SCHEMA_VERSION) {
@@ -550,6 +626,11 @@ function migrateProgress(data) {
   // v1 → v2: Add qualityHistory
   if (migrated.version === 1 || !migrated.version) {
     migrated = migrateV1ToV2(migrated);
+  }
+
+  // v2 → v3: Add pattern-quality tracking
+  if (migrated.version === 2) {
+    migrated = migrateV2ToV3(migrated);
   }
 
   return migrated;
@@ -724,7 +805,7 @@ export function getQualityProgress(progress, lessons) {
 
   const qualityAccuracy = {};
 
-  // Calculate accuracy per quality (same logic as getWeakQualities)
+  // Calculate accuracy per quality
   lessons.forEach(lesson => {
     const quality = lesson.quality || lesson.metadata?.quality;
     if (!quality) return;
@@ -735,11 +816,20 @@ export function getQualityProgress(progress, lessons) {
         qualityAccuracy[quality] = {
           total: 0,
           sum: 0,
+          patternCount: 0,
           lastPracticed: null
         };
       }
       qualityAccuracy[quality].total++;
       qualityAccuracy[quality].sum += lessonProgress.accuracy;
+
+      // Count patterns with this quality
+      lesson.patterns?.forEach(pattern => {
+        const qualities = getPatternQualities(pattern, lesson);
+        if (qualities.includes(quality)) {
+          qualityAccuracy[quality].patternCount++;
+        }
+      });
 
       // Track most recent practice time
       if (!qualityAccuracy[quality].lastPracticed ||
@@ -757,13 +847,14 @@ export function getQualityProgress(progress, lessons) {
       const daysSince = getDaysSinceLastPractice(data.lastPracticed);
       const isOverdue = isOverdueForReview(data.lastPracticed, masteryLevel.level);
 
-      // NEW in v2: Get trend data
+      // Get trend data
       const trend = getQualityTrend(quality, progress);
 
       return {
         quality,
         accuracy: Math.round(accuracy * 100), // Convert to percentage
         masteryLevel,
+        patternCount: data.patternCount,
         lessonCount: data.total,
         lastPracticed: data.lastPracticed,
         needsReview: accuracy < 0.7,
@@ -772,7 +863,7 @@ export function getQualityProgress(progress, lessons) {
         lastPracticedFormatted: data.lastPracticed ? formatDaysAgo(daysSince) : 'never',
         isOverdue,
         reviewIntervalDays: getReviewIntervalDays(masteryLevel.level),
-        // NEW in v2: Trend data
+        // Trend data
         trend: {
           direction: trend.direction,
           changePercentage: Math.round(trend.changePercentage),

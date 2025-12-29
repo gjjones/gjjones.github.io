@@ -59,6 +59,7 @@
  * @typedef {Object} Pattern
  * @property {string} id - Unique pattern identifier
  * @property {Object.<string, number[]>} grid - Instrument -> array of step indices where notes are placed
+ * @property {string[]|null} qualities - Optional array of quality identifiers
  * @property {number} [difficulty] - Difficulty rating (1-3: easy, medium, hard)
  */
 
