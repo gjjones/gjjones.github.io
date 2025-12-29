@@ -72,7 +72,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // KD (beat 1, a-of-2)
-  ], 'sixteenth', 2, 86),
+  ], 'sixteenth', 2, 86, ['16th-note-subdivision', 'kick-drum-precision']),
 
   // ===== PATTERN 2: EASY - Kick on beat 1, hitch after beat 1 =====
   // Kicks: step 0 (beat 1), step 1 (the "e" of 1 - just after beat 1)
@@ -80,7 +80,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // KD (beat 1, e-of-1)
-  ], 'sixteenth', 2, 84),
+  ], 'sixteenth', 2, 84, ['16th-note-subdivision', 'kick-drum-precision']),
 
   // ===== PATTERN 3: EASY - Classic with one hitch =====
   // Kicks: step 0 (beat 1), step 8 (beat 3), step 23 (the "a" of beat 2 in measure 2)
@@ -88,7 +88,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false],    // KD (1, 3, a-of-2)
-  ], 'sixteenth', 2, 89),
+  ], 'sixteenth', 2, 89, ['16th-note-subdivision', 'kick-drum-precision']),
 
   // ===== PATTERN 4: MEDIUM - Kicks with multiple hitches =====
   // Kicks: step 0, step 1 (e-of-1), step 9 (e-of-3), step 16 (beat 1 measure 2)
@@ -96,7 +96,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [true, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],     // KD (1, e-of-1, e-of-3, 1)
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 85, ['16th-note-subdivision', 'kick-drum-precision', 'syncopation']),
 
   // ===== PATTERN 5: MEDIUM - "And" kicks with hitches =====
   // Kicks: step 2 (and-of-1), step 6 (and-of-2), step 10 (and-of-3), step 11 (a-of-3)
@@ -104,7 +104,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [false, false, true, false, false, false, true, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],      // KD (and-of-1, and-of-2, and-of-3, a-of-3)
-  ], 'sixteenth', 2, 82),
+  ], 'sixteenth', 2, 82, ['16th-note-subdivision', 'kick-drum-precision', 'syncopation']),
 
   // ===== PATTERN 6: MEDIUM - Early kick pattern =====
   // All kicks land just before the beat (on the "a" of the previous beat)
@@ -113,7 +113,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true],     // KD (a-of-4, a-of-2, a-of-4)
-  ], 'sixteenth', 2, 87),
+  ], 'sixteenth', 2, 87, ['16th-note-subdivision', 'kick-drum-precision', 'syncopation']),
 
   // ===== PATTERN 7: MEDIUM - Late kick pattern =====
   // Kicks land just after the beat (on the "e")
@@ -122,7 +122,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false],     // KD (e-of-1, e-of-3, e-of-1)
-  ], 'sixteenth', 2, 83),
+  ], 'sixteenth', 2, 83, ['16th-note-subdivision', 'kick-drum-precision', 'syncopation']),
 
   // ===== PATTERN 8: HARD - Complex hitch combination =====
   // Mix of early and late kicks with downbeats
@@ -131,7 +131,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [true, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],      // KD (1, e-of-1, a-of-2, 3, 1)
-  ], 'sixteenth', 2, 88),
+  ], 'sixteenth', 2, 88, ['16th-note-subdivision', 'kick-drum-precision', 'syncopation']),
 
   // ===== PATTERN 9: HARD - Syncopated shuffle =====
   // Multiple hitches creating a shuffled feel
@@ -140,7 +140,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false],      // KD (e-of-1, e-of-2, e-of-3, e-of-4, and-of-1)
-  ], 'sixteenth', 2, 84),
+  ], 'sixteenth', 2, 84, ['16th-note-subdivision', 'kick-drum-precision', 'syncopation']),
 
   // ===== PATTERN 10: HARD - Advanced hitch pattern =====
   // Complex mix with rapid double kicks
@@ -149,7 +149,7 @@ export const LESSON_4_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked on beats 2 & 4)
     [true, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false],       // KD (1, e-of-1, a-of-2, 1, e-of-1, and-of-3)
-  ], 'sixteenth', 2, 86),
+  ], 'sixteenth', 2, 86, ['16th-note-subdivision', 'kick-drum-precision', 'syncopation']),
 ];
 
 /**

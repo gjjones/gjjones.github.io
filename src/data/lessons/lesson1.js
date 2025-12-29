@@ -62,7 +62,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // KD (only on beat 1)
-  ], 'eighth', 2, 83),
+  ], 'eighth', 2, 83, ['downbeat-identification']),
 
   // ===== PATTERN 2: EASY - Kick on beat 3 only =====
   // Simple: kick on "The Three"
@@ -70,7 +70,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],   // KD (only on beat 3)
-  ], 'eighth', 2, 87),
+  ], 'eighth', 2, 87, ['downbeat-identification']),
 
   // ===== PATTERN 3: EASY - Classic rock beat =====
   // Kicks on beat 1 of each measure - most fundamental pattern in popular music
@@ -78,7 +78,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],    // KD (on 1 & 3)
-  ], 'eighth', 2, 85),
+  ], 'eighth', 2, 85, ['downbeat-identification', 'backbeat-placement']),
 
   // ===== PATTERN 4: MEDIUM - Kick on 1, and-of-2 =====
   // Introduces the "and" (step 5)
@@ -86,7 +86,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false],    // KD (1, and-of-2)
-  ], 'eighth', 2, 89),
+  ], 'eighth', 2, 89, ['downbeat-identification', 'kick-drum-precision']),
 
   // ===== PATTERN 5: MEDIUM - Kick on 1, 3, and-of-3 =====
   // Adds a third kick on the "and-of-3"
@@ -94,7 +94,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, true, false, false],     // KD (1, 3, and-of-3)
-  ], 'eighth', 2, 82),
+  ], 'eighth', 2, 82, ['downbeat-identification', 'kick-drum-precision']),
 
   // ===== PATTERN 6: MEDIUM - Kick on and-of-1, 3 =====
   // Kick starts on the "and" of beat 1
@@ -102,7 +102,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false],    // KD (and-of-1, 3)
-  ], 'eighth', 2, 86),
+  ], 'eighth', 2, 86, ['downbeat-identification', 'syncopation']),
 
   // ===== PATTERN 7: MEDIUM - Four-on-the-floor =====
   // Kick on all 4 quarter note beats per measure (8 kicks total)
@@ -110,7 +110,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],      // KD (all 4 beats both measures)
-  ], 'eighth', 2, 84),
+  ], 'eighth', 2, 84, ['downbeat-identification', 'backbeat-placement']),
 
   // ===== PATTERN 8: HARD - Syncopated kicks =====
   // Kicks on 1, and-of-2, and-of-3
@@ -118,7 +118,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false],     // KD (1, and-of-2, and-of-3)
-  ], 'eighth', 2, 88),
+  ], 'eighth', 2, 88, ['downbeat-identification', 'kick-drum-precision', 'syncopation']),
 
   // ===== PATTERN 9: HARD - Complex pattern with four kicks =====
   // Kicks on 1, and-of-1, 3, and-of-3
@@ -126,7 +126,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false],      // KD (1, and-of-1, 3, and-of-3)
-  ], 'eighth', 2, 81),
+  ], 'eighth', 2, 81, ['downbeat-identification', 'kick-drum-precision', 'syncopation']),
 
   // ===== PATTERN 10: HARD - Funky syncopation =====
   // Kicks on and-of-1, and-of-2, 3, and-of-4
@@ -134,7 +134,7 @@ export const LESSON_1_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, true, false, false, true, false, false, false, false, false, false, true],      // KD (and-of-1, and-of-2, 3, and-of-4)
-  ], 'eighth', 2, 85),
+  ], 'eighth', 2, 85, ['downbeat-identification', 'backbeat-placement']),
 ];
 
 /**

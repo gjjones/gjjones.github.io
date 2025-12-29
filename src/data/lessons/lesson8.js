@@ -72,7 +72,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, true, true],       // SN (backbeat + fill)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3 both measures)
-  ], 'sixteenth', 2, 83),
+  ], 'sixteenth', 2, 83, ['two-bar-memory', 'pattern-completion']),
 
   // ===== PATTERN 2: EASY - Kick pattern with kick fill =====
   // Groove: Basic rock beat
@@ -81,7 +81,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (backbeat, normal on beat 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, true, false, true, true],       // KD (1 & 3 + fill)
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 85, ['two-bar-memory', 'pattern-completion']),
 
   // ===== PATTERN 3: EASY - Snare on "and" turnaround =====
   // Groove: Backbeat
@@ -90,7 +90,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, true],       // SN (backbeat + turnaround)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 88),
+  ], 'sixteenth', 2, 88, ['two-bar-memory', 'pattern-completion']),
 
   // ===== PATTERN 4: MEDIUM - Syncopated groove with fill =====
   // Groove: Kicks on "and" beats
@@ -99,7 +99,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, true, true],       // SN (backbeat + fill)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, false],       // KD (syncopated)
-  ], 'sixteenth', 2, 84),
+  ], 'sixteenth', 2, 84, ['two-bar-memory', 'pattern-completion', 'syncopation']),
 
   // ===== PATTERN 5: MEDIUM - Hi-hat variation turnaround =====
   // Groove: Steady 8th hats with backbeat
@@ -108,7 +108,7 @@ export const LESSON_8_PATTERNS = [
     [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, false, false, false, false],               // HH (8ths, stops at turnaround)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (backbeat)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 86),
+  ], 'sixteenth', 2, 86, ['two-bar-memory', 'pattern-completion', 'syncopation']),
 
   // ===== PATTERN 6: MEDIUM - Double kick turnaround =====
   // Groove: Standard rock pattern
@@ -117,7 +117,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (backbeat)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, true, true, false],       // KD (1 & 3 + turnaround)
-  ], 'sixteenth', 2, 82),
+  ], 'sixteenth', 2, 82, ['two-bar-memory', 'pattern-completion', 'syncopation']),
 
   // ===== PATTERN 7: MEDIUM - Snare and kick combination fill =====
   // Groove: Funky pattern with ghost notes
@@ -126,7 +126,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, false, true, false],         // SN (ghost notes + turnaround)
     [true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, true, false, true],       // KD (syncopated + turnaround)
-  ], 'sixteenth', 2, 89),
+  ], 'sixteenth', 2, 89, ['two-bar-memory', 'pattern-completion', 'syncopation']),
 
   // ===== PATTERN 8: HARD - Complex groove with subtle fill =====
   // Groove: 16th note kick variations
@@ -135,7 +135,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, false, true],       // SN (backbeat + subtle fill)
     [true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false],       // KD (complex)
-  ], 'sixteenth', 2, 87),
+  ], 'sixteenth', 2, 87, ['two-bar-memory', 'pattern-completion', 'syncopation']),
 
   // ===== PATTERN 9: HARD - Displaced backbeat with fill =====
   // Groove: Laid back snare
@@ -144,7 +144,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true],     // HH (turnaround only)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, false],       // SN (laid back + turnaround)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true],       // KD (1 & 3 + turnaround)
-  ], 'sixteenth', 2, 84),
+  ], 'sixteenth', 2, 84, ['two-bar-memory', 'pattern-completion', 'syncopation']),
 
   // ===== PATTERN 10: HARD - Maximum complexity =====
   // Groove: Complex syncopated pattern
@@ -153,7 +153,7 @@ export const LESSON_8_PATTERNS = [
     [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, true, false, true],                 // HH (8ths + turnaround)
     [false, false, false, false, true, true, false, false, false, true, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, true, false, false, true, true, true, true],             // SN (complex + fill)
     [true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, true, false, false, true, false, true],         // KD (syncopated + turnaround)
-  ], 'sixteenth', 2, 85),
+  ], 'sixteenth', 2, 85, ['two-bar-memory', 'pattern-completion', 'syncopation']),
 ];
 
 /**
