@@ -29,7 +29,7 @@ export const LESSON_2_METADATA = {
   },
 
   tempos: [85, 115],
-  learningGoal: 'Transcribe 10 patterns with kick on the upbeats (ands) instead of downbeats',
+  learningGoal: 'Transcribe 15 patterns with kick on the upbeats (ands) instead of downbeats',
   prerequisites: ['lesson-1-kick-snare-skeleton'],
   nextLessons: ['lesson-3-hi-hat-anchor'],
 
@@ -40,14 +40,14 @@ export const LESSON_2_METADATA = {
 };
 
 /**
- * Lesson 2 Patterns
+ * Lesson 2 Patterns (15 total: 5 easy, 5 medium, 5 hard)
  *
  * Focus on kicks landing on the "ands" (upbeats):
  * - Steps 1, 3, 5, 7, 9, 11, 13, 15 (odd steps)
  *
- * Patterns 1-3: EASY - Single "and" placements
- * Patterns 4-7: MEDIUM - Multiple "ands"
- * Patterns 8-10: HARD - Complex syncopation
+ * EASY (Patterns 1-5): Single or double "and" placements, tempo 82-89 BPM
+ * MEDIUM (Patterns 6-10): Multiple "ands" and mixed patterns, tempo 82-89 BPM
+ * HARD (Patterns 11-15): Complex syncopation with many upbeats, tempo 81-88 BPM
  */
 
 export const LESSON_2_PATTERNS = [
@@ -56,70 +56,105 @@ export const LESSON_2_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // KD (and-of-1)
-  ], 'eighth', 2, 84, ['upbeat-identification']),
+  ], 'eighth', 2, 84, ['upbeat-identification'], 'easy'),
 
   // ===== PATTERN 2: EASY - Kick on "and-of-3" only =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false],   // KD (and-of-3)
-  ], 'eighth', 2, 88, ['upbeat-identification']),
+  ], 'eighth', 2, 88, ['upbeat-identification'], 'easy'),
 
   // ===== PATTERN 3: EASY - Kicks on "and-of-1" and "and-of-3" =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false],    // KD (and-of-1, and-of-3)
-  ], 'eighth', 2, 86, ['upbeat-identification']),
+  ], 'eighth', 2, 86, ['upbeat-identification'], 'easy'),
 
-  // ===== PATTERN 4: MEDIUM - Kick on "and-of-2" =====
+  // ===== PATTERN 4: EASY - Kick on "and-of-4" only =====
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true],   // KD (and-of-4)
+  ], 'eighth', 2, 85, ['upbeat-identification'], 'easy'),
+
+  // ===== PATTERN 5: EASY - Kicks on "and-of-2" and "and-of-4" =====
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
+    [false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, true],    // KD (and-of-2, and-of-4)
+  ], 'eighth', 2, 89, ['upbeat-identification'], 'easy'),
+
+  // ===== PATTERN 6: MEDIUM - Kick on "and-of-2" =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false],   // KD (and-of-2)
-  ], 'eighth', 2, 82, ['upbeat-identification', 'eighth-note-precision']),
+  ], 'eighth', 2, 82, ['upbeat-identification', 'eighth-note-precision'], 'medium'),
 
-  // ===== PATTERN 5: MEDIUM - Kicks on "and-of-1" and "and-of-2" =====
+  // ===== PATTERN 7: MEDIUM - Kicks on "and-of-1" and "and-of-2" =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false],    // KD (and-of-1, and-of-2)
-  ], 'eighth', 2, 87, ['upbeat-identification', 'eighth-note-precision']),
+  ], 'eighth', 2, 87, ['upbeat-identification', 'eighth-note-precision'], 'medium'),
 
-  // ===== PATTERN 6: MEDIUM - All four "ands" =====
+  // ===== PATTERN 8: MEDIUM - All four "ands" =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false],      // KD (all ands)
-  ], 'eighth', 2, 85, ['upbeat-identification', 'syncopation']),
+  ], 'eighth', 2, 85, ['upbeat-identification', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 7: MEDIUM - Mix of downbeats and upbeats =====
+  // ===== PATTERN 9: MEDIUM - Three upbeats + one downbeat =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
     [true, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false],     // KD (1, and-of-2, and-of-3)
-  ], 'eighth', 2, 89, ['upbeat-identification', 'eighth-note-precision', 'syncopation']),
+  ], 'eighth', 2, 89, ['upbeat-identification', 'eighth-note-precision', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 8: HARD - Syncopated pattern =====
+  // ===== PATTERN 10: MEDIUM - Mix of downbeats and upbeats =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
-    [false, true, false, true, false, false, false, true, false, true, false, false, false, false, false, true],       // KD (lots of ands)
-  ], 'eighth', 2, 83, ['upbeat-identification', 'kick-drum-precision', 'syncopation']),
+    [true, false, false, false, false, true, false, false, true, false, false, false, false, true, false, false],      // KD (1, and-of-2, 3, and-of-4)
+  ], 'eighth', 2, 83, ['upbeat-identification', 'eighth-note-precision', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 9: HARD - Complex upbeat pattern =====
+  // ===== PATTERN 11: HARD - Syncopated pattern =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
-    [false, false, false, true, false, true, false, false, false, false, false, true, false, true, false, false],      // KD (and-of-e-1, and-of-2, and-of-e-3, and-of-4)
-  ], 'eighth', 2, 86, ['upbeat-identification', 'kick-drum-precision', 'syncopation']),
+    [false, true, false, true, false, false, false, true, false, true, false, false, false, false, false, true],       // KD (lots of ands: 1, e-1, 2, 3, e-3, 4)
+  ], 'eighth', 2, 83, ['upbeat-identification', 'kick-drum-precision', 'syncopation'], 'hard'),
 
-  // ===== PATTERN 10: HARD - Completely off-beat =====
+  // ===== PATTERN 12: HARD - Complex upbeat pattern =====
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
-    [false, true, false, false, false, false, false, true, false, false, false, true, false, false, false, true],      // KD (all ands of all 4 beats)
-  ], 'eighth', 2, 84, ['upbeat-identification', 'kick-drum-precision', 'syncopation']),
+    [false, false, false, true, false, true, false, false, false, false, false, true, false, true, false, false],      // KD (e-1, and-of-2, e-3, and-of-4)
+  ], 'eighth', 2, 86, ['upbeat-identification', 'kick-drum-precision', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 13: HARD - Completely off-beat =====
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
+    [false, true, false, false, false, false, false, true, false, false, false, true, false, false, false, true],      // KD (all ands: and-of-1, and-of-2, and-of-3, and-of-4)
+  ], 'eighth', 2, 84, ['upbeat-identification', 'kick-drum-precision', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 14: HARD - Dense upbeat pattern =====
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
+    [false, true, false, true, false, true, false, false, false, true, false, true, false, false, false, true],        // KD (five upbeats: and-of-1, e-1, and-of-2, and-of-3, e-3, and-of-4)
+  ], 'eighth', 2, 81, ['upbeat-identification', 'kick-drum-precision', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 15: HARD - Maximum syncopation =====
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],    // SN (locked on 2 & 4)
+    [false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true],          // KD (all ands: maximum upbeats on every odd step)
+  ], 'eighth', 2, 88, ['upbeat-identification', 'kick-drum-precision', 'syncopation'], 'hard'),
 ];
 
 /**

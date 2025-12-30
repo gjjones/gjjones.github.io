@@ -29,7 +29,7 @@ export const LESSON_7_METADATA = {
   },
 
   tempos: [85, 115],  // Slow analytical tempo to standard groove tempo
-  learningGoal: 'Transcribe 10 patterns distinguishing between normal, early (rushed), and late (laid back) backbeat placement on beat 4',
+  learningGoal: 'Transcribe 15 patterns distinguishing between normal, early (rushed), and late (laid back) backbeat placement on beat 4',
   prerequisites: ['lesson-1-kick-snare-skeleton', 'lesson-2-the-ands', 'lesson-3-hihat-anchor', 'lesson-4-16th-kick-hitch', 'lesson-5-open-hihat-lift', 'lesson-6-e-and-a-snare'],
   nextLessons: ['lesson-8-two-bar-phrasing'],
 
@@ -40,7 +40,7 @@ export const LESSON_7_METADATA = {
 };
 
 /**
- * Lesson 7 Patterns
+ * Lesson 7 Patterns (15 total: 5 easy, 5 medium, 5 hard)
  *
  * Beat mapping for 16th note grid (32 steps total):
  * Measure 1: Steps 0-15
@@ -56,17 +56,9 @@ export const LESSON_7_METADATA = {
  * - Early: steps 11, 27 (the "a" of beat 3 - rushed/swing feel)
  * - Late: steps 13, 29 (the "e" of beat 4 - laid back feel)
  *
- * Patterns 1-3: EASY (slow tempo 85-90 BPM)
- * - Establish baseline and introduce displacement
- * - Simple kick patterns
- *
- * Patterns 4-7: MEDIUM (mixed tempo 95-105 BPM)
- * - Mix early and late displacements
- * - More complex kick patterns
- *
- * Patterns 8-10: HARD (faster tempo 108-115 BPM)
- * - Complex displacement patterns
- * - Syncopated kicks with displaced backbeat
+ * EASY (Patterns 1-5): Baseline and simple displacements with basic kicks, tempo 82-89 BPM
+ * MEDIUM (Patterns 6-10): Mix of early/late and more complex kicks, tempo 83-87 BPM
+ * HARD (Patterns 11-15): Complex displacement with syncopated kicks, tempo 81-88 BPM
  */
 
 export const LESSON_7_PATTERNS = [
@@ -76,7 +68,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (2 & 4 on beat)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 82, ['backbeat-displacement', 'backbeat-placement']),
+  ], 'sixteenth', 2, 82, ['backbeat-displacement', 'backbeat-placement'], 'easy'),
 
   // ===== PATTERN 2: EASY - Beat 4 early (measure 1) =====
   // Snares: beat 2 on beat (4, 20), beat 4 early (11, 28)
@@ -84,7 +76,7 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (2, 4 early in m1, 2 & 4 in m2)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 89, ['backbeat-displacement', 'backbeat-placement']),
+  ], 'sixteenth', 2, 89, ['backbeat-displacement', 'backbeat-placement'], 'easy'),
 
   // ===== PATTERN 3: EASY - Beat 4 late (measure 1) =====
   // Snares: beat 2 on beat (4, 20), beat 4 late (13, 28)
@@ -92,65 +84,108 @@ export const LESSON_7_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (2, 4 late in m1, 2 & 4 in m2)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 85, ['backbeat-displacement', 'backbeat-placement']),
+  ], 'sixteenth', 2, 85, ['backbeat-displacement', 'backbeat-placement'], 'easy'),
 
-  // ===== PATTERN 4: MEDIUM - Both measures early =====
+  // ===== PATTERN 4: EASY - Beat 4 late (measure 2) =====
+  // Snares: beat 2 on beat (4, 20), beat 4 late in measure 2 only (12, 29)
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false],     // SN (2, 4 normal in m1, 2 & 4 late in m2)
+    [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
+  ], 'sixteenth', 2, 86, ['backbeat-displacement', 'backbeat-placement'], 'easy'),
+
+  // ===== PATTERN 5: EASY - Beat 4 early (measure 2) =====
+  // Snares: beat 2 on beat (4, 20), beat 4 early in measure 2 only (12, 27)
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (2, 4 normal in m1, 2 & 4 early in m2)
+    [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
+  ], 'sixteenth', 2, 84, ['backbeat-displacement', 'backbeat-placement'], 'easy'),
+
+  // ===== PATTERN 6: MEDIUM - Both measures early =====
   // Snares: beat 2 on beat (4, 20), beat 4 early both measures (11, 27)
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (2 & 4 early)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 87, ['backbeat-displacement', 'backbeat-placement', 'syncopation']),
+  ], 'sixteenth', 2, 87, ['backbeat-displacement', 'backbeat-placement', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 5: MEDIUM - Both measures late =====
+  // ===== PATTERN 7: MEDIUM - Both measures late =====
   // Snares: beat 2 on beat (4, 20), beat 4 late both measures (13, 29)
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false],     // SN (2 & 4 late)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 83, ['backbeat-displacement', 'backbeat-placement', 'syncopation']),
+  ], 'sixteenth', 2, 83, ['backbeat-displacement', 'backbeat-placement', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 6: MEDIUM - Mix: M1 early, M2 late =====
+  // ===== PATTERN 8: MEDIUM - Mix: M1 early, M2 late =====
   // Snares: beat 2 on beat (4, 20), M1 beat 4 early (11), M2 beat 4 late (29)
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false],     // SN (mixed)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 86, ['backbeat-displacement', 'backbeat-placement', 'syncopation']),
+  ], 'sixteenth', 2, 86, ['backbeat-displacement', 'backbeat-placement', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 7: MEDIUM - Early with syncopated kick =====
+  // ===== PATTERN 9: MEDIUM - Early with syncopated kick =====
   // Snares: beat 2 & 4 early (4, 11, 20, 27)
   // Kicks: syncopated pattern
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (2 & 4 early)
     [true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false],     // KD (1, and-of-3)
-  ], 'sixteenth', 2, 84, ['backbeat-displacement', 'backbeat-placement', 'syncopation']),
+  ], 'sixteenth', 2, 84, ['backbeat-displacement', 'backbeat-placement', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 8: HARD - Late with complex kick pattern =====
+  // ===== PATTERN 10: MEDIUM - Mix: M1 late, M2 normal with kicks =====
+  // Snares: M1 beat 4 late (13), M2 beat 4 normal (28)
+  // Kicks: varied pattern
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (M1 late, M2 normal)
+    [true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1, and-of-2, 3)
+  ], 'sixteenth', 2, 85, ['backbeat-displacement', 'backbeat-placement', 'syncopation'], 'medium'),
+
+  // ===== PATTERN 11: HARD - Late with complex kick pattern =====
   // Snares: beat 2 & 4 late (4, 13, 20, 29)
   // Kicks: more complex syncopation
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false],     // SN (2 & 4 late)
     [true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, false, false, false, false, false],       // KD (1, e-of-1, and-of-3, and-of-3)
-  ], 'sixteenth', 2, 88, ['backbeat-displacement', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 88, ['backbeat-displacement', '16th-note-subdivision', 'syncopation'], 'hard'),
 
-  // ===== PATTERN 9: HARD - Alternating displacement =====
+  // ===== PATTERN 12: HARD - Alternating displacement =====
   // Snares: M1 late, M2 early with varied kicks
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (M1: 2, 4 late; M2: 2, 4 early)
     [true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false],       // KD (complex)
-  ], 'sixteenth', 2, 85, ['backbeat-displacement', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 85, ['backbeat-displacement', '16th-note-subdivision', 'syncopation'], 'hard'),
 
-  // ===== PATTERN 10: HARD - Maximum complexity =====
+  // ===== PATTERN 13: HARD - Maximum complexity =====
   // Snares: Both early with very syncopated kicks
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (2 & 4 early)
     [true, true, false, false, false, false, false, true, false, true, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, true, true, false, false, false, true, false],           // KD (very complex)
-  ], 'sixteenth', 2, 81, ['backbeat-displacement', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 81, ['backbeat-displacement', '16th-note-subdivision', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 14: HARD - Both late with dense kick pattern =====
+  // Snares: beat 2 & 4 late both measures (4, 13, 20, 29)
+  // Kicks: dense syncopation with multiple 16th positions
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false],     // SN (2 & 4 late)
+    [true, false, true, false, false, false, true, false, false, true, true, false, false, false, false, false, true, true, false, false, false, false, false, false, true, false, false, true, false, false, true, false],           // KD (dense pattern)
+  ], 'sixteenth', 2, 87, ['backbeat-displacement', '16th-note-subdivision', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 15: HARD - Alternating early/late each measure with complex kicks =====
+  // Snares: M1 early & late (4, 11, 13), M2 early (20, 27)
+  // Kicks: maximum complexity
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],     // SN (complex displacement)
+    [true, true, false, false, false, false, false, true, false, false, true, false, false, true, false, false, true, false, false, true, false, false, true, false, false, true, true, false, false, false, false, true],           // KD (maximum complexity)
+  ], 'sixteenth', 2, 82, ['backbeat-displacement', '16th-note-subdivision', 'syncopation'], 'hard'),
 ];
 
 /**

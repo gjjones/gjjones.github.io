@@ -27,7 +27,7 @@ export const LESSON_8_METADATA = {
   },
 
   tempos: [85, 115],  // Slow analytical tempo to standard groove tempo
-  learningGoal: 'Transcribe 10 two-bar patterns and identify the "turnaround" in the last 4 steps of measure 2',
+  learningGoal: 'Transcribe 15 two-bar patterns and identify the "turnaround" in the last 4 steps of measure 2',
   prerequisites: ['lesson-1-kick-snare-skeleton', 'lesson-2-the-ands', 'lesson-3-hihat-anchor', 'lesson-4-16th-kick-hitch', 'lesson-5-open-hihat-lift', 'lesson-6-e-and-a-snare', 'lesson-7-displaced-backbeat'],
   nextLessons: ['lesson-9-tom-dialogue'],
 
@@ -38,7 +38,7 @@ export const LESSON_8_METADATA = {
 };
 
 /**
- * Lesson 8 Patterns
+ * Lesson 8 Patterns (15 total: 5 easy, 5 medium, 5 hard)
  *
  * Beat mapping for 16th note grid (32 steps total):
  * Measure 1: Steps 0-15
@@ -51,17 +51,9 @@ export const LESSON_8_METADATA = {
  * - Steps 16-27: Repeat the first 12 steps (3 beats) of that groove
  * - Steps 28-31: Break the pattern with a turnaround/fill
  *
- * Patterns 1-3: EASY (slow tempo 85-90 BPM)
- * - Simple grooves with clear turnarounds
- * - Single instrument fills (snare or kick)
- *
- * Patterns 4-7: MEDIUM (mixed tempo 95-105 BPM)
- * - More complex grooves
- * - Multi-instrument turnarounds
- *
- * Patterns 8-10: HARD (faster tempo 108-115 BPM)
- * - Complex grooves with subtle turnarounds
- * - Syncopated patterns throughout
+ * EASY (Patterns 1-5): Simple grooves with clear turnarounds, tempo 83-88 BPM
+ * MEDIUM (Patterns 6-10): More complex grooves with multi-instrument turnarounds, tempo 82-89 BPM
+ * HARD (Patterns 11-15): Complex grooves with subtle turnarounds, tempo 84-87 BPM
  */
 
 export const LESSON_8_PATTERNS = [
@@ -72,7 +64,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, true, true],       // SN (backbeat + fill)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3 both measures)
-  ], 'sixteenth', 2, 83, ['two-bar-memory', 'pattern-completion']),
+  ], 'sixteenth', 2, 83, ['two-bar-memory', 'pattern-completion'], 'easy'),
 
   // ===== PATTERN 2: EASY - Kick pattern with kick fill =====
   // Groove: Basic rock beat
@@ -81,7 +73,7 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (backbeat, normal on beat 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, true, false, true, true],       // KD (1 & 3 + fill)
-  ], 'sixteenth', 2, 85, ['two-bar-memory', 'pattern-completion']),
+  ], 'sixteenth', 2, 85, ['two-bar-memory', 'pattern-completion'], 'easy'),
 
   // ===== PATTERN 3: EASY - Snare on "and" turnaround =====
   // Groove: Backbeat
@@ -90,70 +82,115 @@ export const LESSON_8_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, true],       // SN (backbeat + turnaround)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 88, ['two-bar-memory', 'pattern-completion']),
+  ], 'sixteenth', 2, 88, ['two-bar-memory', 'pattern-completion'], 'easy'),
 
-  // ===== PATTERN 4: MEDIUM - Syncopated groove with fill =====
+  // ===== PATTERN 4: EASY - Kick only turnaround =====
+  // Groove: Basic backbeat
+  // Turnaround: Single kick on "e" of beat 4 (step 29)
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (backbeat)
+    [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, true, false, false],       // KD (1 & 3 + simple turnaround)
+  ], 'sixteenth', 2, 86, ['two-bar-memory', 'pattern-completion'], 'easy'),
+
+  // ===== PATTERN 5: EASY - Snare triplet feel turnaround =====
+  // Groove: Simple rock beat
+  // Turnaround: Three snares (steps 28, 29, 31)
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, false, true],       // SN (backbeat + turnaround)
+    [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
+  ], 'sixteenth', 2, 84, ['two-bar-memory', 'pattern-completion'], 'easy'),
+
+  // ===== PATTERN 6: MEDIUM - Syncopated groove with fill =====
   // Groove: Kicks on "and" beats
   // Turnaround: Snare triplet feel (steps 28, 29, 30, 31)
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, true, true],       // SN (backbeat + fill)
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, false],       // KD (syncopated)
-  ], 'sixteenth', 2, 84, ['two-bar-memory', 'pattern-completion', 'syncopation']),
+  ], 'sixteenth', 2, 84, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 5: MEDIUM - Hi-hat variation turnaround =====
+  // ===== PATTERN 7: MEDIUM - Hi-hat variation turnaround =====
   // Groove: Steady 8th hats with backbeat
   // Turnaround: Hi-hat breaks pattern (steps 28-31)
   createPattern([
     [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, false, false, false, false],               // HH (8ths, stops at turnaround)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (backbeat)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
-  ], 'sixteenth', 2, 86, ['two-bar-memory', 'pattern-completion', 'syncopation']),
+  ], 'sixteenth', 2, 86, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 6: MEDIUM - Double kick turnaround =====
+  // ===== PATTERN 8: MEDIUM - Double kick turnaround =====
   // Groove: Standard rock pattern
   // Turnaround: Double kick on "e" and "and" (steps 29, 30)
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],     // SN (backbeat)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, true, true, false],       // KD (1 & 3 + turnaround)
-  ], 'sixteenth', 2, 82, ['two-bar-memory', 'pattern-completion', 'syncopation']),
+  ], 'sixteenth', 2, 82, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 7: MEDIUM - Snare and kick combination fill =====
+  // ===== PATTERN 9: MEDIUM - Snare and kick combination fill =====
   // Groove: Funky pattern with ghost notes
   // Turnaround: Snare-kick alternation (steps 28-31)
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, false, true, false],         // SN (ghost notes + turnaround)
     [true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, true, false, true],       // KD (syncopated + turnaround)
-  ], 'sixteenth', 2, 89, ['two-bar-memory', 'pattern-completion', 'syncopation']),
+  ], 'sixteenth', 2, 89, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 8: HARD - Complex groove with subtle fill =====
+  // ===== PATTERN 10: MEDIUM - Hi-hat and snare fill =====
+  // Groove: Backbeat with ghost notes
+  // Turnaround: Hi-hat and snare combination (steps 28-31)
+  createPattern([
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false],     // HH (turnaround only)
+    [false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, true, false, true],           // SN (ghost notes + turnaround)
+    [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1 & 3)
+  ], 'sixteenth', 2, 87, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'medium'),
+
+  // ===== PATTERN 11: HARD - Complex groove with subtle fill =====
   // Groove: 16th note kick variations
   // Turnaround: Subtle snare variation (steps 29, 31)
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], // HH (empty)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, true, false, true],       // SN (backbeat + subtle fill)
     [true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false],       // KD (complex)
-  ], 'sixteenth', 2, 87, ['two-bar-memory', 'pattern-completion', 'syncopation']),
+  ], 'sixteenth', 2, 87, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'hard'),
 
-  // ===== PATTERN 9: HARD - Displaced backbeat with fill =====
+  // ===== PATTERN 12: HARD - Displaced backbeat with fill =====
   // Groove: Laid back snare
   // Turnaround: All three instruments (steps 28-31)
   createPattern([
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true],     // HH (turnaround only)
     [false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, false],       // SN (laid back + turnaround)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true],       // KD (1 & 3 + turnaround)
-  ], 'sixteenth', 2, 84, ['two-bar-memory', 'pattern-completion', 'syncopation']),
+  ], 'sixteenth', 2, 84, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'hard'),
 
-  // ===== PATTERN 10: HARD - Maximum complexity =====
+  // ===== PATTERN 13: HARD - Maximum complexity =====
   // Groove: Complex syncopated pattern
   // Turnaround: Dense fill (all instruments, steps 28-31)
   createPattern([
     [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, true, false, true],                 // HH (8ths + turnaround)
     [false, false, false, false, true, true, false, false, false, true, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, true, false, false, true, true, true, true],             // SN (complex + fill)
     [true, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, false, false, false, false, false, true, false, false, true, false, true],         // KD (syncopated + turnaround)
-  ], 'sixteenth', 2, 85, ['two-bar-memory', 'pattern-completion', 'syncopation']),
+  ], 'sixteenth', 2, 85, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 14: HARD - Syncopated groove with complex multi-instrument fill =====
+  // Groove: Off-beat kicks with ghost notes
+  // Turnaround: All instruments active with complex interplay (steps 28-31)
+  createPattern([
+    [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, false, true, true, false],                 // HH (8ths + turnaround variation)
+    [false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, true, false, true, true],           // SN (ghost notes + dense turnaround)
+    [false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, true, false, true, false, false, true],         // KD (syncopated + turnaround)
+  ], 'sixteenth', 2, 86, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 15: HARD - Complex phrasing with subtle turnaround change =====
+  // Groove: Dense pattern with all three instruments
+  // Turnaround: Subtle variation on beat 4 that changes the phrase
+  createPattern([
+    [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, false, true],                 // HH (8ths, subtle turnaround)
+    [false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, false, true, false, false, false, true, true, true],               // SN (complex ghost notes + turnaround)
+    [true, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, true, false, false, true, false, true],         // KD (syncopated + turnaround)
+  ], 'sixteenth', 2, 85, ['two-bar-memory', 'pattern-completion', 'syncopation'], 'hard'),
 ];
 
 /**

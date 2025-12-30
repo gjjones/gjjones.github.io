@@ -30,7 +30,7 @@ export const LESSON_5_METADATA = {
   },
 
   tempos: [85, 115],  // Slow analytical tempo to standard groove tempo
-  learningGoal: 'Transcribe 10 patterns identifying where the open hi-hat appears and gets "choked" by the closed hat',
+  learningGoal: 'Transcribe 15 patterns identifying where the open hi-hat appears and gets "choked" by the closed hat',
   prerequisites: ['lesson-1-kick-snare-skeleton', 'lesson-2-the-ands', 'lesson-3-hihat-anchor', 'lesson-4-16th-kick-hitch'],
   nextLessons: ['lesson-6-16th-snare'],
 
@@ -41,7 +41,7 @@ export const LESSON_5_METADATA = {
 };
 
 /**
- * Lesson 5 Patterns
+ * Lesson 5 Patterns (15 total: 5 easy, 5 medium, 5 hard)
  *
  * Beat mapping for 16th note grid (32 steps total):
  * Measure 1: Steps 0-15
@@ -54,17 +54,9 @@ export const LESSON_5_METADATA = {
  * Closed hi-hat locked: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30] = all 8th notes
  * Snare locked: [4, 12, 20, 28] = beats 2 & 4
  *
- * Patterns 1-3: EASY (slow tempo 85-90 BPM)
- * - Simple open hat on upbeats ("ands")
- * - Clear choke points
- *
- * Patterns 4-7: MEDIUM (mixed tempo 95-105 BPM)
- * - Multiple open hats
- * - Varied placement (not just on "ands")
- *
- * Patterns 8-10: HARD (faster tempo 108-115 BPM)
- * - Complex open hat patterns
- * - Syncopated placements
+ * EASY (Patterns 1-5): Single open hat placements on obvious positions, tempo 82-87 BPM
+ * MEDIUM (Patterns 6-10): Multiple open hats and varied placements, tempo 84-89 BPM
+ * HARD (Patterns 11-15): Complex syncopated open hat patterns, tempo 81-86 BPM
  */
 
 export const LESSON_5_PATTERNS = [
@@ -76,7 +68,7 @@ export const LESSON_5_PATTERNS = [
     [false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (and-of-2, and-of-4)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD (four-on-the-floor)
-  ], 'sixteenth', 2, 87, ['open-hihat-choking', '16th-note-subdivision']),
+  ], 'sixteenth', 2, 87, ['open-hihat-choking', '16th-note-subdivision'], 'easy'),
 
   // ===== PATTERN 2: EASY - Open hat on "and" of 1 =====
   // OH: step 2 (the "and" of beat 1)
@@ -86,7 +78,7 @@ export const LESSON_5_PATTERNS = [
     [false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (and-of-1)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (beats 1 & 3)
-  ], 'sixteenth', 2, 85, ['open-hihat-choking', '16th-note-subdivision']),
+  ], 'sixteenth', 2, 85, ['open-hihat-choking', '16th-note-subdivision'], 'easy'),
 
   // ===== PATTERN 3: EASY - Open hat on "and" of 3 =====
   // OH: step 10 (the "and" of beat 3)
@@ -96,9 +88,29 @@ export const LESSON_5_PATTERNS = [
     [false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false],   // OH (and-of-3 both measures)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD (four-on-the-floor)
-  ], 'sixteenth', 2, 82, ['open-hihat-choking', '16th-note-subdivision']),
+  ], 'sixteenth', 2, 82, ['open-hihat-choking', '16th-note-subdivision'], 'easy'),
 
-  // ===== PATTERN 4: MEDIUM - Open hat on multiple "ands" =====
+  // ===== PATTERN 4: EASY - Open hat on "and" of 4 only =====
+  // OH: step 14 (the "and" of beat 4)
+  // KD: beats 1, 3
+  createPattern([
+    [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],    // HH (locked 8ths)
+    [false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (and-of-4 measure 1 only)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
+    [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1, 3)
+  ], 'sixteenth', 2, 86, ['open-hihat-choking', '16th-note-subdivision'], 'easy'),
+
+  // ===== PATTERN 5: EASY - Open hat on "and" of 1 and 3 =====
+  // OH: steps 2, 10 (and-of-1, and-of-3)
+  // KD: four-on-the-floor
+  createPattern([
+    [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],    // HH (locked 8ths)
+    [false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (and-of-1, and-of-3 measure 1 only)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
+    [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD (four-on-the-floor)
+  ], 'sixteenth', 2, 84, ['open-hihat-choking', '16th-note-subdivision'], 'easy'),
+
+  // ===== PATTERN 6: MEDIUM - Open hat on multiple "ands" =====
   // OH: steps 2, 10 (and-of-1, and-of-3)
   // KD: beats 1, 3, and-of-2
   createPattern([
@@ -106,9 +118,9 @@ export const LESSON_5_PATTERNS = [
     [false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false],   // OH (and-of-1, and-of-3 both measures)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1, and-of-2, 3)
-  ], 'sixteenth', 2, 88, ['open-hihat-choking', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 88, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 5: MEDIUM - Open hat before backbeat =====
+  // ===== PATTERN 7: MEDIUM - Open hat before backbeat =====
   // OH: steps 3, 11 (the "a" just before beats 2 and 4)
   // KD: four-on-the-floor
   createPattern([
@@ -116,9 +128,9 @@ export const LESSON_5_PATTERNS = [
     [false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false],   // OH (a-of-1, a-of-3 = just before 2 & 4)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD (four-on-the-floor)
-  ], 'sixteenth', 2, 84, ['open-hihat-choking', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 84, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 6: MEDIUM - Open hat on "e" positions =====
+  // ===== PATTERN 8: MEDIUM - Open hat on "e" positions =====
   // OH: steps 1, 9 (the "e" after beats 1 and 3)
   // KD: 1, and-of-2, 3
   createPattern([
@@ -126,9 +138,9 @@ export const LESSON_5_PATTERNS = [
     [false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false],   // OH (e-of-1, e-of-3 both measures)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false],     // KD (1, and-of-2, 3)
-  ], 'sixteenth', 2, 89, ['open-hihat-choking', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 89, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 7: MEDIUM - Multiple open hats per measure =====
+  // ===== PATTERN 9: MEDIUM - Multiple open hats per measure =====
   // OH: steps 2, 6, 10 (ands of 1, 2, 3)
   // KD: 1, 3
   createPattern([
@@ -136,9 +148,19 @@ export const LESSON_5_PATTERNS = [
     [false, false, true, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (and-of-1, and-of-2, and-of-3 in measure 1)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1, 3)
-  ], 'sixteenth', 2, 85, ['open-hihat-choking', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 85, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'medium'),
 
-  // ===== PATTERN 8: HARD - Syncopated open hats =====
+  // ===== PATTERN 10: MEDIUM - Open hat on "and" of 2, 4 with syncopated kick =====
+  // OH: steps 6, 14, 22 (and-of-2 both measures, and-of-4 measure 2)
+  // KD: 1, and-of-1, 3, and-of-3
+  createPattern([
+    [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],    // HH (locked 8ths)
+    [false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false],   // OH (and-of-2 both measures, and-of-4 measure 2)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
+    [true, false, true, false, false, false, false, false, true, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1, and-of-1, 3, and-of-3)
+  ], 'sixteenth', 2, 87, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'medium'),
+
+  // ===== PATTERN 11: HARD - Syncopated open hats =====
   // OH: steps 1, 7, 9 (e-of-1, a-of-2, e-of-3)
   // KD: 1, and-of-1, and-of-2, 3
   createPattern([
@@ -146,9 +168,9 @@ export const LESSON_5_PATTERNS = [
     [false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (e-of-1, a-of-2, e-of-3)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, true, false, false, false, true, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1, and-of-1, and-of-2, 3)
-  ], 'sixteenth', 2, 81, ['open-hihat-choking', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 81, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'hard'),
 
-  // ===== PATTERN 9: HARD - Off-beat open hat rhythm =====
+  // ===== PATTERN 12: HARD - Off-beat open hat rhythm =====
   // OH: steps 3, 11, 19 (a-of-1, a-of-3, a-of-1 measure 2)
   // KD: four-on-the-floor
   createPattern([
@@ -156,9 +178,9 @@ export const LESSON_5_PATTERNS = [
     [false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (a-of-1, a-of-3, a-of-1)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],      // KD (four-on-the-floor)
-  ], 'sixteenth', 2, 86, ['open-hihat-choking', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 86, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'hard'),
 
-  // ===== PATTERN 10: HARD - Complex open hat pattern =====
+  // ===== PATTERN 13: HARD - Complex open hat pattern =====
   // OH: steps 2, 5, 10, 13 (and-of-1, e-of-2, and-of-3, e-of-4)
   // KD: 1, 3, and-of-3
   createPattern([
@@ -166,7 +188,27 @@ export const LESSON_5_PATTERNS = [
     [false, false, true, false, false, true, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (and-of-1, e-of-2, and-of-3, e-of-4)
     [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
     [true, false, false, false, false, false, false, false, true, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1, 3, and-of-3)
-  ], 'sixteenth', 2, 83, ['open-hihat-choking', '16th-note-subdivision', 'syncopation']),
+  ], 'sixteenth', 2, 83, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 14: HARD - Dense open hat with complex kick =====
+  // OH: steps 1, 3, 9, 11, 17 (e-of-1, a-of-1, e-of-3, a-of-3, e-of-1 measure 2)
+  // KD: 1, and-of-2, 3, and-of-4
+  createPattern([
+    [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],    // HH (locked 8ths)
+    [false, true, false, true, false, false, false, false, false, true, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (five open hats: e-of-1, a-of-1, e-of-3, a-of-3, e-of-1 measure 2)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
+    [true, false, false, false, false, false, true, false, true, false, false, false, false, false, false, true, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (1, and-of-2, 3, and-of-4)
+  ], 'sixteenth', 2, 84, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'hard'),
+
+  // ===== PATTERN 15: HARD - Maximum complexity open hat pattern =====
+  // OH: steps 1, 5, 7, 9, 13, 19 (e-of-1, e-of-2, a-of-2, e-of-3, e-of-4, a-of-1 measure 2)
+  // KD: 1, and-of-1, and-of-2, 3, and-of-3, and-of-4
+  createPattern([
+    [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],    // HH (locked 8ths)
+    [false, true, false, false, false, true, false, true, false, true, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false],   // OH (six open hats with complex syncopation)
+    [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],    // SN (locked beats 2 & 4)
+    [true, false, true, false, false, false, true, false, true, false, false, false, false, true, false, true, true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],     // KD (six kicks with maximum syncopation)
+  ], 'sixteenth', 2, 82, ['open-hihat-choking', '16th-note-subdivision', 'syncopation'], 'hard'),
 ];
 
 /**

@@ -17,25 +17,33 @@ export const RESOLUTION_CONFIG = {
  * @param {number} measures - Number of measures (1-4)
  * @param {number|null} tempo - Optional BPM for this pattern (defaults to null)
  * @param {string[]|null} qualities - Optional array of quality identifiers (e.g., ['downbeat-identification', 'kick-drum-precision'])
+ * @param {'easy'|'medium'|'hard'|null} difficulty - Optional difficulty level (defaults to 'medium')
  * @returns {Object} Pattern object with steps and metadata
  *
  * @example
- * // Pattern with single quality
- * createPattern(grid, 'eighth', 2, 85, ['downbeat-identification'])
+ * // Pattern with quality and difficulty
+ * createPattern(grid, 'eighth', 2, 85, ['downbeat-identification'], 'easy')
  *
  * @example
  * // Pattern with multiple qualities
- * createPattern(grid, 'eighth', 2, 87, ['downbeat-identification', 'kick-drum-precision'])
+ * createPattern(grid, 'eighth', 2, 87, ['downbeat-identification', 'kick-drum-precision'], 'medium')
  *
  * @example
  * // Pattern without qualities (backward compatible, will inherit lesson.quality)
  * createPattern(grid, 'eighth', 2, 85)
  */
-export function createPattern(steps, resolution, measures, tempo = null, qualities = null) {
+export function createPattern(steps, resolution, measures, tempo = null, qualities = null, difficulty = 'medium') {
   const config = RESOLUTION_CONFIG[resolution];
 
   if (!config) {
     throw new Error(`Invalid resolution: ${resolution}. Must be 'quarter', 'eighth', or 'sixteenth'`);
+  }
+
+  // Validate difficulty
+  const validDifficulties = ['easy', 'medium', 'hard'];
+  if (difficulty && !validDifficulties.includes(difficulty)) {
+    console.warn(`Invalid difficulty: ${difficulty}. Defaulting to 'medium'`);
+    difficulty = 'medium';
   }
 
   const stepsPerMeasure = config.stepsPerMeasure;
@@ -56,7 +64,8 @@ export function createPattern(steps, resolution, measures, tempo = null, qualiti
     totalSteps,
     division: config.division,
     tempo,  // Optional BPM for this pattern
-    qualities  // Optional array of quality identifiers
+    qualities,  // Optional array of quality identifiers
+    difficulty  // Difficulty level: 'easy', 'medium', or 'hard'
   };
 }
 
