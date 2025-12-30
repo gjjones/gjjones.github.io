@@ -57,21 +57,37 @@ export const PHASE_2_REVIEW = {
 };
 
 /**
- * Phase 3: Expansion Lessons (Advanced Qualities)
- * Lessons 10-14 introduce new instruments and advanced concepts
+ * Phase 3: Two-Bar Phrasing & Advanced Skills
+ * Lessons in Phase 3 build on core foundation
  */
 export const PHASE_3_EXPANSION = {
   phaseNumber: 3,
-  title: 'Advanced Concepts',
-  description: 'Explore swing, ride cymbal, syncopation, and more',
+  title: 'Extended Phrases',
+  description: 'Master two-bar phrasing and tom fills',
   lessonIds: [
-    'lesson-10-swing-feel',
-    'lesson-11-ride-cymbal',
-    'lesson-12-syncopation-emphasis',
-    'lesson-13-half-time-feel',
-    'lesson-14-crash-accents'
+    'lesson-7-displaced-backbeat',
+    'lesson-8-two-bar-phrasing',
+    'lesson-9-tom-dialogue'
   ],
-  unlockCondition: 'Complete Phase 2 or achieve 80% accuracy in Phase 1'
+  unlockCondition: 'Complete first 6 lessons'
+};
+
+/**
+ * Phase 4: Advanced Mastery
+ * Lessons 10-14 combine all techniques for complete musicianship
+ */
+export const PHASE_4_ADVANCED = {
+  phaseNumber: 4,
+  title: 'Advanced Mastery',
+  description: 'Complete grooves, advanced syncopation, and musical complexity',
+  lessonIds: [
+    'lesson-10-advanced-syncopation',
+    'lesson-11-advanced-fills',
+    'lesson-12-linear-patterns',
+    'lesson-13-complete-grooves',
+    'lesson-14-two-bar-mastery'
+  ],
+  unlockCondition: 'Complete Phase 3'
 };
 
 /**
@@ -80,18 +96,20 @@ export const PHASE_3_EXPANSION = {
 export const CURRICULUM_PHASES = [
   PHASE_1_CORE,
   PHASE_2_REVIEW,
-  PHASE_3_EXPANSION
+  PHASE_3_EXPANSION,
+  PHASE_4_ADVANCED
 ];
 
 /**
  * Total curriculum statistics
  */
 export const CURRICULUM_STATS = {
-  totalLessons: 17,
-  coreLessons: 9,
-  reviewLessons: 3,
-  expansionLessons: 5,
-  totalPhases: 3
+  totalLessons: 14,
+  coreLessons: 6,
+  reviewLessons: 0,
+  expansionLessons: 3,
+  advancedLessons: 5,
+  totalPhases: 4
 };
 
 /**
@@ -99,28 +117,25 @@ export const CURRICULUM_STATS = {
  * Used for quick lookup of which phase a lesson belongs to
  */
 export const LESSON_TO_PHASE_MAP = {
-  // Phase 1: Core Lessons
+  // Phase 1: Core Lessons (Foundation)
   'lesson-1-kick-snare-skeleton': 1,
   'lesson-2-the-ands': 1,
-  'lesson-3-backbeat-vs-displaced': 1,
-  'lesson-4-ghost-notes': 1,
-  'lesson-5-offbeat-hi-hat': 1,
-  'lesson-6-combining-qualities': 1,
-  'lesson-7-cross-rhythms': 1,
-  'lesson-8-polyrhythms': 1,
-  'lesson-9-tom-fills': 1,
+  'lesson-3-hihat-anchor': 1,
+  'lesson-4-16th-kick-hitch': 1,
+  'lesson-5-open-hihat-lift': 1,
+  'lesson-6-e-and-a-snare': 1,
 
-  // Phase 2: Review Lessons
-  'review-1-downbeat-vs-upbeat': 2,
-  'review-2-backbeat-variations': 2,
-  'review-3-ghost-note-detection': 2,
+  // Phase 3: Extended Phrases
+  'lesson-7-displaced-backbeat': 3,
+  'lesson-8-two-bar-phrasing': 3,
+  'lesson-9-tom-dialogue': 3,
 
-  // Phase 3: Expansion Lessons
-  'lesson-10-swing-feel': 3,
-  'lesson-11-ride-cymbal': 3,
-  'lesson-12-syncopation-emphasis': 3,
-  'lesson-13-half-time-feel': 3,
-  'lesson-14-crash-accents': 3
+  // Phase 4: Advanced Mastery
+  'lesson-10-advanced-syncopation': 4,
+  'lesson-11-advanced-fills': 4,
+  'lesson-12-linear-patterns': 4,
+  'lesson-13-complete-grooves': 4,
+  'lesson-14-two-bar-mastery': 4
 };
 
 /**

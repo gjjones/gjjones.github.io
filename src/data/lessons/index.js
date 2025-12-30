@@ -15,6 +15,11 @@ import LESSON_6 from './lesson6.js';
 import LESSON_7 from './lesson7.js';
 import LESSON_8 from './lesson8.js';
 import LESSON_9 from './lesson9.js';
+import { lesson10 as LESSON_10 } from './lesson10.js';
+import { lesson11 as LESSON_11 } from './lesson11.js';
+import { lesson12 as LESSON_12 } from './lesson12.js';
+import { lesson13 as LESSON_13 } from './lesson13.js';
+import { lesson14 as LESSON_14 } from './lesson14.js';
 
 /**
  * All available lessons
@@ -30,7 +35,11 @@ const ALL_LESSONS = [
   LESSON_7,
   LESSON_8,
   LESSON_9,
-  // ... more lessons will be added here
+  LESSON_10,
+  LESSON_11,
+  LESSON_12,
+  LESSON_13,
+  LESSON_14,
 ];
 
 /**
@@ -57,6 +66,6 @@ export function initializeCurriculum() {
 /**
  * Export all lessons for direct access if needed
  */
-export { LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6, LESSON_7, LESSON_8, LESSON_9 };
+export { LESSON_1, LESSON_2, LESSON_3, LESSON_4, LESSON_5, LESSON_6, LESSON_7, LESSON_8, LESSON_9, LESSON_10, LESSON_11, LESSON_12, LESSON_13, LESSON_14 };
 
 export default ALL_LESSONS;
