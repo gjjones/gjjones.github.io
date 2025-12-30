@@ -18,13 +18,15 @@ import { SequencerGrid } from '../components/SequencerGrid';
 import { DrumSettings } from '../components/DrumSettings/DrumSettings';
 import { getDifferences } from '../utils/sequenceComparison';
 import { getPatternQualities } from '../utils/patternUtils.js';
-import { getFirstTimeLessonPatterns } from '../utils/difficultyUtils.js';
+import { getFirstTimeLessonPatterns, filterPatternsByDifficulty } from '../utils/difficultyUtils.js';
 import { theme } from '../theme';
 import { requiresMidiPermission, canPlayback } from '../utils/playbackUtils';
 
 export function QuizRoute() {
   const { quizId } = useParams({ from: '/quiz/$quizId' });
   const navigate = useNavigate();
+  const searchParams = new URLSearchParams(window.location.search);
+  const userSelectedDifficulty = searchParams.get('difficulty') || null;
   const {
     permissionStatus,
     requestAccess,
@@ -38,27 +40,37 @@ export function QuizRoute() {
   const selectedQuiz = getLesson(quizId);
   const isLesson = !!selectedQuiz;
 
-  // Filter patterns for first-time users (5 easy + 5 medium = 10 patterns)
-  // Returning users see all 15 patterns
+  // Filter patterns based on user selection and first-time status
+  // Priority: User selection > First-time auto-filter > All patterns
   const filteredQuiz = useMemo(() => {
     if (!selectedQuiz || !isLesson) return selectedQuiz;
 
     const lessonProgress = getLessonProgress(quizId);
     const isFirstTime = !lessonProgress || lessonProgress.attempts === 0;
 
-    if (isFirstTime && selectedQuiz.patterns) {
-      // First-time user: show only easy and medium patterns
-      const filteredPatterns = getFirstTimeLessonPatterns(selectedQuiz.patterns);
-      return {
-        ...selectedQuiz,
-        patterns: filteredPatterns,
-        totalQuestions: filteredPatterns.length
-      };
+    if (!selectedQuiz.patterns) return selectedQuiz;
+
+    let filteredPatterns;
+
+    // Priority 1: User manually selected a specific difficulty
+    if (userSelectedDifficulty && userSelectedDifficulty !== 'all') {
+      filteredPatterns = filterPatternsByDifficulty(selectedQuiz.patterns, userSelectedDifficulty);
+    }
+    // Priority 2: First-time user with no specific selection or "all" selected
+    else if (isFirstTime) {
+      filteredPatterns = getFirstTimeLessonPatterns(selectedQuiz.patterns);
+    }
+    // Priority 3: Returning user with no selection or "all" selected
+    else {
+      filteredPatterns = selectedQuiz.patterns;
     }
 
-    // Returning user: show all patterns
-    return selectedQuiz;
-  }, [selectedQuiz, quizId, getLessonProgress, isLesson]);
+    return {
+      ...selectedQuiz,
+      patterns: filteredPatterns,
+      totalQuestions: filteredPatterns.length
+    };
+  }, [selectedQuiz, quizId, getLessonProgress, isLesson, userSelectedDifficulty]);
 
   const [playbackMode, setPlaybackMode] = useState('hidden');
   const [showHints, setShowHints] = useState(false);

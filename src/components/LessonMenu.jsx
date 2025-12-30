@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { theme, getButtonStyles } from '../theme';
 import { getAllLessons, getLessonsByPhase } from '../utils/curriculumLoader';
 import { useProgressTracking, getQualityProgress, getWeakQualities } from '../hooks/useProgressTracking';
 import { useWarmupMode } from '../hooks/useWarmupMode';
 import { getRecommendedLesson, STRATEGY } from '../utils/recommendationEngine';
+import { DifficultySelector } from './DifficultySelector';
 
 /**
  * Lesson menu component for curriculum navigation
@@ -15,6 +16,15 @@ export function LessonMenu({ onSelectLesson }) {
   const lessons = getAllLessons();
   const { progress: progressData } = useProgressTracking();
   const { isWarmupMode, toggleWarmupMode, warmupReduction } = useWarmupMode();
+
+  // Handle lesson selection with difficulty parameter
+  const handleLessonSelect = (lessonId, difficulty = 'all') => {
+    navigate({
+      to: '/quiz/$quizId',
+      params: { quizId: lessonId },
+      search: difficulty !== 'all' ? { difficulty } : {}
+    });
+  };
 
   // Group lessons by phase
   const phase1Lessons = getLessonsByPhase(1);
@@ -302,7 +312,7 @@ export function LessonMenu({ onSelectLesson }) {
                 key={lesson.id}
                 lesson={lesson}
                 progressData={progressData}
-                onSelect={() => onSelectLesson(lesson.id)}
+                onSelect={handleLessonSelect}
                 isRecommended={recommendationResult?.lessonId === lesson.id}
                 qualityProgress={qualityProgress}
               />
@@ -337,7 +347,7 @@ export function LessonMenu({ onSelectLesson }) {
                 key={lesson.id}
                 lesson={lesson}
                 progressData={progressData}
-                onSelect={() => onSelectLesson(lesson.id)}
+                onSelect={handleLessonSelect}
                 isRecommended={recommendationResult?.lessonId === lesson.id}
                 qualityProgress={qualityProgress}
               />
@@ -372,7 +382,7 @@ export function LessonMenu({ onSelectLesson }) {
                 key={lesson.id}
                 lesson={lesson}
                 progressData={progressData}
-                onSelect={() => onSelectLesson(lesson.id)}
+                onSelect={handleLessonSelect}
                 isRecommended={recommendationResult?.lessonId === lesson.id}
                 qualityProgress={qualityProgress}
               />
@@ -389,6 +399,8 @@ export function LessonMenu({ onSelectLesson }) {
  * Shows lesson metadata with skill mastery indicator
  */
 function LessonCard({ lesson, progressData, onSelect, isRecommended, qualityProgress }) {
+  const [selectedDifficulty, setSelectedDifficulty] = useState('all');
+
   // Get progress for this lesson
   const lessonProgress = progressData?.lessonProgress?.[lesson.id];
 
@@ -396,9 +408,13 @@ function LessonCard({ lesson, progressData, onSelect, isRecommended, qualityProg
   const quality = lesson.quality || lesson.metadata?.quality;
   const qualityData = qualityProgress?.find(q => q.quality === quality);
 
+  const handleCardClick = () => {
+    onSelect(lesson.id, selectedDifficulty);
+  };
+
   return (
     <button
-      onClick={onSelect}
+      onClick={handleCardClick}
       style={{
         padding: theme.spacing.lg,
         background: theme.colors.bg.secondary,
@@ -535,10 +551,17 @@ function LessonCard({ lesson, progressData, onSelect, isRecommended, qualityProg
         style={{
           fontSize: theme.typography.fontSize.sm,
           color: theme.colors.text.secondary,
+          marginBottom: theme.spacing.sm,
         }}
       >
         {lesson.patterns?.length || 10} patterns
       </div>
+
+      {/* Difficulty selector */}
+      <DifficultySelector
+        onSelect={setSelectedDifficulty}
+        defaultDifficulty="all"
+      />
     </button>
   );
 }
