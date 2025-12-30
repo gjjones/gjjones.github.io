@@ -11,7 +11,7 @@ import { createPattern } from '../../utils/patternUtils.js';
 
 export const LESSON_4_METADATA = {
   id: 'lesson-4-16th-kick-hitch',
-  phase: 2,
+  phase: 1,
   lessonNumber: 4,
   title: 'The 16th Note Kick "Hitch"',
   concept: 'Identifying kick "hitches" on 16th note subdivisions',

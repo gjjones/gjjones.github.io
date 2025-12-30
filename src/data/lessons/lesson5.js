@@ -11,7 +11,7 @@ import { createPattern } from '../../utils/patternUtils.js';
 
 export const LESSON_5_METADATA = {
   id: 'lesson-5-open-hihat-lift',
-  phase: 2,
+  phase: 1,
   lessonNumber: 5,
   title: 'The Open Hi-Hat "Lift"',
   concept: 'Identifying open hi-hat placement and the "choke" effect',

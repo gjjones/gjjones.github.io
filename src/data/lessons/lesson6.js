@@ -11,7 +11,7 @@ import { createPattern } from '../../utils/patternUtils.js';
 
 export const LESSON_6_METADATA = {
   id: 'lesson-6-e-and-a-snare',
-  phase: 2,
+  phase: 1,
   lessonNumber: 6,
   title: 'The "e" and "a" Snare',
   concept: 'Transcribing snare ghost notes on 16th note subdivisions',

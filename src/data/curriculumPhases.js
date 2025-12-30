@@ -28,13 +28,10 @@ export const PHASE_1_CORE = {
   lessonIds: [
     'lesson-1-kick-snare-skeleton',
     'lesson-2-the-ands',
-    'lesson-3-backbeat-vs-displaced',
-    'lesson-4-ghost-notes',
-    'lesson-5-offbeat-hi-hat',
-    'lesson-6-combining-qualities',
-    'lesson-7-cross-rhythms',
-    'lesson-8-polyrhythms',
-    'lesson-9-tom-fills'
+    'lesson-3-hi-hat-anchor',
+    'lesson-4-16th-kick-hitch',
+    'lesson-5-open-hihat-lift',
+    'lesson-6-e-and-a-snare'
   ],
   unlockCondition: 'Available from start'
 };
@@ -49,9 +46,7 @@ export const PHASE_2_REVIEW = {
   title: 'Quality Distinction',
   description: 'Practice identifying rhythmic qualities by ear',
   lessonIds: [
-    'review-1-downbeat-vs-upbeat',
-    'review-2-backbeat-variations',
-    'review-3-ghost-note-detection'
+    // Review lessons not yet implemented
   ],
   unlockCondition: 'Complete Phase 1 with 70% accuracy or higher'
 };
