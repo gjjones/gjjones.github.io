@@ -192,6 +192,11 @@ export function isPhaseUnlocked(phaseNumber, progressData) {
     return phase2Completed || phase1MasteryUnlock;
   }
 
+  if (phaseNumber === 4) {
+    // Phase 4: Always unlocked (advanced lessons available to all)
+    return true;
+  }
+
   return false;
 }
 
@@ -226,7 +231,7 @@ export function calculatePhaseAccuracy(phaseNumber, progressData) {
  */
 export function getNextPhase(progressData) {
   // Check phases in order
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= 4; i++) {
     if (!isPhaseUnlocked(i, progressData)) {
       // Return previous phase if this one isn't unlocked yet
       return i - 1;

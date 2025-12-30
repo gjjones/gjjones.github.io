@@ -30,6 +30,7 @@ export function LessonMenu({ onSelectLesson }) {
   const phase1Lessons = getLessonsByPhase(1);
   const phase2Lessons = getLessonsByPhase(2);
   const phase3Lessons = getLessonsByPhase(3);
+  const phase4Lessons = getLessonsByPhase(4);
 
   // Get quality progress for all 9 qualities
   const qualityProgress = useMemo(() => {
@@ -390,6 +391,41 @@ export function LessonMenu({ onSelectLesson }) {
           </div>
         </div>
       )}
+
+      {/* Phase 4: Advanced Mastery (if any exist) */}
+      {phase4Lessons.length > 0 && (
+        <div style={{ width: '100%', maxWidth: '900px', marginBottom: theme.spacing.xl }}>
+          <h2
+            style={{
+              fontSize: theme.typography.fontSize.xl,
+              fontWeight: theme.typography.fontWeight.semibold,
+              color: theme.colors.text.primary,
+              marginBottom: theme.spacing.md,
+              textAlign: 'left',
+            }}
+          >
+            Phase 4: Advanced Mastery
+          </h2>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: theme.spacing.lg,
+            }}
+          >
+            {phase4Lessons.map((lesson) => (
+              <LessonCard
+                key={lesson.id}
+                lesson={lesson}
+                progressData={progressData}
+                onSelect={handleLessonSelect}
+                isRecommended={recommendationResult?.lessonId === lesson.id}
+                qualityProgress={qualityProgress}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -412,9 +448,20 @@ function LessonCard({ lesson, progressData, onSelect, isRecommended, qualityProg
     onSelect(lesson.id, selectedDifficulty);
   };
 
+  const handleKeyDown = (e) => {
+    // Make div keyboard accessible like a button
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCardClick();
+    }
+  };
+
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
       style={{
         padding: theme.spacing.lg,
         background: theme.colors.bg.secondary,
@@ -558,11 +605,13 @@ function LessonCard({ lesson, progressData, onSelect, isRecommended, qualityProg
       </div>
 
       {/* Difficulty selector */}
-      <DifficultySelector
-        onSelect={setSelectedDifficulty}
-        defaultDifficulty="all"
-      />
-    </button>
+      <div onClick={(e) => e.stopPropagation()}>
+        <DifficultySelector
+          onSelect={setSelectedDifficulty}
+          defaultDifficulty="all"
+        />
+      </div>
+    </div>
   );
 }
 

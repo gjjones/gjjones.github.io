@@ -40,6 +40,9 @@ export function QuizRoute() {
   const selectedQuiz = getLesson(quizId);
   const isLesson = !!selectedQuiz;
 
+  // Initialize progress tracking for lessons (must be before filteredQuiz useMemo)
+  const { recordLessonCompletion, recordPatternResult, getLessonProgress } = useProgressTracking();
+
   // Filter patterns based on user selection and first-time status
   // Priority: User selection > First-time auto-filter > All patterns
   const filteredQuiz = useMemo(() => {
@@ -79,9 +82,6 @@ export function QuizRoute() {
 
   // Initialize drum settings
   const drumSettings = useDrumSettings();
-
-  // Initialize progress tracking for lessons
-  const { recordLessonCompletion, recordPatternResult, getLessonProgress } = useProgressTracking();
 
   // Initialize timer for tracking quiz session time
   const timer = useTimer();
