@@ -1,9 +1,10 @@
 import { theme } from '../../theme';
 import { ConnectionStatus } from './ConnectionStatus';
 import { BpmControl } from './BpmControl';
+import { DifficultyBadge } from './DifficultyBadge';
 import { useWarmupMode } from '../../hooks/useWarmupMode';
 
-export function Header({ selectedOutput, bpm, onBpmChange, currentQuestionIndex, totalQuestions, onExit }) {
+export function Header({ selectedOutput, bpm, onBpmChange, currentQuestionIndex, totalQuestions, currentPatternDifficulty, onExit }) {
   const { isWarmupMode } = useWarmupMode();
 
   return (
@@ -39,6 +40,11 @@ export function Header({ selectedOutput, bpm, onBpmChange, currentQuestionIndex,
             <span>🔥</span>
             <span>WARMUP MODE</span>
           </div>
+        )}
+
+        {/* Difficulty Badge - show when pattern difficulty is available */}
+        {currentPatternDifficulty && (
+          <DifficultyBadge difficulty={currentPatternDifficulty} />
         )}
       </div>
 

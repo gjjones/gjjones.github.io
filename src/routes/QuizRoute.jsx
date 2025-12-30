@@ -18,6 +18,7 @@ import { SequencerGrid } from '../components/SequencerGrid';
 import { DrumSettings } from '../components/DrumSettings/DrumSettings';
 import { getDifferences } from '../utils/sequenceComparison';
 import { getPatternQualities } from '../utils/patternUtils.js';
+import { getFirstTimeLessonPatterns } from '../utils/difficultyUtils.js';
 import { theme } from '../theme';
 import { requiresMidiPermission, canPlayback } from '../utils/playbackUtils';
 
@@ -37,6 +38,28 @@ export function QuizRoute() {
   const selectedQuiz = getLesson(quizId);
   const isLesson = !!selectedQuiz;
 
+  // Filter patterns for first-time users (5 easy + 5 medium = 10 patterns)
+  // Returning users see all 15 patterns
+  const filteredQuiz = useMemo(() => {
+    if (!selectedQuiz || !isLesson) return selectedQuiz;
+
+    const lessonProgress = getLessonProgress(quizId);
+    const isFirstTime = !lessonProgress || lessonProgress.attempts === 0;
+
+    if (isFirstTime && selectedQuiz.patterns) {
+      // First-time user: show only easy and medium patterns
+      const filteredPatterns = getFirstTimeLessonPatterns(selectedQuiz.patterns);
+      return {
+        ...selectedQuiz,
+        patterns: filteredPatterns,
+        totalQuestions: filteredPatterns.length
+      };
+    }
+
+    // Returning user: show all patterns
+    return selectedQuiz;
+  }, [selectedQuiz, quizId, getLessonProgress, isLesson]);
+
   const [playbackMode, setPlaybackMode] = useState('hidden');
   const [showHints, setShowHints] = useState(false);
   const [viewMode, setViewMode] = useState('sequencer'); // 'sequencer' | 'settings'
@@ -46,7 +69,7 @@ export function QuizRoute() {
   const drumSettings = useDrumSettings();
 
   // Initialize progress tracking for lessons
-  const { recordLessonCompletion, recordPatternResult } = useProgressTracking();
+  const { recordLessonCompletion, recordPatternResult, getLessonProgress } = useProgressTracking();
 
   // Initialize timer for tracking quiz session time
   const timer = useTimer();
@@ -123,14 +146,14 @@ export function QuizRoute() {
   // Lessons can specify which instruments they need (e.g., for Lesson 5 with Open Hi-Hat)
   // Memoized to prevent infinite re-renders
   const { lessonInstruments, lessonToPresetIndexMap } = useMemo(() => {
-    if (!selectedQuiz?.instruments) {
+    if (!filteredQuiz?.instruments) {
       // No specific instruments required, use all from settings
       const indexMap = drumSettings.instruments.map((_, i) => i);
       return { lessonInstruments: drumSettings.instruments, lessonToPresetIndexMap: indexMap };
     }
 
     // Lesson specifies required instruments - filter and reorder to match
-    const requiredLabels = selectedQuiz.instruments;
+    const requiredLabels = filteredQuiz.instruments;
     const filtered = [];
     const indexMap = [];
 
@@ -151,7 +174,7 @@ export function QuizRoute() {
     });
 
     return { lessonInstruments: filtered, lessonToPresetIndexMap: indexMap };
-  }, [selectedQuiz?.instruments, drumSettings.instruments]);
+  }, [filteredQuiz?.instruments, drumSettings.instruments]);
 
   // Create lesson-specific instrument lookup functions
   // These use lessonInstruments instead of the full drumSettings.instruments
@@ -207,7 +230,7 @@ export function QuizRoute() {
   const sequencer = useSequencer(
     sendNoteTrigger,
     playbackMode,
-    selectedQuiz,
+    filteredQuiz,
     getLessonMidiParams,
     getLessonInstrument,
     lessonInstruments
@@ -235,14 +258,14 @@ export function QuizRoute() {
       timer.stop(); // Stop timer when quiz completes
 
       // Record lesson completion for lessons
-      if (isLesson && recordLessonCompletion && selectedQuiz) {
+      if (isLesson && recordLessonCompletion && filteredQuiz) {
         const correctCount = sequencer.quizResults.filter(r => r === true).length;
         const totalCount = sequencer.quizResults.length;
         const accuracy = totalCount > 0 ? correctCount / totalCount : 0;
 
         // Build pattern-quality results
-        const patternQualityResults = selectedQuiz.patterns?.map((pattern, index) => {
-          const qualities = getPatternQualities(pattern, selectedQuiz);
+        const patternQualityResults = filteredQuiz.patterns?.map((pattern, index) => {
+          const qualities = getPatternQualities(pattern, filteredQuiz);
           const isCorrect = sequencer.quizResults[index];
 
           // All-or-nothing: pattern result applies to all qualities
@@ -307,8 +330,8 @@ export function QuizRoute() {
     // Record pattern result for lessons
     if (isLesson && recordPatternResult) {
       // Build quality results for this pattern
-      const pattern = selectedQuiz.patterns?.[sequencer.currentQuestionIndex];
-      const qualities = getPatternQualities(pattern, selectedQuiz);
+      const pattern = filteredQuiz.patterns?.[sequencer.currentQuestionIndex];
+      const qualities = getPatternQualities(pattern, filteredQuiz);
 
       const qualityResults = {};
       qualities.forEach(quality => {
@@ -396,7 +419,7 @@ export function QuizRoute() {
           bpm={sequencer.bpm}
           onBpmChange={sequencer.setBpm}
           currentQuestionIndex={undefined}
-          totalQuestions={selectedQuiz.totalQuestions}
+          totalQuestions={filteredQuiz.totalQuestions}
           onExit={handleExitQuiz}
         />
         <main style={{
@@ -431,7 +454,8 @@ export function QuizRoute() {
         bpm={sequencer.bpm}
         onBpmChange={sequencer.setBpm}
         currentQuestionIndex={sequencer.currentQuestionIndex}
-        totalQuestions={selectedQuiz.totalQuestions}
+        totalQuestions={filteredQuiz.totalQuestions}
+        currentPatternDifficulty={sequencer.currentPattern?.difficulty}
         onExit={handleExitQuiz}
       />
       <main style={{
@@ -481,7 +505,7 @@ export function QuizRoute() {
                 measures={sequencer.currentPattern.measures}
                 getMusicalPosition={sequencer.getMusicalPosition}
                 instruments={sequencer.instruments}
-                lessonConstraints={isLesson ? selectedQuiz?.constraints : null}
+                lessonConstraints={isLesson ? filteredQuiz?.constraints : null}
               />
             )}
           </>
