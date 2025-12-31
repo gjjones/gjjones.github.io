@@ -112,7 +112,6 @@ export function QuizRoute() {
     const checkAndLoadSamples = async () => {
       // Wait for AudioContext to be available
       if (!timingClockForSamples.audioContext) {
-        console.log('[QuizRoute] Waiting for AudioContext to be ready...');
         return;
       }
 
@@ -120,7 +119,6 @@ export function QuizRoute() {
 
       if (!hasSavedSettings) {
         // First-time user: auto-load 808 kit
-        console.log('[QuizRoute] First visit - auto-loading 808 sample kit');
         if (DEFAULT_PRESET && samplePlayer.loadSample) {
           await drumSettings.loadSamplesFromPreset(
             DEFAULT_PRESET.instruments,
@@ -134,7 +132,6 @@ export function QuizRoute() {
         });
 
         if (needsSampleLoading && samplePlayer.loadSample) {
-          console.log('[QuizRoute] Reloading samples from saved settings');
           await drumSettings.loadSamplesFromPreset(
             drumSettings.instruments,
             samplePlayer.loadSample

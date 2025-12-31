@@ -431,14 +431,6 @@ export const EXAMPLE_LESSON_1_CONSTRAINTS = {
  * Useful for debugging and validation
  */
 export function testGeneration() {
-  console.log('Testing pattern generation...');
-
   const patterns = generatePatternsForLesson(EXAMPLE_LESSON_1_CONSTRAINTS, 100, 10);
-
-  console.log(`Generated ${patterns.length} patterns`);
-  patterns.forEach((pattern, i) => {
-    console.log(`Pattern ${i + 1} (${pattern.difficulty}):`, pattern.grid);
-  });
-
   return patterns;
 }

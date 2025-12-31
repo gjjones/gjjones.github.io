@@ -49,12 +49,7 @@ const ALL_LESSONS = [
  * @returns {{successful: number, failed: number, errors: Array}} Registration results
  */
 export function initializeCurriculum() {
-  console.log('Initializing curriculum...');
   const results = registerLessons(ALL_LESSONS);
-
-  console.log(
-    `Curriculum initialized: ${results.successful} lessons registered, ${results.failed} failed`
-  );
 
   if (results.failed > 0) {
     console.error('Lesson registration errors:', results.errors);

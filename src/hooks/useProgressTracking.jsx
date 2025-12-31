@@ -582,8 +582,6 @@ function migrateV1ToV2(progressV1) {
  * - Add patternIndex to qualityHistory snapshots
  */
 function migrateV2ToV3(progressV2) {
-  console.log('Migrating progress from v2 to v3...');
-
   return {
     ...progressV2,
     version: 3,
